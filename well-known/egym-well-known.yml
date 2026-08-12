@@ -1,0 +1,68 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of /.well-known/* on every EGYM host in apis.yml and every OpenAPI servers[] host
+probed: '2026-08-12'
+hosts_probed:
+- developer.egym.com
+- egym.com
+- www.egym.com
+- mms.api.egym.com
+- analytics.api.egym.com
+- user-connect.api.egym.com
+- partner-api.api.egym.com
+- egym-wellpass.com
+paths_probed:
+- /.well-known/security.txt
+- /.well-known/openid-configuration
+- /.well-known/oauth-authorization-server
+- /.well-known/oauth-protected-resource
+- /.well-known/api-catalog
+- /.well-known/ai-plugin.json
+- /.well-known/agent-card.json
+- /.well-known/agent.json
+hit_count: 1
+documents:
+- host: https://developer.egym.com
+  path: /.well-known/oauth-authorization-server
+  status: 200
+  content_type: application/json
+  file: egym-oauth-authorization-server.json
+  standard: RFC 8414 OAuth 2.0 Authorization Server Metadata
+  real_document: true
+  note: 'A genuine RFC 8414 metadata document served from EGYM''s own host. It describes the
+    authorization server for the developer.egym.com documentation MCP server, not for the
+    EGYM business APIs — issuer is https://auth.cloud.redocly.com (the Redocly Reunite portal
+    platform), and its endpoints live under /_mcp/. Supports authorization_code, refresh_token
+    and client_credentials grants, PKCE S256, and dynamic client registration.'
+misses:
+- {host: developer.egym.com, path: /.well-known/security.txt, status: 404}
+- {host: developer.egym.com, path: /.well-known/openid-configuration, status: 404}
+- {host: developer.egym.com, path: /.well-known/oauth-protected-resource, status: 404}
+- {host: developer.egym.com, path: /.well-known/api-catalog, status: 404}
+- {host: developer.egym.com, path: /.well-known/ai-plugin.json, status: 404}
+- {host: developer.egym.com, path: /.well-known/agent-card.json, status: 404}
+- {host: developer.egym.com, path: /.well-known/agent.json, status: 404}
+- {host: egym.com, path: 'all eight paths', status: 404}
+- {host: www.egym.com, path: 'all eight paths', status: 404}
+- {host: mms.api.egym.com, path: 'all eight paths', status: 404}
+- {host: analytics.api.egym.com, path: 'all eight paths', status: 404}
+- {host: user-connect.api.egym.com, path: 'all eight paths', status: 404}
+- {host: egym-wellpass.com, path: 'all eight paths', status: 404}
+- {host: partner-api.api.egym.com, path: 'all eight paths', status: 'connection failed — NXDOMAIN'}
+security_txt:
+  served: false
+  note: 'No /.well-known/security.txt on any EGYM host, so no SecurityTxt pointer is emitted.
+    EGYM does publish a security contact indirectly, in DNS: the egym.com CAA record carries
+    iodef mailto:security-caa@egym.com and mailto:it-infrastructure-team@egym.com. That is a
+    certificate-issuance incident channel, not a vulnerability disclosure policy, and it is
+    not discoverable over HTTP.'
+agent_card:
+  found: false
+  note: 'Both /.well-known/agent-card.json and the legacy /.well-known/agent.json returned 404
+    on every host probed. No a2a/ artifact is written — an agent card is search-only and must
+    never be authored on a provider''s behalf.'
+in_spec_jwks:
+  note: 'Two EGYM specifications declare their own JWKS endpoint under the API path rather than
+    at a well-known location: GET /api/v1/oauth/.well-known/jwks.json (operationId wellKnown)
+    in both Equipment Vendor APIs. It is namespaced under /api/v1, so it is not discoverable
+    by an RFC 8615 root probe.'

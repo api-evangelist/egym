@@ -1,0 +1,139 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/errors
+docs:
+- https://developer.egym.com/mms-api-v2/errors
+- https://developer.egym.com/mms-api-v2/error-handling
+- https://developer.egym.com/mms-api-v2/tutorials/conflicts-resolution
+- https://developer.egym.com/user-connect-api/docs/error-handling
+- https://developer.egym.com/data-hub/authentication
+api: EGYM MMS API V2
+format: custom-json
+envelope_field: errorCode
+error_code_count: 15
+philosophy: 'EGYM uses conventional HTTP status classes (2xx success, 4xx client error,
+  5xx EGYM server error) and states that all 4xx errors can be handled programmatically
+  via a stable errorCode string in the response body. 404s additionally carry a
+  metadata.entity discriminator naming exactly which resource was missing.'
+
+error_codes:
+- code: invalidRequest
+  status: 400
+  meaning: Generic malformed-request code. Further detail is in the message field.
+  action: Read message; correct the request body.
+- code: invalidArguments
+  status: 400
+  meaning: The request contains invalid arguments.
+  action: Read the errors[] field for per-field detail, or message.
+- code: missingPermission
+  status: 403
+  meaning: This action requires explicit permission on the API key.
+  action: Contact EGYM support to have the permission granted to the gym-location key.
+- code: forbiddenAction
+  status: 403
+  meaning: Generic forbidden code. Further detail is in the message field.
+  action: Read message.
+- code: corporateFitnessMembershipExpired
+  status: 403
+  meaning: The member's corporate fitness (Wellpass) membership has expired.
+  action: Deny admission; the member must renew with their employer/Wellpass.
+  domain: corporate-fitness
+- code: corporateFitnessMembershipNotStarted
+  status: 403
+  meaning: The corporate fitness membership starts in the future.
+  action: Deny admission until the start date.
+  domain: corporate-fitness
+- code: corporateFitnessGymNotInNetwork
+  status: 403
+  meaning: The gym is not a network partner of the corporate fitness program.
+  action: Not a caller error — the venue is not enrolled in Wellpass.
+  domain: corporate-fitness
+- code: corporateFitnessGymNotInNetworkPlus1
+  status: 403
+  meaning: The gym is not participating in the Plus1 program but the member holds a
+    Plus1 corporate fitness membership.
+  action: Deny admission; the venue is outside the member's tier.
+  domain: corporate-fitness
+- code: notFound
+  status: 404
+  meaning: The requested resource does not exist. metadata.entity names which one.
+  action: Check the URL path and identifiers; branch on metadata.entity.
+- code: userEmailConflict
+  status: 409
+  meaning: The email is already used within your gym or chain.
+  action: See the conflict-resolution tutorial; resolve to the existing account.
+- code: userEmailUsedByAnotherAccountConflict
+  status: 409
+  meaning: The email is already used by another account.
+  action: See the conflict-resolution tutorial.
+- code: membershipExists
+  status: 409
+  meaning: Action cannot be performed due to a memberships conflict.
+  action: Reconcile the existing membership before retrying.
+- code: tanAssociatedWithAnotherAccount
+  status: 409
+  meaning: The provided TAN (9-digit Wellpass verification code) is associated with
+    another account.
+  action: Re-verify the member's Wellpass TAN.
+  domain: corporate-fitness
+- code: webhookUrlAlreadyRegistered
+  status: 409
+  meaning: The given URL has already been registered for the current gym.
+  action: Update the existing subscription instead of creating a new one.
+- code: generalConflict
+  status: 409
+  meaning: The given resource already exists.
+  action: Treat as a duplicate-create; fetch the existing resource.
+- code: forbiddenAccountMerge
+  status: 409
+  meaning: Action blocked due to conflicting personal data with an existing account
+    in the chain profile.
+  action: See the conflict-resolution tutorial.
+
+not_found_entities:
+  field: metadata.entity
+  description: 'A 404 narrows to exactly which resource type was missing, which makes
+    404 handling branchable instead of ambiguous. This is the strongest machine-readable
+    property of the EGYM error contract.'
+  values:
+  - {entity: UNKNOWN, meaning: The specific resource cannot be identified.}
+  - {entity: ACCOUNT, meaning: The EGYM account was not found.}
+  - {entity: CHAIN_PROFILE, meaning: The chain profile of the specified EGYM account was not found.}
+  - {entity: MEMBERSHIP, meaning: The membership was not found.}
+  - {entity: PRODUCT, meaning: The product was not found.}
+  - {entity: WEBHOOK, meaning: The webhook was not found.}
+  - {entity: GYM_LOCATION, meaning: The gym location was not found.}
+  - {entity: TASK, meaning: The trainer task was not found.}
+  - {entity: RFID, meaning: The RFID was not found.}
+  - {entity: NFC_TOKEN, meaning: The NFC token could not be resolved.}
+  - {entity: TAN, meaning: The Wellpass verification TAN was not found. Added 2025-08-13.}
+
+status_semantics:
+- status: 400
+  meaning: Malformed request body; missing or rejected required fields. Response body
+    names the rejected or missing values.
+- status: 401
+  meaning: API key missing. Check that the x-api-key request header is present.
+- status: 403
+  meaning: Wrong API key, or the action is forbidden for a reason given in the body.
+- status: 404
+  meaning: Resource not found. Branch on metadata.entity.
+- status: 409
+  meaning: The requested operation conflicts with the current state of data.
+- status: 429
+  meaning: The API key exceeded its allowed request rate. See rate-limits/egym-rate-limits.yml.
+- status: 5xx
+  meaning: An error on EGYM servers (unavailable, internal error). Not caller-correctable.
+
+other_surfaces:
+- api: EGYM Data Hub API
+  codes:
+  - {status: 401, meaning: The x-api-key header is missing, malformed, or invalid.}
+  - {status: 403, meaning: The API key is valid but is not authorized to access this resource.}
+  source: https://developer.egym.com/data-hub/authentication
+- api: EGYM Canonical GroupX Classes API (blueprint)
+  note: 'The blueprint defines a cause/reason error vocabulary that the IMPLEMENTING partner
+    must return, not one EGYM returns: cause bookingFailed / addToWaitlistFailed etc. with
+    reason values such as lackOfProduct, returned as 422. No schema is attached to those
+    422 responses in the specification.'
+  source: https://developer.egym.com/mms-blueprints/canonical-classes

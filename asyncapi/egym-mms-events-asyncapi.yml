@@ -1,0 +1,151 @@
+asyncapi: 3.0.0
+info:
+  title: EGYM MMS Webhook Events
+  version: '1.0.0'
+  description: |
+    DERIVED, NOT PUBLISHED BY EGYM. EGYM documents its webhook surface in prose at
+    https://developer.egym.com/general/webhooks and manages subscriptions through the
+    MMS API V2 OpenAPI document, but publishes no AsyncAPI. This document is an API
+    Evangelist rendering of exactly what EGYM documents — six event types, one flat
+    payload shape, an x-api-key shared secret and a 5-second receiver timeout — and adds
+    nothing that EGYM does not state. See asyncapi/egym-events-webhooks.yml for the
+    captured source material and the gaps.
+
+    generated: 2026-08-12
+    method: derived
+    source: https://developer.egym.com/general/webhooks
+  contact:
+    name: MMS Connect Team
+    email: connect@egym.com
+    url: https://developer.egym.com/general/webhooks
+  externalDocs:
+    description: EGYM webhooks documentation
+    url: https://developer.egym.com/general/webhooks
+defaultContentType: application/json
+servers:
+  partnerReceiver:
+    host: partner-supplied.example.com
+    protocol: https
+    description: |
+      The partner's own HTTPS endpoint, registered with EGYM via POST /api/v2/webhooks.
+      EGYM requires a valid SSL certificate, reachability without VPN, and a response
+      within 5 seconds. The host is supplied by the subscriber, not by EGYM.
+    security:
+      - $ref: '#/components/securitySchemes/webhookSecret'
+channels:
+  memberEvents:
+    address: /
+    title: EGYM member event callback
+    description: The single registered callback URL receives every subscribed event type.
+    messages:
+      gymCheckin:
+        $ref: '#/components/messages/GymCheckin'
+      gymCheckout:
+        $ref: '#/components/messages/GymCheckout'
+      equipmentCheckin:
+        $ref: '#/components/messages/EquipmentCheckin'
+      membershipDelete:
+        $ref: '#/components/messages/MembershipDelete'
+      geniusOnboardingCompleted:
+        $ref: '#/components/messages/GeniusOnboardingCompleted'
+      test:
+        $ref: '#/components/messages/TestEvent'
+operations:
+  receiveMemberEvent:
+    action: receive
+    channel:
+      $ref: '#/channels/memberEvents'
+    summary: Receive an EGYM member event.
+    description: |
+      EGYM POSTs a notification to the registered URL. The payload carries only the
+      account id, an epoch-millis timestamp and the event type — it is a notification,
+      not a state transfer, so the consumer calls back into MMS API V2 (retrieveAccount)
+      to read what changed. Since 2026-06-24 deliveries are filtered by member
+      data-sharing consent.
+    messages:
+      - $ref: '#/channels/memberEvents/messages/gymCheckin'
+      - $ref: '#/channels/memberEvents/messages/gymCheckout'
+      - $ref: '#/channels/memberEvents/messages/equipmentCheckin'
+      - $ref: '#/channels/memberEvents/messages/membershipDelete'
+      - $ref: '#/channels/memberEvents/messages/geniusOnboardingCompleted'
+      - $ref: '#/channels/memberEvents/messages/test'
+components:
+  securitySchemes:
+    webhookSecret:
+      type: httpApiKey
+      name: x-api-key
+      in: header
+      description: |
+        The secret the partner supplied when registering the subscription, echoed by EGYM
+        on every delivery so the receiver can authenticate the caller. EGYM documents no
+        HMAC payload signature, so this authenticates the sender but does not attest
+        payload integrity.
+  schemas:
+    EventEnvelope:
+      type: object
+      required: [accountId, timestamp, type]
+      properties:
+        accountId:
+          type: string
+          format: uuid
+          description: Account id of the user.
+          examples: ['3fa85f64-5717-4562-b3fc-2c963f66afa6']
+        timestamp:
+          type: integer
+          format: int64
+          description: UTC timestamp of the event, epoch milliseconds.
+          examples: [1667921312188]
+        type:
+          type: string
+          description: Event type.
+          enum:
+            - GYM_CHECKIN
+            - GYM_CHECKOUT
+            - EQUIPMENT_CHECKIN
+            - MEMBERSHIP_DELETE
+            - GENIUS_ONBOARDING_COMPLETED
+            - TEST
+  messages:
+    GymCheckin:
+      name: GYM_CHECKIN
+      title: Gym check-in
+      summary: A customer has physically checked in at a gym.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'
+    GymCheckout:
+      name: GYM_CHECKOUT
+      title: Gym check-out
+      summary: A customer has physically checked out from a gym.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'
+    EquipmentCheckin:
+      name: EQUIPMENT_CHECKIN
+      title: Equipment check-in
+      summary: A customer has physically logged in to equipment in a gym.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'
+    MembershipDelete:
+      name: MEMBERSHIP_DELETE
+      title: Membership deleted
+      summary: Member data has been deleted from EGYM.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'
+    GeniusOnboardingCompleted:
+      name: GENIUS_ONBOARDING_COMPLETED
+      title: Genius onboarding completed
+      summary: A member completed EGYM Genius onboarding.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'
+    TestEvent:
+      name: TEST
+      title: Test event
+      summary: |
+        Verification event, fired on demand by POST /api/v2/webhooks/{id}/trigger.
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/EventEnvelope'

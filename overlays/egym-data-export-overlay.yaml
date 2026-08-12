@@ -1,0 +1,30 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for EGYM Data Export API
+  version: 1.0.0
+extends: openapi/egym-data-export-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/egym-data-export-openapi.yml (harvested verbatim from developer.egym.com/_spec/)
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: egym
+    x-apievangelist-api: data-export
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://developer.egym.com/
+    x-apievangelist-upstream-version: Alpha preview
+    x-apievangelist-maturity: alpha preview
+    x-apievangelist-discovery: not present in the HTML documentation navigation; retrievable only via the EGYM documentation
+      MCP server get-full-api-description tool
+    x-apievangelist-host-note: the declared Test server one-mms-service.ext-1.test.co.egym.coffee was withdrawn
+      by the 2026-05-29 change log entry but is still declared here
+- target: $
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/egym-authentication.yml
+      conventions: conventions/egym-conventions.yml
+      errors: errors/egym-problem-types.yml
+      lifecycle: lifecycle/egym-lifecycle.yml
+      data_model: data-model/egym-data-model.yml
+      mcp: mcp/egym-mcp.yml

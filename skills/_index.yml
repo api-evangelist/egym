@@ -1,0 +1,53 @@
+generated: '2026-08-12'
+method: generated
+source: 'openapi/ (8 EGYM OpenAPI documents) + the EGYM developer portal conceptual pages.
+  Every operationId referenced in these skills was verified against the harvested
+  specification before it was written; none is invented.'
+provider: egym
+skill_count: 5
+note: 'EGYM publishes an AI-agent instruction page of its own
+  (https://developer.egym.com/general/ai-agent-instructions) telling an agent how to NAVIGATE
+  the documentation via its MCP server. These skills are the complement: how to EXECUTE the
+  marquee flows against the REST APIs, which the MCP server does not do — see
+  mcp/egym-tool-crosswalk.yml.'
+skills:
+- file: egym-sync-member-accounts.md
+  name: Sync gym members into EGYM Cloud
+  api: openapi/egym-mms-api-v2-openapi.yml
+  audience: Member management system (MMS) vendors
+  operations: [publishAccount, listAccounts, retrieveAccount, retrieveAccountByMembershipId,
+    getByEmail, updateAccount, partialUpdate, eraseAccountMembershipData, uploadImage, deleteImage]
+- file: egym-wellpass-checkin.md
+  name: Onboard and admit an EGYM Wellpass corporate-fitness member
+  api: openapi/egym-mms-api-v2-openapi.yml
+  audience: Gyms in the EGYM Wellpass network
+  operations: [publishAccount, getCorporateFitnessMemberAccounts, checkAdmission, checkin,
+    checkout, retrieveAccountByMembershipId, getByRfid, getByNfc]
+- file: egym-subscribe-to-events.md
+  name: Subscribe to EGYM gym and equipment events
+  api: openapi/egym-mms-api-v2-openapi.yml
+  audience: Any partner consuming EGYM events
+  operations: [createWebhook, getAllWebhooks, getWebhookById, updateWebhook, deleteWebhook,
+    triggerWebhook, retrieveAccount]
+- file: egym-submit-equipment-measurements.md
+  name: Authenticate a member at equipment and submit measurements
+  api: openapi/egym-equipment-vendor-standalone-openapi.yml
+  audience: Equipment vendors
+  operations: [token, createToken, getUser, getUserDetails, createBodyMeasurement,
+    createCardioMeasurement, createFlexibilityMeasurement, createWorkout, createWorkout_1,
+    create, assignRfid, initialiseTest, updateTest, wellKnown]
+- file: egym-export-analytics-data.md
+  name: Export EGYM workout, measurement and analytics data
+  api: openapi/egym-data-hub-openapi.yml
+  audience: Analytics and BI consumers at Enterprise Pack gyms
+  operations: [getAnalyticsExport, getSmartStrengthWorkoutsExport,
+    getSmartStrengthAssessmentsExport, getFlexibilityMeasurementsExport, getBodyMeasurementsExport,
+    getOptedOutUsersExport, createAsyncExportJob, getAsyncExportJobStatus, getWorkouts,
+    getStrengthMeasurements, getCardioMeasurements, getBodyMeasurement]
+not_covered:
+- 'Canonical GroupX Classes API — a blueprint the MMS vendor implements on its own host, so
+  there is no EGYM endpoint for an agent to call.'
+- 'MMS API v1 — legacy, and it declares no operationIds at all, so no step could be grounded
+  in one.'
+- 'User Connect API — only four operations and its OpenAPI declares no securitySchemes, so a
+  skill would have to describe auth the specification does not carry.'

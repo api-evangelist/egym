@@ -1,0 +1,38 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/general/general-info
+plan_count: 0
+public_pricing: false
+self_service_signup: false
+model: partner-gated / contact-sales
+note: 'EGYM publishes no public API pricing page and no self-service developer signup.
+  API access is granted through a partner integration process: the developer portal
+  states "If you''re interested in integrating with EGYM, please get in touch with us
+  at integrations@egym.com. We will advise you for an integration project on the proper
+  integration path as well as the necessary keys for the APIs." Keys are provisioned
+  per gym location by EGYM. This is plan_count: 0 as an honest recorded fact, not a
+  gap in the search.'
+tiers: []
+entitlement_gates:
+- api: EGYM Data Hub API
+  gate: 'Documented as a pilot "available exclusively to EGYM Enterprise Pack customers",
+    so access is bound to a commercial tier of the EGYM product rather than an API plan.'
+  source: https://developer.egym.com/data-hub
+- api: EGYM MMS API V2
+  gate: 'API keys are issued per gym location with granular permissions; a 403 missingPermission
+    error code exists for actions the key was not granted, and EGYM directs callers to
+    contact support to have a permission added.'
+  source: https://developer.egym.com/mms-api-v2/errors
+- api: EGYM Data Export API
+  gate: Marked "Alpha preview" by EGYM.
+  source: https://developer.egym.com/general/ai-agent-instructions
+contact:
+  integrations: integrations@egym.com
+  mms_connect_team: connect@egym.com
+  data_hub_team: ox-dev@egym.com
+  support: support@egym.com
+evidence:
+- url: https://developer.egym.com/general/general-info
+  status: 200
+- url: https://developer.egym.com/data-hub/authentication
+  status: 200

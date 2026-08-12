@@ -1,0 +1,179 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/ (8 documents — $ref graph, id-reference fields and path structure)
+docs:
+- https://developer.egym.com/mms-api-v2/member-account-concept
+- https://developer.egym.com/general/data-privacy
+
+core_concept: 'EGYM''s data model has one root identity — the EGYM ID, a global account that is
+  not scoped to a tenant, brand or gym — and layers gym-scoped context on top of it. The
+  developer portal describes the EGYM ID as the account used to log in to EGYM hardware and
+  software products and connected equipment. Around it sit two governance buckets that decide
+  which API can touch which field: "Gym Data" (processed on behalf of the gym) and "Workout
+  Data" (managed on behalf of the member, who controls sharing).'
+
+entities:
+- name: Account
+  schema: MemberAccountDTO
+  spec: openapi/egym-mms-api-v2-openapi.yml
+  id_field: accountId
+  id_format: uuid
+  domain: gym-data
+  description: The EGYM member account as seen by a gym. Root of the MMS API V2 resource tree.
+  lookup_routes:
+  - '/api/v2/accounts/{accountId}'
+  - '/api/v2/accounts/membership/{membershipId}'
+  - '/api/v2/accounts/email/{email}'
+  - '/api/v2/accounts/rfid/{rfid}'
+  - '/api/v2/accounts/nfc/{nfc}'
+- name: Contact
+  schema: ContactDTO
+  domain: gym-data
+  description: Contact details embedded in an account.
+- name: Membership
+  schema: MembershipDTO
+  id_field: membershipId
+  domain: gym-data
+  description: 'The gym contract on an account: start and end of contract, membership type,
+    and a referringMemberId back-reference to another member.'
+- name: CorporateFitness
+  schema: CorporateFitnessDTO
+  domain: gym-data
+  description: 'The EGYM Wellpass / corporate fitness envelope on a membership. Carries the
+    verificationTAN (a 9-digit code that uniquely identifies the Wellpass member and links the
+    gym account to their existing EGYM account) and drives the Plus1 network eligibility rules
+    that surface as 403 corporateFitness* error codes.'
+- name: Rfid
+  schema: RfidDTO / RfidListDTO
+  id_field: rfid
+  domain: gym-data
+  description: A physical RFID credential assigned to an account. Multiple per account.
+- name: NfcToken
+  schema: NfcTokenDTO / AssignNfcTokenRequest
+  id_field: collectorId + passTypeId
+  domain: gym-data
+  description: 'A wallet-based NFC credential (Apple/Google Wallet pass). Introduced 2025-12-11.'
+- name: Product
+  schema: ProductDTO
+  id_field: productId
+  domain: gym-data
+  description: 'A bookable EGYM product at the gym (Smart Strength, EGYM+).'
+- name: UserProduct
+  schema: UserProductDTO
+  id_field: productId
+  domain: gym-data
+  description: A product booking on an account, with an activation window.
+- name: Task
+  schema: TaskDTO
+  id_field: id
+  domain: gym-data
+  description: 'A trainer task, with authorId, targetId and completerId references to the
+    people involved.'
+- name: Webhook
+  schema: WebhookRequestDTO / WebhookResponseDTO
+  id_field: id
+  domain: configuration
+  description: A gym-scoped webhook subscription (URL + secret + event types).
+- name: GymRoles
+  schema: GymRolesDTO
+  domain: gym-data
+  description: 'Roles an account holds at a gym, including gymOwner (added 2025-09-25).'
+- name: Presence / Admission
+  schema: UserPresenceDTO / AdmissionDTO
+  domain: gym-data
+  description: 'Gym visit state. checkin/checkout record presence; checkAdmission returns an
+    admission decision, which is the operation that enforces the corporate-fitness rules.'
+- name: Workout
+  spec: openapi/egym-data-export-openapi.yml, openapi/egym-equipment-vendor-standalone-openapi.yml, openapi/egym-user-connect-openapi.yml
+  domain: workout-data
+  description: 'A completed training session. Written by equipment (createWorkout for strength,
+    cardio and open exercises), by consented third-party apps (submitWorkout), and read back by
+    export (getWorkouts).'
+- name: Measurement
+  domain: workout-data
+  subtypes:
+  - {type: body, written_by: [createBodyMeasurement], read_by: [getUserBodyMeasurements, getUserBodyHistory, getBodyMeasurement, getBodyMeasurementsExport]}
+  - {type: cardio, written_by: [createCardioMeasurement, submitVo2MaxMeasurement, submitRestingHeartRateMeasurement, submitBloodPressureMeasurement], read_by: [getUserCardioMeasurements, getUserCardioHistory, getCardioMeasurements]}
+  - {type: flexibility, written_by: [createFlexibilityMeasurement], read_by: [getUserFlexibilityMeasurements, getUserFlexibilityHistory, getFlexibilityMeasurementsExport]}
+  - {type: strength, read_by: [getStrengthMeasurements, getSmartStrengthAssessmentsExport]}
+  description: 'Health and fitness measurements. The single most cross-cutting entity — written
+    from three different APIs under three different auth models, read from two more.'
+- name: TrainingPlan
+  spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  domain: workout-data
+  description: Strength and cardio training plans surfaced to equipment.
+- name: CardioTest
+  id_field: cardioTestId
+  domain: workout-data
+  description: An in-progress cardio fitness test, initialised then updated by the device.
+- name: GroupXClass
+  spec: openapi/egym-canonical-groupx-classes-openapi.yml
+  id_field: classId
+  domain: partner-implemented
+  description: 'A group exercise class in the blueprint contract, with attendees and a waitlist,
+    booked for an exerciserId. Lives on the MMS vendor''s host, not EGYM''s.'
+- name: ExportJob
+  spec: openapi/egym-data-hub-openapi.yml
+  id_field: jobId
+  domain: workout-data
+  description: 'An asynchronous Data Hub export job, created then polled for status.'
+
+relationships:
+- {from: Account, to: Contact, type: has_one, via: contact, evidence: 'MemberAccountDTO.contact $ref ContactDTO'}
+- {from: Account, to: Membership, type: has_one, via: membership, evidence: 'MemberAccountDTO.membership $ref MembershipDTO'}
+- {from: Membership, to: CorporateFitness, type: has_one, via: corporateFitness, evidence: 'MembershipDTO.corporateFitness $ref CorporateFitnessDTO'}
+- {from: Membership, to: Account, type: belongs_to, via: referringMemberId, evidence: 'MembershipDTO.referringMemberId'}
+- {from: Account, to: Rfid, type: has_many, via: '/accounts/{accountId}/rfids', evidence: 'RfidListDTO.rfids array of RfidDTO'}
+- {from: Account, to: NfcToken, type: has_one, via: '/accounts/{accountId}/nfc', evidence: path structure}
+- {from: Account, to: UserProduct, type: has_many, via: '/accounts/{accountId}/products', evidence: path structure}
+- {from: UserProduct, to: Product, type: belongs_to, via: productId, evidence: 'UserProductDTO.productId matches ProductDTO.productId'}
+- {from: Account, to: GymRoles, type: has_one, via: '/accounts/{accountId}/roles', evidence: path structure}
+- {from: Account, to: Presence, type: has_many, via: '/accounts/{accountId}/checkins and /checkouts', evidence: path structure}
+- {from: Account, to: Task, type: has_many, via: targetId, evidence: 'TaskDTO.targetId'}
+- {from: Task, to: Account, type: belongs_to, via: authorId, evidence: 'TaskDTO.authorId'}
+- {from: Task, to: Account, type: belongs_to, via: completerId, evidence: 'TaskDTO.completerId'}
+- {from: Account, to: Workout, type: has_many, via: '/accounts/{accountId}/workouts', evidence: 'openapi/egym-data-export-openapi.yml path structure'}
+- {from: Account, to: Measurement, type: has_many, via: '/accounts/{accountId}/measurements/{strength|cardio|body}', evidence: 'openapi/egym-data-export-openapi.yml path structure'}
+- {from: PageableResponseMemberAccountDTO, to: Account, type: has_many, via: items, evidence: '$ref array of MemberAccountDTO'}
+- {from: ErrorDTO, to: FieldErrorDTO, type: has_many, via: fieldErrors, evidence: '$ref array'}
+- {from: GroupXClass, to: Account, type: has_many, via: exerciserId, evidence: '/classes/{classId}/attendees/{exerciserId}'}
+
+identifier_vocabulary:
+- {id: accountId, format: uuid, scope: EGYM-wide, note: 'The join key across every EGYM API and the only field in the webhook payload.'}
+- {id: membershipId, scope: gym/chain, note: MMS-side membership identifier used for lookup and push notifications.}
+- {id: rfid, scope: gym, note: 'Physical credential; rfidFormat MIFARE and others.'}
+- {id: nfc, scope: wallet, note: Wallet pass token.}
+- {id: verificationTAN, format: 9-digit, scope: Wellpass, note: 'Links a gym account to an existing EGYM corporate-fitness account when membershipType is CORPORATE_FITNESS.'}
+- {id: gymId, scope: EGYM, note: 'Path parameter on the Equipment Vendor server-to-server user lookup.'}
+- {id: gymLocationId, scope: EGYM, note: 'Implicit on key-authenticated calls — Data Hub resolves it from the API key rather than taking it as a parameter.'}
+- {id: exerciserId, scope: partner, note: 'The blueprint''s term for a member, on the partner-implemented class API.'}
+
+governance_split:
+  gym_data:
+    controller: the gym
+    processor: EGYM
+    examples: [names, birthdays, contract information, trainer-entered data]
+    consent: Not required per-user; covered by the gym contract.
+    apis: [MMS API V2, MMS API v1, Data Hub API, Data Export API]
+  workout_data:
+    controller: the member
+    examples: [workout tracking results, health data, training plans]
+    consent: 'Member chooses who to share with; revocable in EGYM ID settings.'
+    apis: [User Connect API, Equipment Vendor APIs]
+    enforcement:
+    - getOptedOutUsersExport (Data Hub) so a consumer can honour opt-outs
+    - consent-based webhook event filtering, added 2026-06-24
+    - eraseAccountMembershipData + MEMBERSHIP_DELETE webhook event
+  source: https://developer.egym.com/general/data-privacy
+
+schema_counts:
+  total_named_schemas: 164
+  by_spec:
+    egym-equipment-vendor-standalone-openapi.yml: 59
+    egym-mms-api-v2-openapi.yml: 23
+    egym-data-hub-openapi.yml: 20
+    egym-data-export-openapi.yml: 18
+    egym-equipment-vendor-server-openapi.yml: 14
+    egym-user-connect-openapi.yml: 13
+    egym-canonical-groupx-classes-openapi.yml: 9
+    egym-mms-api-v1-openapi.yml: 8

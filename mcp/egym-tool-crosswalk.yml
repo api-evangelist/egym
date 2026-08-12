@@ -1,0 +1,192 @@
+generated: '2026-08-12'
+method: derived
+source: mcp/egym-mcp-tools-list.json (live tools/list, HTTP 200, 2026-08-12) + openapi/ (8 EGYM OpenAPI documents)
+summary: 'EGYM''s MCP server and EGYM''s REST APIs are orthogonal surfaces, not two
+  projections of one core. The MCP server is a documentation/catalog reader: its six tools
+  operate ON the OpenAPI documents and the docs corpus. Not one MCP tool invokes a business
+  operation — there is no create-member tool, no submit-measurement tool, no check-in tool.
+  So every REST operation is rest_only and every MCP tool is mcp_only in the usual sense of
+  the crosswalk. Recording that divergence honestly is the point of this artifact: an agent
+  connected to EGYM''s MCP server can learn the entire platform and execute none of it.'
+
+surfaces:
+  openapi:
+    count: 8
+    files:
+    - openapi/egym-mms-api-v2-openapi.yml
+    - openapi/egym-mms-api-v1-openapi.yml
+    - openapi/egym-data-hub-openapi.yml
+    - openapi/egym-data-export-openapi.yml
+    - openapi/egym-equipment-vendor-standalone-openapi.yml
+    - openapi/egym-equipment-vendor-server-openapi.yml
+    - openapi/egym-user-connect-openapi.yml
+    - openapi/egym-canonical-groupx-classes-openapi.yml
+    operation_count: 117
+    gated: false
+    note: All eight harvested anonymously from developer.egym.com/_spec/ or via the MCP server.
+  mcp:
+    url: https://developer.egym.com/mcp
+    gated: false
+    tools_list_status: 200
+    tool_count: 6
+    note: tools/list answered anonymously with complete inputSchema for every tool.
+  graphql:
+    present: false
+    note: No GraphQL surface found on any EGYM host.
+
+crosswalk:
+- tool: get-full-api-description
+  category: catalog
+  rest: []
+  binding: meta
+  confidence: high
+  note: 'Returns the complete OpenAPI document for a named API. Backed by the same artifacts
+    served at https://developer.egym.com/_spec/<definitionId>, which is how the eight specs
+    in openapi/ were harvested. Not a REST business operation — a spec-distribution call.'
+- tool: get-endpoints
+  category: catalog
+  rest: []
+  binding: meta
+  confidence: high
+  note: Enumerates paths+methods of one API. Equivalent to reading paths[] out of the OpenAPI.
+- tool: get-endpoint-info
+  category: catalog
+  rest: []
+  binding: meta
+  confidence: high
+  note: 'Returns parameters, security and examples for one path+method. Equivalent to reading
+    a single operation object out of the OpenAPI.'
+- tool: get-security-schemes
+  category: catalog
+  rest: []
+  binding: meta
+  confidence: high
+  note: 'Equivalent to components.securitySchemes; see authentication/egym-authentication.yml
+    for the derived provider-wide roll-up of the same data.'
+- tool: list-apis
+  category: catalog
+  rest: []
+  binding: meta
+  confidence: high
+  note: 'The EGYM API catalog itself. Returns nine catalog rows including DATA EXPORT API,
+    which has no page in the HTML documentation.'
+- tool: search
+  category: documentation
+  rest: []
+  binding: docs
+  confidence: high
+  note: Full-text retrieval over the documentation corpus indexed in llms/egym-llms.txt.
+
+mcp_only:
+- tool: list-apis
+  reason: 'Catalog metadata. There is no REST endpoint that enumerates EGYM''s APIs — the
+    catalog exists only in the MCP server, the AI-agent instruction page and the portal nav.'
+- tool: search
+  reason: 'Documentation retrieval. No REST search endpoint exists.'
+- tool: get-full-api-description
+  reason: 'Spec distribution. The nearest REST-ish equivalent is the undocumented
+    developer.egym.com/_spec/<definitionId> path, which is a Redocly portal internal, not a
+    published EGYM API operation.'
+- tool: get-endpoints
+  reason: Spec introspection; no REST equivalent.
+- tool: get-endpoint-info
+  reason: Spec introspection; no REST equivalent.
+- tool: get-security-schemes
+  reason: Spec introspection; no REST equivalent.
+
+rest_only:
+- capability: Member account lifecycle
+  api: EGYM MMS API V2
+  operations: [publishAccount, listAccounts, retrieveAccount, updateAccount, partialUpdate,
+    eraseAccountMembershipData, retrieveAccountByMembershipId, getByEmail, getByRfid, getByNfc,
+    getCorporateFitnessMemberAccounts, uploadImage, deleteImage, getRoles, assignRoles, migrate]
+  reason: No MCP tool executes member CRUD.
+- capability: Credentials (RFID / NFC)
+  api: EGYM MMS API V2
+  operations: [getUserRfids, updateUsersRfids, addRFIDToUser, deleteRfid, getAccountNfcToken,
+    assignAccountNfcToken, deleteAccountNfcToken]
+  reason: No MCP tool assigns credentials.
+- capability: Gym visits and admission
+  api: EGYM MMS API V2
+  operations: [checkin, checkout, checkAdmission]
+  reason: No MCP tool performs a check-in or an admission decision.
+- capability: Products and booking
+  api: EGYM MMS API V2
+  operations: [listGymProducts, productDetails, userProducts, productBooking, deactivateUserProduct]
+  reason: No MCP tool books a product.
+- capability: Trainer tasks
+  api: EGYM MMS API V2
+  operations: [createTask, getTasks, getTask, updateTask]
+  reason: No MCP tool creates or updates a task.
+- capability: Webhook subscription management
+  api: EGYM MMS API V2
+  operations: [createWebhook, getAllWebhooks, getWebhookById, updateWebhook, deleteWebhook, triggerWebhook]
+  reason: No MCP tool manages subscriptions.
+- capability: Push notifications
+  api: EGYM MMS API V2
+  operations: [sendPushNotificationByAccountId, sendPushNotificationByMembershipId]
+  reason: No MCP tool sends a notification.
+- capability: Analytics and data export
+  api: EGYM Data Hub API
+  operations: [getAnalyticsExport, getSmartStrengthWorkoutsExport, getSmartStrengthAssessmentsExport,
+    getFlexibilityMeasurementsExport, getBodyMeasurementsExport, getOptedOutUsersExport,
+    createAsyncExportJob, getAsyncExportJobStatus]
+  reason: No MCP tool runs an export.
+- capability: Per-account data export
+  api: EGYM Data Export API
+  operations: [getWorkouts, getStrengthMeasurements, getCardioMeasurements, getBodyMeasurement]
+  reason: No MCP tool runs an export.
+- capability: Equipment authentication and measurement submission (device)
+  api: EGYM Equipment Vendor API (standalone clients)
+  operations: [token, getUser, updateUser, acceptTermsAndConditions, uploadUserImage, assignRfid,
+    createWorkout, createWorkout_1, create, createBodyMeasurement, createCardioMeasurement,
+    createFlexibilityMeasurement, getUserBodyMeasurements, getUserCardioMeasurements,
+    getUserFlexibilityMeasurements, getUserBodyHistory, getUserCardioHistory, getUserFlexibilityHistory,
+    initialiseTest, updateTest, postponeReminder, findAllTrainingPlans, findAllTrainingPlans_1,
+    getUserActivityInformation, getWorkoutPoints, machineHeartbeat, info, wellKnown, getImage,
+    getTermsAndConditions, getPrivacyPolicy]
+  reason: No MCP tool submits a measurement.
+- capability: Equipment authentication and measurement submission (server-to-server)
+  api: EGYM Equipment Vendor API (server-to-server)
+  operations: [createToken, wellKnown, getUserDetails, createBodyMeasurement, createCardioMeasurement,
+    createFlexibilityMeasurement]
+  reason: No MCP tool submits a measurement.
+- capability: User-consented submissions
+  api: EGYM User Connect API
+  operations: [submitWorkout, submitVo2MaxMeasurement, submitRestingHeartRateMeasurement,
+    submitBloodPressureMeasurement]
+  reason: No MCP tool submits on a member's behalf.
+- capability: Class booking (partner-implemented blueprint)
+  api: EGYM Canonical GroupX Classes API
+  operations: [searchClasses, getClassDetails, addAttendeeToClass, updateBooking,
+    removeAttendeeFromClass, addAttendeeToWaitlist, removeAttendeeFromWaitlist,
+    getExerciserClassSchedule]
+  reason: 'Not an EGYM-hosted API at all — a blueprint the MMS vendor implements. Nothing to
+    bind an MCP tool to.'
+- capability: Legacy MMS
+  api: EGYM MMS API v1
+  operations: ['GET /gym/product', 'GET /gym/product/{productId}', 'POST /user/publish',
+    'GET /user/profile', 'GET /user/product', 'PUT /user/product', 'POST /user/checkin',
+    'POST /user/checkout', 'POST /alive', 'GET /task', 'POST /task', 'PUT /task/{taskId}',
+    'GET /task/{taskId}']
+  reason: 'Legacy surface; also has no operationIds at all, so nothing could be bound by id
+    even if a tool existed.'
+
+coverage:
+  mcp_tools_named: 6
+  mcp_tools_bound_to_rest: 0
+  mcp_only: 6
+  rest_operations_total: 117
+  rest_operations_with_a_tool: 0
+  rest_coverage_pct: 0
+  note: 'Zero here is a finding, not a failure of the crosswalk. EGYM has shipped a
+    read-the-docs MCP server, which is a genuine and well-executed agent-readiness move —
+    documented install, published agent instructions, anonymous tools/list, real input
+    schemas — but it is a discovery surface, not an execution surface. The gap between what
+    an agent can learn from EGYM and what an agent can do at EGYM is the whole 117 operations.'
+
+opportunity:
+  note: 'The mechanical path to an execution MCP server already exists in this repo: 117
+    operations with 104 unique operationIds, three coherent auth models, a typed error
+    registry and a documented rate limiter. skills/ packages five of the marquee flows as
+    grounded agent instructions against real operationIds.'

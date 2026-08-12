@@ -1,0 +1,106 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass#testing-your-integration
+docs:
+- https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+- https://developer.egym.com/mms-api-v2/gymapi/api
+- https://developer.egym.com/mms-api-v2/guide
+
+summary: 'EGYM operates two different kinds of test surface: a plain test ENVIRONMENT (separate
+  hosts you point at) and a guided, gated sandbox inside the EGYM Partner Integration Portal
+  (PIP) that generates test values and verifies your requests before it passes you. Neither is
+  self-service — both arrive with onboarding.'
+
+environments:
+- name: MMS test environment
+  api: EGYM MMS API v1
+  base_url: https://mms.api.egym.com/gymapi/v1
+  documented_at: https://developer.egym.com/mms-api-v2/gymapi/api
+  statement: 'EGYM provides a test environment for integration testing of the API which is
+    particularly helpful during development. Before entering productive mode, EGYM jointly
+    tests all functionalities to ensure data is correctly sent, received and interpreted.'
+  caveats:
+  - 'EGYM warns the environment may temporarily be unavailable for technical reasons.'
+  - 'The documentation UI does not permit live requests — the "Try it out" control generates
+    an example curl request rather than executing one.'
+  - 'Attribute case is significant; EGYM instructs callers to use attributes exactly as
+    indicated.'
+- name: MMS API V2 test host
+  api: EGYM MMS API V2
+  base_url: https://mms.api.ed.ts.egym.coffee
+  documented_at: https://developer.egym.com/mms-api-v2/change-log
+  note: 'Declared as the Test server in the MMS API V2 OpenAPI. Replaced
+    https://one-mms-service.ext-1.test.co.egym.coffee, which the 2026-05-29 change log entry
+    deprecated and withdrew.'
+- name: Equipment Vendor test hosts
+  apis: [EGYM Equipment Vendor API (standalone clients), EGYM Equipment Vendor API (server-to-server)]
+  base_urls:
+  - https://partner-api.ext-1.test.co.egym.coffee
+  - https://b2b-partner-api.ext-1.test.co.egym.coffee
+  note: 'Declared in servers[]. Neither resolved when probed on 2026-08-12 (NXDOMAIN), and for
+    the server-to-server API this test host is the ONLY server declared — no production base
+    URL is published anywhere.'
+- name: User Connect test host
+  api: EGYM User Connect API
+  base_url: https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api
+  note: 'The spec also declares http://localhost:8080/user-connect-api, an internal development
+    server left in the published document.'
+- name: Data Export test host
+  api: EGYM Data Export API
+  base_url: https://one-mms-service.ext-1.test.co.egym.coffee
+  note: 'Still declared as the Test server in the specification even though the change log
+    withdrew this host on 2026-05-29.'
+
+test_domain_convention:
+  suffix: .egym.coffee
+  note: 'EGYM uses the egym.coffee domain for non-production environments, distinct from
+    egym.com for production. Useful as a guardrail: any request going to a .egym.coffee host
+    is by definition not touching real member data.'
+
+guided_sandbox:
+  name: EGYM Partner Integration Portal (PIP)
+  applies_to: Pay with Wellpass
+  access: 'Gated. Contact your Wellpass contact for portal access; access is granted during
+    onboarding. Not self-service.'
+  what_it_generates:
+  - 'Test booking codes — the portal generates a code for a sandbox location you select, and
+    shows you the code, the clubId and a startDate. EGYM states test codes are only issued as
+    part of a sandbox test run in the portal; there is no published list of magic values.'
+  - 'Sandbox locations, whose club identifiers follow the format pip-<locationId>. This prefix
+    is the one published, structural test-vs-live discriminator EGYM documents.'
+  verification: 'The portal inspects each request your system sends and verifies the fields
+    before marking a test case passed — it is a conformance harness, not just a set of
+    credentials.'
+  mandatory_test_cases:
+  - {step: 1, name: Validate a code, call: 'POST {baseUrl}/rest/paymentmethod/validate with dryRun: true', expected: 200 OK}
+  - {step: 2, name: Confirm the booking, call: 'POST {baseUrl}/rest/paymentmethod/validate with dryRun: false and a future startDate', expected: 200 OK}
+  - {step: 3, name: Cancel the booking, call: 'POST {baseUrl}/rest/paymentmethod/cancel with the same code and clubId', expected: 204 No Content}
+  note: All three test cases are mandatory to complete the Code Validation use case.
+
+dry_run_mechanism:
+  api: Pay with Wellpass
+  parameter: dryRun
+  description: 'The same endpoint validates and redeems. dryRun: true validates the code
+    without redeeming it or creating a booking; dryRun: false redeems it and charges the
+    member''s credits. This is a live-mode safety mechanism rather than a sandbox — it works
+    against real codes in production.'
+  warning: 'EGYM explicitly warns that all validations run again on confirmation, so a booking
+    that passed the dry run can still fail when confirmed (for example if the code was redeemed
+    elsewhere in the meantime). Handle errors on both calls.'
+
+test_key_prefixes:
+  live_vs_test_key_naming: null
+  note: 'EGYM publishes no key-prefix convention (no sk_test_/sk_live_ equivalent). Test and
+    live are separated by HOST, and by the pip- clubId prefix inside the Pay with Wellpass
+    sandbox. A caller cannot tell from a key alone which environment it belongs to.'
+
+published_test_values:
+  cards: []
+  bank_accounts: []
+  magic_identifiers: []
+  note: 'No magic test identifiers are published anywhere in EGYM''s documentation. Every test
+    value is issued to you — by the PIP sandbox or by EGYM during onboarding — so nothing can
+    be recorded here. That is a recorded absence, not a gap in the search.'
+time_simulation:
+  supported: false
+  note: No test clocks or time-travel tooling documented.

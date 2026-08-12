@@ -1,0 +1,170 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass#error-handling
+api: Pay with Wellpass
+applies_to: booking platform partners (websites and apps where users book classes at gyms and studios)
+geography: France and Belgium only
+note: 'EGYM is not a card acquirer, but Pay with Wellpass is a genuine authorization-and-capture
+  surface: a member generates a single-use booking code in the Wellpass app, the partner
+  validates it (dryRun: true), then redeems it (dryRun: false), which charges the member''s
+  Wellpass credit wallet and returns a payout amount. The typed rejection vocabulary below is
+  therefore a decline-code registry in everything but name, and it behaves like one — including
+  a deliberately coarse code that masks its real cause from the buyer.'
+
+envelope:
+  business_errors:
+    discriminator: type
+    fields: [type, description, possibleExplanation, data]
+    example: |
+      {
+        "type": "NoPassFoundWithProvidedCode",
+        "description": "No pass found with provided code",
+        "possibleExplanation": "The code provided is wrong, most likely a typo or it has the wrong status or the code has expired",
+        "data": { "code": "ABC123XYZ" }
+      }
+    guidance: Use the type field to react programmatically and show the user a helpful message.
+  payload_validation_errors:
+    status: 400
+    fields: [statusCode, error, message]
+    note: 'A DIFFERENT shape from business errors — message is an array of strings. A client
+      must branch on which envelope it received before it can read the failure.'
+    example: |
+      {
+        "statusCode": 400,
+        "error": "Bad Request",
+        "message": ["code should not be empty", "startDate must be in the future or present"]
+      }
+  divergence_note: 'Neither envelope matches the ErrorDTO shape used by every other EGYM API
+    (timestamp/path/requestId/status/error/errorCode/message/fieldErrors/metadata). Pay with
+    Wellpass runs behind the EGYM partner gateway and ships a third error contract.'
+
+decline_code_count: 13
+decline_codes:
+- code: NoPassFoundWithProvidedCode
+  status: 400
+  operation: validate
+  meaning: The code is wrong, already redeemed, or expired.
+  action: Ask the user to re-check the code or generate a new one in the Wellpass app.
+  masked_to_buyer: false
+- code: EmailDoesNotMatchOwner
+  status: 400
+  operation: validate
+  meaning: The email does not match the owner of the code.
+  action: Ask the user to use the same email they registered with Wellpass.
+  masked_to_buyer: false
+- code: PassDoesNotBelongToGym
+  status: 400
+  operation: validate
+  meaning: The code was generated for a different gym.
+  action: Ask the user to generate a code for the correct gym.
+  masked_to_buyer: false
+- code: UserCannotBookClass
+  status: 400
+  operation: validate
+  meaning: The user is not eligible to book this class.
+  action: 'Show a generic message. EGYM deliberately does not distinguish the cause.'
+  masked_to_buyer: true
+  masked_causes:
+  - Overlapping booking — the user already has a booking that overlaps this class time.
+  - No active membership — not active now, or not active at the class start date.
+  - Wrong membership type — not eligible for booking at this gym.
+  - 'Insufficient credits — on confirmation (dryRun: false), charging the credit wallet failed.'
+  masking_note: 'This is the decline-code masking pattern exactly as card networks use it: a
+    single opaque decline covering an eligibility problem, a scheduling conflict and an
+    insufficient-funds condition, so the partner cannot enumerate a member''s wallet balance or
+    membership state. EGYM recommends the message "Your Wellpass membership doesn''t allow this
+    booking. Please check your membership and existing bookings in the Wellpass app."'
+- code: SessionPriceIsTooHigh
+  status: 400
+  operation: validate
+  meaning: The submitted price exceeds the maximum allowed for this gym.
+  action: The user likely selected the wrong offer. Re-check the class price.
+  masked_to_buyer: false
+- code: NoGymFoundWithProvidedClubId
+  status: 400
+  operation: validate, cancel
+  meaning: The clubId is not known.
+  action: Verify your gym information; contact Wellpass if it persists.
+  masked_to_buyer: false
+  fault: partner-configuration
+- code: PayWithPassCodeDisabledOnGym
+  status: 400
+  operation: validate
+  meaning: Pay with Wellpass is not enabled for this gym.
+  action: Contact Wellpass to enable it.
+  masked_to_buyer: false
+  fault: gym-configuration
+- code: NoPricingDataAssociatedOnGymError
+  status: 400
+  operation: validate
+  meaning: The gym has no pricing data configured.
+  action: Contact Wellpass.
+  masked_to_buyer: false
+  fault: gym-configuration
+- code: BookingNotFound
+  status: 404
+  operation: cancel
+  meaning: No booking exists for the given code/gym combination.
+  action: Verify the code and clubId.
+  masked_to_buyer: false
+- code: BookingInThePast
+  status: 400
+  operation: cancel
+  meaning: The class has already ended and can no longer be cancelled.
+  action: Do not retry. Refunds after class end are out of scope for this API.
+  masked_to_buyer: false
+- code: NotAPayWithWellpassBooking
+  status: 400
+  operation: cancel
+  meaning: The booking was not created through Pay with Wellpass.
+  action: Cancel it through whatever channel created it.
+  masked_to_buyer: false
+- code: PayWithWellpassNotEnabledOnGym
+  status: 400
+  operation: cancel
+  meaning: Pay with Wellpass is not (or no longer) enabled for this gym.
+  action: Contact Wellpass.
+  masked_to_buyer: false
+  fault: gym-configuration
+- code: 'payload validation (400 Bad Request)'
+  status: 400
+  operation: validate, cancel
+  meaning: Required fields missing or malformed.
+  action: 'Read the message[] array — each entry names one failed constraint, e.g. "code should
+    not be empty", "startDate must be in the future or present".'
+  masked_to_buyer: false
+  envelope: payload_validation_errors
+
+operations:
+- name: validate / confirm
+  method: POST
+  path: '{baseUrl}/rest/paymentmethod/validate'
+  auth: 'Authorization: Bearer <API key>, issued per partner via the Partner Integration Portal'
+  gateway: 'All requests go through the EGYM partner gateway, which authenticates then forwards
+    to the Pay with Wellpass service. Partners never call that service directly.'
+  fields: [code, price, startDate, duration, clubId, email, dryRun]
+  success: '200 OK with data.payout, data.customer.firstname/lastname, data.gym.name'
+  idempotent: false
+  note: 'dryRun: true validates without redeeming; dryRun: false redeems and charges. All
+    validations re-run on confirmation, so a passed dry run can still fail.'
+- name: cancel
+  method: POST
+  path: '{baseUrl}/rest/paymentmethod/cancel'
+  fields: [code, clubId, isLateCancel, reason]
+  success: 204 No Content
+  idempotent: true
+  idempotency_statement: 'The endpoint is idempotent: cancelling an already-cancelled booking
+    returns 204 without any further effect.'
+  semantics:
+  - On-time cancellation returns the member's credits.
+  - 'isLateCancel: true, or a cancellation after the booking''s cancellation window, is recorded
+    as a late cancellation.'
+  - A class cancelled by the gym should NOT be flagged as a late cancel.
+
+gaps:
+- 'Pay with Wellpass publishes NO OpenAPI. It is a live, money-moving surface documented only in
+  a prose tutorial — the base URL is a {baseUrl} placeholder issued at onboarding, so even the
+  host is not public.'
+- 'No idempotency key on validate/confirm. A timeout on dryRun: false leaves the partner unable
+  to tell whether the member was charged, and there is no read-back operation to check.'
+- 'Two incompatible error envelopes on the same two endpoints.'

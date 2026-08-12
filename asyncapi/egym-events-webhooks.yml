@@ -1,0 +1,95 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/general/webhooks
+docs:
+- https://developer.egym.com/general/webhooks
+- https://developer.egym.com/mms-api-v2/apis/mms-v2/webhooks
+spec_type: Webhooks
+asyncapi_published: false
+asyncapi_note: 'EGYM publishes no AsyncAPI document. The webhook surface is documented in
+  prose plus a management API in the MMS API V2 OpenAPI; a derived AsyncAPI 3.0.0 rendering
+  of that documented contract is at asyncapi/egym-mms-events-asyncapi.yml.'
+
+surface: outbound webhooks (EGYM pushes to a partner-hosted HTTPS endpoint)
+scope: 'Per gym. Multiple webhooks can be created for a single gym.'
+
+delivery:
+  transport: HTTPS POST
+  content_type: application/json
+  auth_header: x-api-key
+  auth_note: 'The partner supplies the secret when registering the subscription; EGYM sends
+    it back on every delivery as x-api-key so the receiver can authenticate the caller.'
+  timeout_seconds: 5
+  timeout_behaviour: Requests exceeding 5 seconds are treated as unsuccessful.
+  requirements:
+  - HTTPS only, with a valid SSL certificate.
+  - Endpoint must be reachable by EGYM without additional configuration or VPN.
+  retry_policy: null
+  retry_note: No retry, backoff or dead-letter policy is documented.
+  signature_scheme: null
+  signature_note: 'No HMAC payload signature is documented — authentication is a shared
+    secret echoed in a header, so a receiver cannot verify payload integrity.'
+  ordering: null
+  replay: null
+
+payload:
+  shape: flat JSON object
+  example: '{ "accountId": "[UUID]", "timestamp": 1667921312188, "type": "GYM_CHECKIN" }'
+  fields:
+  - {name: accountId, type: uuid, description: Account id of the user.}
+  - {name: timestamp, type: integer, format: epoch-millis, description: UTC timestamp of the event.}
+  - {name: type, type: string, description: 'Event type. See the events list below.'}
+  note: 'The payload is a notification, not a state transfer — it carries no event body
+    beyond the account id, so a consumer must call back into MMS API V2 (for example
+    retrieveAccount) to learn what actually changed.'
+
+event_count: 6
+events:
+- type: GYM_CHECKIN
+  description: A customer has physically checked in at a gym.
+  since: null
+- type: GYM_CHECKOUT
+  description: A customer has physically checked out from a gym.
+  since: null
+- type: EQUIPMENT_CHECKIN
+  description: A customer has physically logged in to equipment in a gym.
+  since: '2023-12-08'
+- type: MEMBERSHIP_DELETE
+  description: Member data has been deleted from EGYM.
+  since: '2024-03-21'
+- type: GENIUS_ONBOARDING_COMPLETED
+  description: A member completed EGYM Genius onboarding.
+  since: null
+- type: TEST
+  description: Test event used to verify a webhook endpoint.
+  since: null
+roadmap_note: EGYM states additional webhook event types will be added in future releases.
+
+consent_filtering:
+  enabled: true
+  since: '2026-06-24'
+  description: 'Webhook events are filtered to account for data-sharing consent, so a
+    subscriber does not receive events for members who have not consented to share with
+    that partner.'
+  source: https://developer.egym.com/mms-api-v2/change-log
+
+management_api:
+  api: EGYM MMS API V2
+  spec: openapi/egym-mms-api-v2-openapi.yml
+  operations:
+  - {operationId: createWebhook, method: POST, path: /api/v2/webhooks, description: Create a webhook subscription.}
+  - {operationId: getAllWebhooks, method: GET, path: /api/v2/webhooks, description: List configured webhooks.}
+  - {operationId: getWebhookById, method: GET, path: '/api/v2/webhooks/{id}', description: Retrieve a webhook subscription.}
+  - {operationId: updateWebhook, method: PUT, path: '/api/v2/webhooks/{id}', description: Update webhook URL and secret.}
+  - {operationId: deleteWebhook, method: DELETE, path: '/api/v2/webhooks/{id}', description: Delete a webhook subscription.}
+  - {operationId: triggerWebhook, method: POST, path: '/api/v2/webhooks/{id}/trigger', description: Fire a TEST event at the registered endpoint to verify it.}
+  conflict: 409 webhookUrlAlreadyRegistered when the URL is already registered for the gym.
+  future: 'EGYM states the webhook management API endpoints will be replaced by a UI-based
+    configuration interface, with migration guidance to follow.'
+
+gaps:
+- No AsyncAPI document is published for the event surface.
+- No payload signature (HMAC) scheme — only a shared secret echoed as x-api-key.
+- No documented retry, backoff, dead-letter or ordering guarantees.
+- 'webhooks: is not declared in the MMS API V2 OpenAPI 3.1 document, even though OpenAPI 3.1
+  supports it and the events are fully specified in prose.'

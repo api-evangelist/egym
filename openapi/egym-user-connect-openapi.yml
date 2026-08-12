@@ -1,0 +1,384 @@
+openapi: 3.1.0
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api
+  description: Test cgn-3
+- url: https://user-connect.api.egym.com/user-connect-api
+  description: Prod
+- url: http://localhost:8080/user-connect-api
+  description: Local
+tags:
+- name: 1. Cardio Measurements
+  description: API for submitting cardio measurements
+- name: 2. Workouts
+  description: API for submitting workouts
+paths:
+  /workouts/v1/workouts:
+    post:
+      tags:
+      - 2. Workouts
+      summary: Submit Workout
+      description: Submit a completed workout on behalf of a member
+      operationId: submitWorkout
+      parameters:
+      - name: measurementSystem
+        in: query
+        required: true
+        schema:
+          type: string
+          enum:
+          - METRIC
+          - IMPERIAL
+      - name: gymLocationId
+        in: query
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Workout submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutBriefResponse'
+        '400':
+          description: Bad Request — validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+        '401':
+          description: Unauthorized — missing or invalid JWT
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutBriefResponse'
+        '502':
+          description: Bad Gateway — server-workout downstream error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutBriefResponse'
+        '503':
+          description: Service Unavailable — server-workout circuit breaker open
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutBriefResponse'
+  /measurements/v1.0/cardio/vo2max:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit VO2max
+      description: Submit VO2max Measurement
+      operationId: submitVo2MaxMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitVo2MaxRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+  /measurements/v1.0/cardio/resting-heart-rate:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit Resting Heart Rate
+      description: Submit Resting Heart Rate Measurement
+      operationId: submitRestingHeartRateMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitRestingHeartRateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+  /measurements/v1.0/cardio/blood-pressure:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit Blood Pressure
+      description: Submit Blood Pressure Measurement
+      operationId: submitBloodPressureMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitBloodPressureRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+components:
+  schemas:
+    FieldErrorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+    ValidationErrorDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        error:
+          type: string
+        message:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldErrorDto'
+    WorkoutExerciseRequest:
+      type: object
+      properties:
+        activityId:
+          type: integer
+          format: int64
+          description: EGYM activity ID.
+        completedAt:
+          type: string
+          format: date-time
+          description: Exercise local completion time.
+        timezone:
+          type: string
+          description: Exercise completion timezone.
+        templateGroupId:
+          type: integer
+          format: int64
+          description: Workout plan ID.
+        templateId:
+          type: integer
+          format: int64
+          description: Workout plan exercise ID.
+        sets:
+          type: array
+          description: Exercise sets.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
+          minItems: 1
+        originallyDisplayedSets:
+          type: array
+          description: Sets originally displayed to the user.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
+      required:
+      - activityId
+      - sets
+    WorkoutExerciseSetRequest:
+      type: object
+      properties:
+        setType:
+          type: string
+          description: REP_BASED or TIME_BASED.
+          enum:
+          - REP_BASED
+          - TIME_BASED
+        numberOfReps:
+          type: integer
+          format: int32
+          description: Number of repetitions.
+        weight:
+          type: number
+          format: double
+          description: Weight in kilograms or pounds.
+        duration:
+          type: integer
+          format: int64
+          description: Duration in seconds.
+        distance:
+          type: number
+          format: double
+          description: Distance in meters or feet.
+        heartRate:
+          type: integer
+          format: int32
+          description: Heart rate (bpm).
+        speed:
+          type: number
+          format: double
+          description: Speed in metres/feet per second.
+        incline:
+          type: number
+          format: double
+          description: Incline.
+        recoveryTime:
+          type: integer
+          format: int64
+          description: Recovery time in seconds.
+        trainingMethod:
+          type: string
+          description: Training method.
+          enum:
+          - REGULAR_TIMEBASED
+          - REGULAR_REPBASED
+          - NEGATIVE_TIMEBASED
+          - NEGATIVE_REPBASED
+          - ADAPTIVE_TIMEBASED
+          - ADAPTIVE_REPBASED
+          - MEASUREMENT
+          - MEASUREMENT_DYNAMIC
+          - ISOKINETIC
+          - ELEMENTS
+          - MAX_POWER
+          - MAX_OUT
+      required:
+      - setType
+    WorkoutRequest:
+      type: object
+      properties:
+        exercises:
+          type: array
+          description: Exercises of the workout.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseRequest'
+          minItems: 1
+      required:
+      - exercises
+    WorkoutBriefResponse:
+      type: object
+      properties:
+        exercises:
+          type: array
+          description: Submitted workout exercises.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseResponse'
+        completedAt:
+          type: string
+          format: date-time
+          description: Workout tracking local time.
+        timezone:
+          type: string
+          description: Workout tracking timezone.
+    WorkoutExerciseResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Server-workout exercise ID.
+        activityId:
+          type: integer
+          format: int64
+          description: EGYM activity ID.
+        label:
+          type: string
+          description: Localized activity name.
+    SubmitVo2MaxDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        vo2Max:
+          type: number
+          format: double
+          description: VO2 Max value
+          maximum: 100
+          minimum: 0
+      required:
+      - createdAt
+      - vo2Max
+    SubmitVo2MaxRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitVo2MaxDto'
+          minItems: 1
+      required:
+      - measurements
+    SubmitRestingHeartRateDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        bpm:
+          type: integer
+          format: int32
+          description: Beats per minute value
+          maximum: 230
+          minimum: 30
+      required:
+      - bpm
+      - createdAt
+    SubmitRestingHeartRateRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitRestingHeartRateDto'
+          minItems: 1
+      required:
+      - measurements
+    SubmitBloodPressureDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        systolic:
+          type: integer
+          format: int32
+          description: Systolic pressure value
+          maximum: 250
+          minimum: 30
+        diastolic:
+          type: integer
+          format: int32
+          description: Diastolic pressure value
+          maximum: 250
+          minimum: 30
+      required:
+      - createdAt
+      - diastolic
+      - systolic
+    SubmitBloodPressureRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitBloodPressureDto'
+          minItems: 1
+      required:
+      - measurements

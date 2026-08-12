@@ -1,0 +1,103 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/change-log
+docs:
+- https://developer.egym.com/mms-api-v2/change-log
+- https://developer.egym.com/general/general-info
+- https://developer.egym.com/mms-api-v2/what-new-in-v2
+- https://developer.egym.com/data-hub
+
+versioning:
+  scheme: uri-path
+  current: v2 (MMS), v1 (Equipment Vendor, Data Hub), v1/v1.0 per-resource (User Connect)
+  policy: We support the latest API version only.
+  docs: https://developer.egym.com/mms-api-v2/change-log
+  breaking_change_signal: 'The change log marks non-backward-compatible entries in italics
+    rather than tagging them structurally, so a machine cannot reliably separate breaking
+    from additive changes from the published text alone.'
+
+deprecation:
+  policy_url: https://developer.egym.com/general/general-info
+  policy: 'EGYM has a stated deprecation posture but no formal, dated deprecation policy
+    document. The general-info page states "We are currently transitioning from v1 to v2 of
+    the MMS API. For any new projects it is required to use v2." The MMS API v2 change log
+    is the only place deprecations are announced, and it has been used for that: the
+    2026-05-29 entry deprecates and withdraws a test server URL.'
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_apis:
+  - api: EGYM MMS API v1
+    status: legacy
+    evidence: 'Required to use v2 for any new project (general-info); MMS API V2 ships a
+      dedicated POST /api/v2/migrate operation to move accounts off v1.'
+    replacement: EGYM MMS API V2
+    sunset_date: null
+  deprecated_endpoints:
+  - host: https://one-mms-service.ext-1.test.co.egym.coffee
+    kind: test-server-url
+    announced: '2026-05-29'
+    replacement: https://mms.api.ed.ts.egym.coffee
+    evidence: 'Change log 2026-05-29 (italicised as non-backward-compatible): "The test
+      server URL https://one-mms-service.ext-1.test.co.egym.coffee is deprecated and no
+      longer supported."'
+    note: 'This deprecated host is still declared as the Test server in the DATA EXPORT API
+      OpenAPI document retrieved 2026-08-12, more than two months after the change log
+      withdrew it.'
+  deprecated_operations: []
+
+maturity_labels:
+- api: EGYM Data Hub API
+  label: Pilot
+  statement: 'Data Hub is in pilot and available exclusively to EGYM Enterprise Pack
+    customers; functionality and API contracts may change.'
+- api: EGYM Data Export API
+  label: Alpha preview
+  statement: info.version is literally "Alpha preview".
+- api: EGYM Documentation MCP Server
+  label: Beta
+  statement: 'AI-agent support for EGYM documentation is currently in beta and under active
+    development. The MCP tools and recommended workflows may change as we improve the
+    experience.'
+- api: EGYM MMS API V2
+  label: GA
+  statement: The current, required API for new MMS integrations.
+
+status_page: https://egym.statuspage.io/
+status_page_note: 'Atlassian Statuspage titled "EGYM Status", time zone Europe/Berlin, last
+  updated 2026-05-16. Reachable and returning a valid summary.json, but the components[]
+  array is empty, so the page publishes no per-service health signal — it can carry incident
+  notices but cannot currently be polled for the status of a named API.'
+status_page_api: https://egym.statuspage.io/api/v2/summary.json
+
+sla:
+  url: null
+  uptime_target: null
+  note: 'No public SLA or uptime commitment was found. The only published timing commitment
+    is a consumer-side one: EGYM allows 5 seconds for a partner webhook receiver to respond
+    before treating the delivery as unsuccessful.'
+
+support:
+  integrations: integrations@egym.com
+  mms_connect: connect@egym.com
+  data_hub: ox-dev@egym.com
+  general: support@egym.com
+
+host_hygiene_findings:
+- finding: 'The production server declared in the Equipment Vendor API (standalone clients)
+    specification, https://partner-api.api.egym.com, does not resolve — NXDOMAIN on 2026-08-12.'
+  spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  probed: '2026-08-12'
+  dns_status: NXDOMAIN
+- finding: 'The Equipment Vendor API (server-to-server) specification declares only a single
+    server, https://b2b-partner-api.ext-1.test.co.egym.coffee, which is a non-production test
+    host and also does not resolve (NXDOMAIN on 2026-08-12). No production base URL is
+    published for this API anywhere in the documentation.'
+  spec: openapi/egym-equipment-vendor-server-openapi.yml
+  probed: '2026-08-12'
+  dns_status: NXDOMAIN
+- finding: 'Three EGYM API hosts resolve and serve TLS 1.3 — mms.api.egym.com,
+    analytics.api.egym.com and user-connect.api.egym.com — all behind global-lb-main-v2.egym.com.'
+  probed: '2026-08-12'
+
+change_log_cross_link: changelog/egym-changelog.yml

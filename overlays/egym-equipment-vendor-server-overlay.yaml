@@ -1,0 +1,27 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for EGYM Equipment Vendor API (server-to-server)
+  version: 1.0.0
+extends: openapi/egym-equipment-vendor-server-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/egym-equipment-vendor-server-openapi.yml (harvested verbatim from developer.egym.com/_spec/)
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: egym
+    x-apievangelist-api: equipment-vendor-server
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://developer.egym.com/
+    x-apievangelist-upstream-version: 1.1.1
+    x-apievangelist-host-note: the only declared server is a non-production test host (b2b-partner-api.ext-1.test.co.egym.coffee)
+      which did not resolve when probed 2026-08-12; no production base URL is published
+- target: $
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/egym-authentication.yml
+      conventions: conventions/egym-conventions.yml
+      errors: errors/egym-problem-types.yml
+      lifecycle: lifecycle/egym-lifecycle.yml
+      data_model: data-model/egym-data-model.yml
+      mcp: mcp/egym-mcp.yml

@@ -1,0 +1,135 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/ (8 documents) + https://developer.egym.com/general/data-privacy
+note: 'Standards conformance derived from the harvested specifications and the published
+  documentation. Where EGYM makes no claim and the artifacts show no evidence, conforms is
+  false with the reason recorded — an honest negative, not an untested one.'
+
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: 'Four of eight documents declare openapi 3.1.0 — MMS API V2, both Equipment Vendor
+    APIs, User Connect.'
+- id: openapi-3.0
+  conforms: true
+  evidence: 'Four documents declare 3.0.x — Data Hub (3.0.3), Data Export (3.0.1), MMS API v1
+    (3.0.0), Canonical GroupX Classes (3.0.0).'
+- id: asyncapi
+  conforms: false
+  evidence: 'No AsyncAPI document is published. EGYM has a real webhook event surface (six event
+    types) documented only in prose. See asyncapi/egym-events-webhooks.yml.'
+- id: oauth2
+  conforms: partial
+  evidence: 'One securityScheme of type oauth2 (clientCredentials, tokenUrl /api/v1/oauth/token)
+    in the Equipment Vendor API (standalone clients), but with an empty scopes map. The
+    /api/v1/oauth/token endpoint on both Equipment Vendor APIs is a custom grantType-based token
+    exchange (RFID, NFC, ENCRYPTED_USER_ID, OBFUSCATED_USER_ID, REFRESH_TOKEN) rather than
+    standard RFC 6749 grant_type values, so it is OAuth-shaped rather than OAuth-conformant.'
+- id: oidc
+  conforms: false
+  evidence: 'No /.well-known/openid-configuration on any EGYM host; no openIdConnect
+    securityScheme in any specification. (The OIDC-capable authorization server discovered at
+    developer.egym.com is the Redocly documentation platform, not EGYM identity.)'
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: 'https://developer.egym.com/.well-known/oauth-authorization-server returns 200 with
+    a valid RFC 8414 document (issuer, authorization_endpoint, token_endpoint, jwks_uri,
+    registration_endpoint, S256 PKCE). Scoped to the documentation MCP server.'
+  scope: documentation-portal-only
+- id: rfc7517-jwks
+  conforms: true
+  evidence: 'Both Equipment Vendor APIs expose GET /api/v1/oauth/.well-known/jwks.json
+    (operationId wellKnown) so partners can verify EGYM-issued JWTs.'
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'No response in any of the eight documents uses application/problem+json. EGYM ships
+    a bespoke ErrorDTO envelope (timestamp, path, status, error, errorCode, message, errors,
+    metadata). It is machine-readable but not RFC 9457.'
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: '/.well-known/security.txt returned 404 on all eight hosts probed 2026-08-12.'
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: 'No Sunset or Deprecation header is documented or declared. Deprecations are
+    announced only as dated prose in the MMS change log.'
+- id: rfc9116-well-known-api-catalog
+  conforms: false
+  evidence: '/.well-known/api-catalog returned 404 on all hosts. EGYM does maintain a real API
+    catalog, but it is reachable only through the MCP list-apis tool and the AI-agent
+    instruction page.'
+- id: mcp
+  conforms: true
+  evidence: 'Official hosted MCP server at https://developer.egym.com/mcp. tools/list returned
+    HTTP 200 anonymously with six tools, each carrying a complete JSON Schema inputSchema.
+    Documented with copy-paste Codex configuration.'
+  version_note: Transport is streamable HTTP responding text/event-stream.
+- id: llms-txt
+  conforms: true
+  evidence: 'https://developer.egym.com/llms.txt returns 200 text/plain, 5.3 KB, listing 59
+    documentation pages each available as a .md twin.'
+- id: a2a
+  conforms: false
+  evidence: 'No agent card at /.well-known/agent-card.json or /.well-known/agent.json on any
+    host.'
+- id: json-schema
+  conforms: true
+  evidence: 'components.schemas across the eight documents define 164 named schemas; the 3.1.0
+    documents use JSON Schema 2020-12 semantics.'
+- id: openapi-webhooks
+  conforms: false
+  evidence: 'MMS API V2 is OpenAPI 3.1.0 and therefore could declare a top-level webhooks: block
+    for its six documented event types, but does not.'
+- id: fhir
+  conforms: false
+  evidence: 'No FHIR resource shapes. EGYM handles health-adjacent data (VO2 max, resting heart
+    rate, blood pressure, body composition) with bespoke schemas rather than FHIR Observation.'
+- id: scim
+  conforms: false
+  evidence: 'Member provisioning is a bespoke MMS contract (/api/v2/accounts), not SCIM 2.0.
+    Notable given the corporate-fitness/HR-adjacent Wellpass use case.'
+- id: odata
+  conforms: false
+  evidence: No OData conventions in any path or query surface.
+- id: json-api
+  conforms: false
+  evidence: 'Plain application/json resource representations; no JSON:API document structure.'
+- id: pagination
+  conforms: partial
+  evidence: 'offset/limit with a PageableResponseMemberAccountDTO envelope on MMS API V2
+    listAccounts only. Most collection reads are date-bounded exports rather than paged. No
+    RFC 8288 Link header pagination.'
+- id: idempotency
+  conforms: false
+  evidence: 'No Idempotency-Key header or equivalent anywhere in the eight documents or the
+    documentation. Duplicate creates surface as typed 409 conflicts to be resolved after the
+    fact.'
+- id: gdpr
+  conforms: claimed
+  evidence: 'EGYM publishes a data privacy framework stating systems are designed to comply with
+    GDPR, and operationalises it: a two-bucket Gym Data / Workout Data controller-processor
+    split, a per-member consent model on Workout Data, a getOptedOutUsersExport endpoint on Data
+    Hub, an eraseAccountMembershipData operation, a MEMBERSHIP_DELETE webhook event, and
+    consent-based webhook event filtering added 2026-06-24. This is a documented programme, not
+    an audited certification.'
+  source: https://developer.egym.com/general/data-privacy
+- id: soc2
+  conforms: false
+  evidence: 'No SOC 2 claim found. No trust centre at trust.egym.com or security.egym.com
+    (both fail to resolve), and no compliance/certification page found on egym.com.'
+- id: iso-27001
+  conforms: false
+  evidence: No ISO 27001 claim found on any public EGYM page probed.
+- id: pci-dss
+  conforms: false
+  evidence: EGYM operates no payment API surface.
+- id: hipaa
+  conforms: false
+  evidence: 'No HIPAA claim found. EGYM does publish a US health data policy at
+    https://legal.egym.com/healthdatapolicy/egym/US.html (HTTP 200).'
+
+compliance_program_published: false
+compliance_note: 'No named third-party certification (SOC 2, ISO 27001, PCI DSS, HIPAA,
+  FedRAMP, CSA STAR, TISAX) was found on any public EGYM surface, and no trust centre exists,
+  so no Compliance pointer is emitted. What EGYM does publish is a privacy/data-governance
+  framework and regional health data policies — real, but a different artifact from a
+  certification programme.'

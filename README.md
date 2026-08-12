@@ -42,5 +42,30 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Egym is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
+EGYM is a Munich-headquartered fitness and health technology company behind the connected-gym
+platform used by commercial fitness operators worldwide — Smart Strength and Smart Flex
+networked equipment, the EGYM Genius training engine, the EGYM Fitness Hub and Trainer apps,
+and the EGYM Wellpass corporate fitness network.
+
+EGYM runs a public developer portal at [developer.egym.com](https://developer.egym.com/)
+covering eight machine-readable APIs across three integration audiences:
+
+| API | Operations | Audience |
+|---|---|---|
+| [MMS API V2](https://developer.egym.com/mms-api-v2/apis/mms-v2) | 43 | Member management system vendors |
+| [MMS API v1](https://developer.egym.com/mms-api-v2/gymapi/api) | 13 | Legacy MMS (v2 required for new work) |
+| [Data Hub API](https://developer.egym.com/data-hub/api) | 8 | Analytics export (Enterprise Pack pilot) |
+| Data Export API | 4 | Per-account export (alpha; MCP-only discovery) |
+| [Equipment Vendor API (standalone)](https://developer.egym.com/equipment/partner-api) | 31 | Device-to-server equipment integration |
+| [Equipment Vendor API (server-to-server)](https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025) | 6 | Backend-to-backend measurement relay |
+| [User Connect API](https://developer.egym.com/user-connect-api/docs/introduction) | 4 | Consented third-party app submissions |
+| [Canonical GroupX Classes](https://developer.egym.com/mms-blueprints/canonical-classes) | 8 | Blueprint the MMS vendor implements |
+
+Plus a prose-only [Pay with Wellpass](https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass)
+authorization surface, a documented webhook event catalog, and an official
+[documentation MCP server](https://developer.egym.com/general/ai-agent-integration) at
+`https://developer.egym.com/mcp` with a published AI-agent instruction page.
+
+- https://egym.com/int
+- https://developer.egym.com/
 - https://www.hiive.com/securities/egym-stock

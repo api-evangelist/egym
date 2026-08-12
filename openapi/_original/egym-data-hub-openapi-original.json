@@ -1,0 +1,916 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Data Hub API",
+    "description": "APIs for exporting analytics, Smart Strength workouts, and measurement data for the authenticated gym location. Data Hub is in pilot and available exclusively to EGYM Enterprise Pack customers; functionality and API contracts may change.",
+    "termsOfService": "https://egym.com/en/terms/",
+    "contact": {
+      "name": "Operator Experience Team",
+      "url": "https://egym.com/",
+      "email": "ox-dev@egym.com"
+    },
+    "version": "Pilot"
+  },
+  "servers": [
+    {
+      "url": "https://analytics.api.egym.com",
+      "description": "Production"
+    }
+  ],
+  "security": [
+    {
+      "apiKeyAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Synchronous exports",
+      "description": "Immediate paginated JSON exports for weekly analytics and recent event data."
+    },
+    {
+      "name": "Asynchronous exports",
+      "description": "Background export jobs that produce downloadable JSON, JSONL, or CSV files."
+    }
+  ],
+  "paths": {
+    "/api/v1/data/analytics": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export weekly analytics",
+        "description": "Returns weekly analytics metrics for the gym location associated with the API key. The maximum date range is 365 days.",
+        "operationId": "getAnalyticsExport",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Analytics export page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/smart-strength-workouts": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export recent Smart Strength workouts",
+        "description": "Returns recent Smart Strength workout data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.",
+        "operationId": "getSmartStrengthWorkoutsExport",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Smart Strength workout export page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmartStrengthWorkoutsExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/smart-strength-assessments": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export recent Smart Strength assessments",
+        "description": "Returns recent Smart Strength assessment data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.",
+        "operationId": "getSmartStrengthAssessmentsExport",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Smart Strength assessment export page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SmartStrengthAssessmentsExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/flexibility-measurements": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export recent flexibility measurements",
+        "description": "Returns recent flexibility measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.",
+        "operationId": "getFlexibilityMeasurementsExport",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Flexibility measurement export page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlexibilityMeasurementsExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/body-measurements": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export recent body measurements",
+        "description": "Returns recent body measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.",
+        "operationId": "getBodyMeasurementsExport",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/startDate"
+          },
+          {
+            "$ref": "#/components/parameters/endDate"
+          },
+          {
+            "$ref": "#/components/parameters/cursor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Body measurement export page.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BodyMeasurementsExportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/opted-out-users": {
+      "get": {
+        "tags": [
+          "Synchronous exports"
+        ],
+        "summary": "Export opted-out users",
+        "description": "Returns the members at the gym location who have not opted in to health data and consumer-to-business (C2B) sharing. These members are excluded from all event exports, so use this endpoint to identify accounts whose previously exported data must be deleted to comply with GDPR and other data-protection requirements. The endpoint takes no query parameters and is not paginated; it returns all opted-out users for the gym location in a single response.",
+        "operationId": "getOptedOutUsersExport",
+        "responses": {
+          "200": {
+            "description": "Opted-out users for the gym location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OptedOutUsersExportResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/async": {
+      "post": {
+        "tags": [
+          "Asynchronous exports"
+        ],
+        "summary": "Create async export job",
+        "description": "Creates a background export job for a file-based event data export. Async exports can go back up to one year. Requests cannot include event data older than one year, and each export job can cover at most 365 days.",
+        "operationId": "createAsyncExportJob",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsyncExportCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Export job created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncExportCreateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/api/v1/data/async/jobs/{jobId}": {
+      "get": {
+        "tags": [
+          "Asynchronous exports"
+        ],
+        "summary": "Get async export job status",
+        "description": "Returns the current status of an async export job. A downloadURL is returned only when the job status is DONE.",
+        "operationId": "getAsyncExportJobStatus",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Export job status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AsyncExportStatusResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKeyAuth": {
+        "type": "apiKey",
+        "description": "API key generated by EGYM for a gym location.",
+        "name": "x-api-key",
+        "in": "header"
+      }
+    },
+    "parameters": {
+      "startDate": {
+        "name": "startDate",
+        "in": "query",
+        "required": true,
+        "description": "Start date in YYYY-MM-DD format.",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "endDate": {
+        "name": "endDate",
+        "in": "query",
+        "required": true,
+        "description": "End date in YYYY-MM-DD format.",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "cursor": {
+        "name": "cursor",
+        "in": "query",
+        "required": false,
+        "description": "Pagination cursor returned as nextCursor by the previous response.",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    "schemas": {
+      "GymInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "AnalyticsExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AnalyticsExportItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AnalyticsExportItem": {
+        "type": "object",
+        "properties": {
+          "periodStart": {
+            "type": "string",
+            "format": "date"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date"
+          },
+          "metricType": {
+            "type": "string"
+          },
+          "metricKey": {
+            "type": "string"
+          },
+          "metricSubType": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "OptedOutUsersExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptedOutUserExportItem"
+            }
+          }
+        }
+      },
+      "OptedOutUserExportItem": {
+        "type": "object",
+        "properties": {
+          "externalAccountId": {
+            "type": "string",
+            "description": "Unique, stable identifier for the member's account. When a member opts out, EGYM shares only this ID so the gym can identify and delete the member's previously exported data without EGYM transmitting any personal information."
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SmartStrengthWorkoutsExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SmartStrengthWorkoutItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SmartStrengthWorkoutItem": {
+        "type": "object",
+        "properties": {
+          "eventTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "externalAccountId": {
+            "type": "string",
+            "description": "Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed."
+          },
+          "mmsMembershipId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional membership identifier from source systems. May be null when unavailable."
+          },
+          "isGuestUser": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "machineType": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainingMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "operationMode": {
+            "type": "string",
+            "nullable": true
+          },
+          "trainingVisualization": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SmartStrengthAssessmentsExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SmartStrengthAssessmentItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SmartStrengthAssessmentItem": {
+        "type": "object",
+        "properties": {
+          "eventTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "bodyRegion": {
+            "type": "string",
+            "nullable": true
+          },
+          "typeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityName": {
+            "type": "string",
+            "nullable": true
+          },
+          "measurementCompleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "chainName": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "externalAccountId": {
+            "type": "string",
+            "description": "Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed."
+          },
+          "mmsMembershipId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional membership identifier from source systems. May be null when unavailable."
+          }
+        }
+      },
+      "FlexibilityMeasurementsExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlexibilityMeasurementItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "FlexibilityMeasurementItem": {
+        "type": "object",
+        "properties": {
+          "externalAccountId": {
+            "type": "string",
+            "description": "Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed."
+          },
+          "mmsMembershipId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional membership identifier from source systems. May be null when unavailable."
+          },
+          "eventTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "measurementType": {
+            "type": "string",
+            "nullable": true
+          },
+          "isStaff": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "measurementCompleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "chainName": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BodyMeasurementsExportResponse": {
+        "type": "object",
+        "properties": {
+          "gym": {
+            "$ref": "#/components/schemas/GymInfo"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BodyMeasurementItem"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BodyMeasurementItem": {
+        "type": "object",
+        "properties": {
+          "externalAccountId": {
+            "type": "string",
+            "description": "Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed."
+          },
+          "mmsMembershipId": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional membership identifier from source systems. May be null when unavailable."
+          },
+          "eventTimestamp": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "measurementSource": {
+            "type": "string",
+            "nullable": true
+          },
+          "isStaff": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "measurementCompleted": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "chainName": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AsyncExportCreateRequest": {
+        "type": "object",
+        "required": [
+          "startDate",
+          "endDate",
+          "exportType"
+        ],
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "description": "Start date in YYYY-MM-DD format. Must not be older than one year."
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "description": "End date in YYYY-MM-DD format. The requested period cannot exceed 365 days or include data older than one year."
+          },
+          "exportType": {
+            "$ref": "#/components/schemas/ExportType"
+          },
+          "fileType": {
+            "description": "Optional output format. Defaults to JSONL when omitted.",
+            "default": "JSONL",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AsyncExportFileType"
+              }
+            ]
+          }
+        }
+      },
+      "AsyncExportCreateResponse": {
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "$ref": "#/components/schemas/AsyncExportJobStatus"
+          }
+        }
+      },
+      "AsyncExportStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/AsyncExportJobStatus"
+          },
+          "downloadURL": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          }
+        }
+      },
+      "ExportType": {
+        "type": "string",
+        "enum": [
+          "SMART_STRENGTH_WORKOUTS",
+          "SMART_STRENGTH_ASSESSMENTS",
+          "FLEXIBILITY_MEASUREMENTS",
+          "BODY_MEASUREMENTS"
+        ]
+      },
+      "AsyncExportFileType": {
+        "type": "string",
+        "enum": [
+          "JSON",
+          "JSONL",
+          "CSV"
+        ]
+      },
+      "AsyncExportJobStatus": {
+        "type": "string",
+        "enum": [
+          "IN_PROGRESS",
+          "DONE",
+          "FAILED",
+          "EXPIRED"
+        ]
+      },
+      "ErrorDTO": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request parameters or body.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDTO"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Missing, malformed, or invalid API key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDTO"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "API key is not authorized to access this resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDTO"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Requested resource was not found.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDTO"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Unexpected server error.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorDTO"
+            }
+          }
+        }
+      }
+    }
+  }
+}

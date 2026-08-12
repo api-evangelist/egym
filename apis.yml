@@ -1,23 +1,371 @@
 aid: egym
-name: Egym
-description: 'Egym is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+name: EGYM
+description: 'EGYM is a Munich-headquartered fitness and health technology company that builds
+  the connected-gym platform used by commercial fitness operators worldwide: Smart Strength
+  and Smart Flex networked equipment, the EGYM Genius AI training engine, the EGYM Fitness Hub
+  and Trainer apps, and the EGYM Wellpass / Corporate Fitness membership network that lets
+  employers give staff access to thousands of partner venues. For developers, EGYM operates a
+  public developer portal at developer.egym.com covering eight machine-readable APIs across
+  three integration audiences — member-management-system (MMS) vendors syncing members,
+  memberships, RFID/NFC credentials, check-ins, products and trainer tasks into EGYM Cloud;
+  equipment vendors submitting body, cardio and flexibility measurements from devices or
+  backends; and analytics consumers exporting workout and measurement data. EGYM also
+  publishes an official documentation MCP server, an llms.txt, a written AI-agent instruction
+  page, a dated change log, published rate limits and a documented webhook event catalog.'
 url: https://raw.githubusercontent.com/api-evangelist/egym/refs/heads/main/apis.yml
+image: https://developer.egym.com/assets/egym-logo.60dd444402b44525ca41f7a89573481ea8fffc6f40134e177d7b3a7f13d6e6b2.9c1bb791.svg
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
 - Company
-apis: []
+- Fitness
+- Health
+- Wellness
+- Corporate Wellness
+- Connected Equipment
+- Gym Management
+- Member Management
+- Check-In
+- Measurements
+- Workouts
+- Analytics
+- Webhooks
+- Germany
+apis:
+- aid: egym:mms-api-v2
+  name: EGYM MMS API V2
+  description: 'The current member-management-system integration API. RESTful contract for
+    gym management software to sync member accounts and memberships into EGYM Cloud, manage
+    profile pictures, RFID and NFC credentials, book EGYM products (Smart Strength, EGYM+),
+    push gym check-in / check-out / admission events, create and track trainer tasks, register
+    webhook subscriptions, send push notifications to EGYM mobile apps, and migrate members
+    from the legacy v1 API. 43 operations across 10 tags.'
+  humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
+  baseURL: https://mms.api.egym.com
+  tags:
+  - Member Management
+  - Gym Management
+  - Check-In
+  - Webhooks
+  - Corporate Wellness
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-mms-api-v2-openapi.yml
+  - type: Documentation
+    url: https://developer.egym.com/mms-api-v2
+  - type: APIReference
+    url: https://developer.egym.com/mms-api-v2/apis/mms-v2
+  - type: GettingStarted
+    url: https://developer.egym.com/mms-api-v2/guide
+  - type: Authentication
+    url: https://developer.egym.com/mms-api-v2/authentication
+  - type: RateLimits
+    url: https://developer.egym.com/mms-api-v2/rate-limits
+  - type: ErrorCatalog
+    url: https://developer.egym.com/mms-api-v2/errors
+  - type: ChangeLog
+    url: https://developer.egym.com/mms-api-v2/change-log
+  - type: Overlay
+    url: overlays/egym-mms-api-v2-overlay.yaml
+- aid: egym:mms-api-v1
+  name: EGYM MMS API v1
+  description: 'The legacy member-management-system API (Gym API v1). Publishes and reads
+    member profiles, gym and user products, check-in / check-out events, trainer tasks and a
+    liveness endpoint. EGYM documents this API as deprecated for new work — the general-info
+    page states that v2 is required for any new project — and the v2 spec ships a /api/v2/migrate
+    operation to move accounts off it. 13 operations.'
+  humanURL: https://developer.egym.com/mms-api-v2/gymapi/api
+  baseURL: https://mms.api.egym.com/v1
+  tags:
+  - Member Management
+  - Gym Management
+  - Legacy
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-mms-api-v1-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/mms-api-v2/gymapi/api
+  - type: Deprecation
+    url: https://developer.egym.com/general/general-info
+- aid: egym:data-hub
+  name: EGYM Data Hub API
+  description: 'Analytics and measurement export API for the authenticated gym location.
+    Offers six synchronous CSV/JSON export endpoints — general analytics, Smart Strength
+    workouts, Smart Strength assessments, flexibility measurements, body measurements and
+    opted-out users — plus an asynchronous export-job surface that creates a job and polls its
+    status. EGYM documents Data Hub as a pilot available exclusively to Enterprise Pack
+    customers, with contracts that may change. 8 operations.'
+  humanURL: https://developer.egym.com/data-hub
+  baseURL: https://analytics.api.egym.com
+  tags:
+  - Analytics
+  - Data Export
+  - Measurements
+  - Workouts
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-data-hub-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/data-hub/api
+  - type: Authentication
+    url: https://developer.egym.com/data-hub/authentication
+  - type: Documentation
+    url: https://developer.egym.com/data-hub
+  - type: Overlay
+    url: overlays/egym-data-hub-overlay.yaml
+- aid: egym:data-export
+  name: EGYM Data Export API
+  description: 'Per-account export API returning a member''s workouts and their strength,
+    cardio and body measurements. Marked "Alpha preview" by EGYM. Notable discovery property:
+    this API is listed in EGYM''s AI-agent instruction page and is retrievable in full from
+    EGYM''s documentation MCP server, but it has no reference page in the HTML documentation
+    navigation — it is an MCP-only surface. 4 operations.'
+  humanURL: https://developer.egym.com/general/ai-agent-instructions
+  baseURL: https://mms.api.egym.com
+  tags:
+  - Data Export
+  - Measurements
+  - Workouts
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-data-export-openapi.yml
+  - type: Overlay
+    url: overlays/egym-data-export-overlay.yaml
+- aid: egym:equipment-vendor-standalone
+  name: EGYM Equipment Vendor API (standalone clients)
+  description: 'Device-to-server API for equipment vendors integrating cardio, strength and
+    measurement hardware directly with EGYM Cloud. Covers OAuth token exchange (RFID, NFC
+    wallet, encrypted/obfuscated user id, refresh token grants), user profile read/update,
+    terms-and-conditions acceptance, RFID assignment, strength / cardio / open-exercise workout
+    submission, body / cardio / flexibility measurement submission and history, cardio tests
+    and reminders, training plans, activity levels, workout points and machine heartbeat.
+    31 operations, the largest EGYM surface.'
+  humanURL: https://developer.egym.com/equipment/partner-api
+  baseURL: https://partner-api.api.egym.com
+  tags:
+  - Connected Equipment
+  - Measurements
+  - Workouts
+  - Devices
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-equipment-vendor-standalone-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/equipment/partner-api
+  - type: Documentation
+    url: https://developer.egym.com/equipment/01-introduction-to-egym-equipment-vendor-apis
+  - type: Overlay
+    url: overlays/egym-equipment-vendor-standalone-overlay.yaml
+- aid: egym:equipment-vendor-server
+  name: EGYM Equipment Vendor API (server-to-server)
+  description: 'Backend-to-backend API for equipment vendors whose measurement devices report
+    through the vendor''s own cloud rather than talking to EGYM directly. Covers OAuth token
+    creation with RFID / NFC-wallet / encrypted-user-id grants, a JWKS endpoint, enriched user
+    lookup by gym, and body, cardio and flexibility measurement submission. Version 1.1.1 added
+    NFC-based login via Apple and Google Wallet. 6 operations.'
+  humanURL: https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025
+  baseURL: https://b2b-partner-api.ext-1.test.co.egym.coffee
+  tags:
+  - Connected Equipment
+  - Measurements
+  - Devices
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-equipment-vendor-server-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025
+  - type: Documentation
+    url: https://developer.egym.com/equipment/01-introduction-to-egym-equipment-vendor-apis
+  - type: Overlay
+    url: overlays/egym-equipment-vendor-server-overlay.yaml
+- aid: egym:user-connect
+  name: EGYM User Connect API
+  description: 'User-authorized API that lets third-party fitness and wearable apps write a
+    member''s own data into their EGYM ID account. Accepts workout submissions and cardio
+    measurements — VO2 max, resting heart rate and blood pressure. Authentication is a
+    user-scoped EGYM ID JWT that the member can revoke from EGYM ID settings, making this the
+    one EGYM surface governed by end-user consent rather than a gym-scoped API key.
+    4 operations.'
+  humanURL: https://developer.egym.com/user-connect-api/docs/introduction
+  baseURL: https://user-connect.api.egym.com/user-connect-api
+  tags:
+  - Measurements
+  - Workouts
+  - Consent
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-user-connect-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/user-connect-api/apis/user-connect-api
+  - type: Authentication
+    url: https://developer.egym.com/user-connect-api/docs/authentication
+  - type: Documentation
+    url: https://developer.egym.com/user-connect-api/docs/introduction
+  - type: Overlay
+    url: overlays/egym-user-connect-overlay.yaml
+- aid: egym:canonical-groupx-classes
+  name: EGYM Canonical GroupX Classes API (blueprint)
+  description: 'An inverted contract: rather than an API EGYM operates, this is an "API
+    blueprint" that EGYM publishes for member-management-system vendors to IMPLEMENT on their
+    own hosts, so EGYM''s white-label member app can consume class booking in a uniform way.
+    Covers class search, class detail, attendee booking / update / cancellation, waitlist
+    add and remove, and an exerciser class schedule. Tagged L2 (read) and L3 (booking)
+    conformance levels. The servers[] entry is the templated placeholder
+    https://example.org/<partner>/group-classes/v1.0 because the partner supplies the host.
+    8 operations.'
+  humanURL: https://developer.egym.com/mms-blueprints/canonical-classes
+  baseURL: https://developer.egym.com/mms-blueprints/canonical-classes
+  tags:
+  - Class Booking
+  - Blueprint
+  - Gym Management
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-canonical-groupx-classes-openapi.yml
+  - type: APIReference
+    url: https://developer.egym.com/mms-blueprints/canonical-classes
+- aid: egym:pay-with-wellpass
+  name: EGYM Pay with Wellpass API
+  description: 'Authorization-and-capture API for booking platforms. A Wellpass member generates
+    a single-use booking code in the Wellpass app for a specific gym; the partner platform
+    validates the code (dryRun true), then redeems it (dryRun false), which creates the booking
+    and charges the member''s Wellpass credit wallet, returning a payout amount. A cancel
+    operation returns credits and is explicitly documented as idempotent. Currently available
+    in France and Belgium only. Two operations, documented in prose with a 13-entry typed
+    business-error registry — EGYM publishes no OpenAPI for this surface and the base URL is a
+    {baseUrl} placeholder issued to partners at onboarding, so no public host exists to record.'
+  humanURL: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+  tags:
+  - Payments
+  - Corporate Wellness
+  - Class Booking
+  properties:
+  - type: Documentation
+    url: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+  - type: DeclineCodes
+    url: errors/egym-decline-codes.yml
+  - type: Sandbox
+    url: sandbox/egym-sandbox.yml
+- aid: egym:mcp-docs
+  name: EGYM Documentation MCP Server
+  description: 'Official hosted Model Context Protocol server published by EGYM at
+    developer.egym.com/mcp and documented on the portal with copy-paste Codex configuration.
+    Exposes six tools over the API catalog and documentation corpus — list-apis, get-endpoints,
+    get-endpoint-info, get-security-schemes, get-full-api-description and search. The endpoint
+    answers tools/list anonymously; an OAuth authorization-server metadata document is served
+    at /.well-known/oauth-authorization-server for clients that authenticate.'
+  humanURL: https://developer.egym.com/general/ai-agent-integration
+  baseURL: https://developer.egym.com/mcp
+  tags:
+  - MCP
+  - AI Agents
+  - Documentation
+  properties:
+  - type: MCPServer
+    url: mcp/egym-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/egym-tool-crosswalk.yml
+  - type: Documentation
+    url: https://developer.egym.com/general/ai-agent-integration
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/egym-agentic-access.yml
 - type: Website
-  url: https://www.hiive.com/securities/egym-stock
+  url: https://egym.com/int
+- type: DeveloperPortal
+  url: https://developer.egym.com/
+- type: Documentation
+  url: https://developer.egym.com/general/general-info
+- type: APIReference
+  url: https://developer.egym.com/mms-api-v2/apis/mms-v2
+- type: GettingStarted
+  url: https://developer.egym.com/mms-api-v2/guide
+- type: Support
+  url: https://egym.com/int/contact
+- type: Blog
+  url: https://egym.com/us/blog
+- type: GitHubOrganization
+  url: https://github.com/egym
+- type: Pricing
+  url: https://egym.com/int/contact
+- type: SignUp
+  url: https://developer.egym.com/general/general-info
+- type: TermsOfService
+  url: https://us.egym.com/en-us/terms
+- type: PrivacyPolicy
+  url: https://egym.com/int/privacy
+- type: StatusPage
+  url: https://egym.statuspage.io/
+- type: ChangeLog
+  url: https://developer.egym.com/mms-api-v2/change-log
+- type: LLMsTxt
+  url: llms/egym-llms.txt
+- type: Authentication
+  url: authentication/egym-authentication.yml
+- type: OAuthScopes
+  url: scopes/egym-scopes.yml
+- type: Conventions
+  url: conventions/egym-conventions.yml
+- type: RateLimits
+  url: rate-limits/egym-rate-limits.yml
+- type: Plans
+  url: plans/egym-plans-pricing.yml
+- type: ErrorCatalog
+  url: errors/egym-problem-types.yml
+- type: ErrorCodes
+  url: errors/egym-error-codes.yml
+- type: Lifecycle
+  url: lifecycle/egym-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/egym-lifecycle.yml
+- type: ChangeLog
+  url: changelog/egym-changelog.yml
+- type: Webhooks
+  url: asyncapi/egym-events-webhooks.yml
+- type: AsyncAPI
+  url: asyncapi/egym-mms-events-asyncapi.yml
+- type: Conformance
+  url: conformance/egym-conformance.yml
+- type: DataModel
+  url: data-model/egym-data-model.yml
+- type: Packages
+  url: packages/egym-packages.yml
+- type: SDKs
+  url: packages/egym-packages.yml
+- type: Components
+  url: components/egym-components.yml
+- type: WellKnown
+  url: well-known/egym-well-known.yml
+- type: DomainSecurity
+  url: security/egym-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Idempotency
+  url: conventions/egym-conventions.yml
+- type: Sandbox
+  url: sandbox/egym-sandbox.yml
+- type: DeclineCodes
+  url: errors/egym-decline-codes.yml
+- type: Overlay
+  url: overlays/egym-mms-api-v1-overlay.yaml
+- type: Overlay
+  url: overlays/egym-canonical-groupx-classes-overlay.yaml
+- type: MCPServer
+  url: mcp/egym-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/egym-tool-crosswalk.yml
+- type: OpenAPI
+  url: openapi/egym-mms-api-v2-openapi.yml
+x-enrichment:
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 41
+  pass: local-v1

@@ -1,0 +1,2934 @@
+openapi: 3.1.0
+info:
+  title: MMS API V2
+  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document
+    defines all available endpoints, request/response schemas, authentication requirements, and error codes.
+
+
+    **Key Features:**
+
+    - Member account and membership management
+
+    - RFID assignment and management
+
+    - Real-time gym visit tracking (check-in/check-out)
+
+    - EGYM product booking (Smart Strength, EGYM+)
+
+    - Trainer task creation and tracking
+
+    - Webhook subscriptions for event notifications
+
+    - Push notifications to EGYM mobile apps
+
+    - Member migration from V1 API'
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: MMS Connect Team
+    url: https://egym.com/
+    email: connect@egym.com
+  version: 2.0.0
+servers:
+- url: https://mms.api.ed.ts.egym.coffee
+  description: Test
+- url: https://mms.api.egym.com
+  description: Prod
+security:
+- mms: []
+tags:
+- name: Migrating members
+  description: These operations are needed to migrate members from V1 API to V2 API.
+- name: Gym Visit
+  description: These operations are needed to transmit the information to EGYM, that a specific member is currently in the
+    gym. Based on that information several business logics are built, to provide a seamless training floor experience to the
+    members of that gym. For example the trainer on the Training Floor is informed that this member is here and that he should
+    complete some tasks.
+- name: Member Account Roles
+  description: These operation are needed to assign and retrieve member account roles
+- name: Trainer Task
+  description: These operations are needed to create and update trainer tasks.
+- name: Member Account NFC
+  description: Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM and partner sides.
+- name: Products booking
+  description: Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine Admission) and EGYM+
+- name: Push notifications
+  description: Send push notifications to EGYM mobile apps
+- name: Member RFIDs
+  description: Operations with RFIDs
+- name: Webhooks
+  description: Operations with webhooks
+- name: Member Account
+  description: These operations are needed to create and update member accounts and their membership information.
+paths:
+  /api/v2/webhooks/{id}:
+    get:
+      tags:
+      - Webhooks
+      summary: Retrieve webhook entry by id
+      operationId: getWebhookById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Webhooks
+      summary: Update webhook entry
+      description: Updates webhook url or/and secret by given webhook id
+      operationId: updateWebhook
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    delete:
+      tags:
+      - Webhooks
+      summary: Delete webhook
+      description: Deletes webhook url
+      operationId: deleteWebhook
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/tasks/{taskId}:
+    get:
+      tags:
+      - Trainer Task
+      summary: Retrieve task details
+      description: This endpoint returns the details of a specific trainer task.
+      operationId: getTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Trainer Task
+      summary: Update a task
+      description: This endpoint updates trainer task in a gym.
+      operationId: updateTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}:
+    get:
+      tags:
+      - Member Account
+      summary: Retrieve an account
+      description: Retrieve an account using accountId.
+      operationId: retrieveAccount
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Member Account
+      summary: Update an account
+      description: Update an account using accountId.
+      operationId: updateAccount
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberAccountDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    delete:
+      tags:
+      - Member Account
+      summary: Delete an account
+      description: 'Delete an account using accountId.
+
+        eraseMemberData parameter is optional and defaults to false. If set to true it removes all member data that belongs
+        to a gym (personal data, contract data, rfid, product bookings).
+
+        If set to false it deletes only membershipId and contract data.
+
+        '
+      operationId: eraseAccountMembershipData
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: eraseMemberData
+        in: query
+        description: If set to true it removes all member data that belongs to a gym (personal data, contract data, rfid,
+          product bookings). If set to false it deletes only membershipId and contract data.
+        required: false
+        schema:
+          type: boolean
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    patch:
+      tags:
+      - Member Account
+      summary: Partially update an account
+      description: Partially update an account using accountId. Only non-null fields in the request will be updated. This
+        is optimized for small, incremental changes.
+      operationId: partialUpdate
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchMemberAccountDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/rfids:
+    get:
+      tags:
+      - Member RFIDs
+      summary: Retrieve user RFIDs
+      description: Returns a list of RFIDs of the user.
+      operationId: getUserRfids
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: allSources
+        in: query
+        description: Allows to receive user RFIDs that were assigned not only by MMS but also by other sources.
+        required: false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RfidDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Member RFIDs
+      summary: Update RFIDs of a user
+      description: 'Note: If this field is sent we will replace the RFID list of this user with the info sent (for an empty
+        list, we will delete all RFID connections of this user). The operation does not affect RFIDs assigned from other sources
+        like EGYM machines, Fitness Hub etc.'
+      operationId: updateUsersRfids
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfidListDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Member RFIDs
+      summary: Add RFID
+      description: Add RFID to specified user.
+      operationId: addRFIDToUser
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfidDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RfidDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/products:
+    get:
+      tags:
+      - Products booking
+      summary: Retrieve user activated products
+      description: Returns a list of products that are activated for the specified user and gym and are active now or in the
+        future.
+      operationId: userProducts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Products booking
+      summary: Activate a product or update product booking
+      description: This endpoint activates or updates a product for a user in a gym. The product is active starting from the
+        specified start date to the end date in Timezone of the club.
+      operationId: productBooking
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProductDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProductDTO'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/nfc:
+    get:
+      tags:
+      - Member Account NFC
+      summary: Retrieve a member account NFC token
+      operationId: getAccountNfcToken
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectorId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: passTypeId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NfcTokenDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Member Account NFC
+      summary: Assign an NFC token to a member account
+      operationId: assignAccountNfcToken
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignNfcTokenRequest'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    delete:
+      tags:
+      - Member Account NFC
+      summary: Delete a member account NFC token
+      operationId: deleteAccountNfcToken
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectorId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: passTypeId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/images:
+    put:
+      tags:
+      - Member Account
+      summary: Upload account image
+      description: 'This endpoint allows to upload a profile picture to the specified user using accountId (Supported formats:
+        JPG, JPEG, PNG. Max file size: 16MB)'
+      operationId: uploadImage
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Content-Length
+        in: header
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  $ref: '#/components/schemas/Part'
+              required:
+              - file
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    delete:
+      tags:
+      - Member Account
+      summary: Delete account image
+      description: This endpoint allows to delete a profile picture of the specified user using accountId
+      operationId: deleteImage
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/webhooks:
+    get:
+      tags:
+      - Webhooks
+      summary: Retrieve existing webhooks
+      description: Returns a list of webhooks of the related gym.
+      operationId: getAllWebhooks
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Webhooks
+      summary: Create webhook url
+      description: Creates webhook url entry
+      operationId: createWebhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequestDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WebhookResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/webhooks/{id}/trigger:
+    post:
+      tags:
+      - Webhooks
+      summary: Trigger webhook
+      description: Trigger webhook with type TEST
+      operationId: triggerWebhook
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Ok
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/tasks:
+    get:
+      tags:
+      - Trainer Task
+      summary: Retrieve all tasks
+      description: This endpoint returns a list of trainer tasks that are available in the gym. Can be filtered by modified
+        date time.
+      operationId: getTasks
+      parameters:
+      - name: modifiedSince
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Trainer Task
+      summary: Create a task
+      description: This endpoint create trainer task in a gym. The trainer task is active until it is completed.
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/migrate:
+    post:
+      tags:
+      - Migrating members
+      summary: Migrate an account
+      description: Migrate membership from V1 API using old EGYM user id (if already migrated then just returns membership).
+      operationId: migrate
+      parameters:
+      - name: legacyUserId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts:
+    get:
+      tags:
+      - Member Account
+      summary: List member accounts
+      description: 'Request all member accounts with paginated response. Result is always ordered by update timestamp (DESC).
+        By default only accounts of the current gym are returned, otherwise set `currentGymOnly` to false. '
+      operationId: listAccounts
+      parameters:
+      - name: currentGymOnly
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: true
+      - name: fromTimestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        example: '2022-09-22T14:19:26.303Z'
+      - name: toTimestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+        example: '2022-09-22T14:19:26.303Z'
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+          minimum: 0
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 10
+          maximum: 100
+          minimum: 0
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PageableResponseMemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Member Account
+      summary: Create an account
+      description: Create an account in the EGYM System.
+      operationId: publishAccount
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberAccountDTO'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/roles:
+    get:
+      tags:
+      - Member Account Roles
+      - Member Account
+      summary: Retrieve an account roles
+      description: Retrieve an account roles in the current gym for given accountId
+      operationId: getRoles
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GymRolesDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Member Account Roles
+      - Member Account
+      summary: Set an account roles
+      description: Update an account roles using accountId.
+      operationId: assignRoles
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GymRolesDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/notifications:
+    post:
+      tags:
+      - Push notifications
+      summary: Sent notification using accountId
+      description: Simple fire and forget operation to sent notification
+      operationId: sendPushNotificationByAccountId
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerPushNotificationDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/checkouts:
+    post:
+      tags:
+      - Gym Visit
+      summary: Member Gym Check Out
+      description: This endpoint informs the EGYM system that the member has left the gym.
+      operationId: checkout
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPresenceDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/checkins:
+    post:
+      tags:
+      - Gym Visit
+      summary: Member Gym Check In
+      description: This endpoint informs the EGYM system that the member has entered the gym.
+      operationId: checkin
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPresenceDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/admissions:
+    post:
+      tags:
+      - Gym Visit
+      summary: Member Admission
+      description: This endpoint is currently used only for members with membership type “CORPORATE_FITNESS”. It verifies
+        if the specified member can have access to the desired gym. The MMS should use the response status to allow or block
+        the member from entering the gym. As a side-effect this access is logged in the EGYM Corporate Fitness system if the
+        admission was granted.
+      operationId: checkAdmission
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdmissionDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/membership/{membershipId}/notifications:
+    post:
+      tags:
+      - Push notifications
+      summary: Sent notification using membershipId
+      description: Simple fire and forget operation to sent notification
+      operationId: sendPushNotificationByMembershipId
+      parameters:
+      - name: membershipId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PartnerPushNotificationDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/products:
+    get:
+      tags:
+      - Products booking
+      summary: Retrieve gym products
+      description: Returns a list of products that are available in the gym and can be activated for a user.
+      operationId: listGymProducts
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/products/{productId}:
+    get:
+      tags:
+      - Products booking
+      summary: Product details
+      description: Returns the details of a specific product.
+      operationId: productDetails
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/rfid/{rfid}:
+    get:
+      tags:
+      - Member RFIDs
+      - Member Account
+      summary: Retrieve an account by RFID
+      description: Retrieve an account using RFID.
+      operationId: getByRfid
+      parameters:
+      - name: rfid
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: tagFormat
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - HITAG1
+          - MIFARE
+          - LEGIC
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/nfc/{nfc}:
+    get:
+      tags:
+      - Member Account
+      - Member Account NFC
+      summary: Retrieve an account by NFC
+      description: Retrieve an account using NFC.
+      operationId: getByNfc
+      parameters:
+      - name: nfc
+        in: path
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      - name: nfcFormat
+        in: query
+        description: '**Deprecated**: Use `passTypeId` or `collectorId` instead.'
+        required: false
+        deprecated: true
+        schema:
+          type: string
+          enum:
+          - NFC_EGYM_APPLE
+          - NFC_EGYM_GOOGLE
+          - NFC_EXTERNAL_APPLE
+          - NFC_EXTERNAL_GOOGLE
+      - name: collectorId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: passTypeId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/membership/{membershipId}:
+    get:
+      tags:
+      - Member Account
+      summary: Retrieve an account by membership ID
+      description: Retrieve an account using membershipId.
+      operationId: retrieveAccountByMembershipId
+      parameters:
+      - name: membershipId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/email/{email}:
+    get:
+      tags:
+      - Member Account
+      summary: Retrieve an account by email
+      description: Retrieve an account using email.
+      operationId: getByEmail
+      parameters:
+      - name: email
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 320
+          minLength: 5
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/corporate-fitness:
+    get:
+      tags:
+      - Gym Visit
+      summary: List Corporate Fitness member accounts
+      description: Request Corporate Fitness member accounts for the current gym whose corporate membership cancellation date
+        falls into specified date range. The type of membership is always `CORPORATE_FITNESS`, both `endDateFrom` and `endDateTo`
+        parameters are mandatory and apply to `corporateFitness.endTimestamp`.
+      operationId: getCorporateFitnessMemberAccounts
+      parameters:
+      - name: endDateFrom
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        example: '2022-09-22'
+      - name: endDateTo
+        in: query
+        required: true
+        schema:
+          type: string
+          format: date
+        example: '2022-09-23'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MemberAccountDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/rfids/{rfid}:
+    delete:
+      tags:
+      - Member RFIDs
+      summary: Remove RFID
+      description: Delete specified RFID from user
+      operationId: deleteRfid
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: rfid
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tagFormat
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - HITAG1
+          - MIFARE
+          - LEGIC
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/products/{productId}:
+    delete:
+      tags:
+      - Products booking
+      summary: Deactivate a product
+      description: This endpoint deactivates a product for a user in a gym.
+      operationId: deactivateUserProduct
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    WebhookRequestDTO:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - secret
+      - url
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
+    WebhookResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Webhook id
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - id
+      - secret
+      - url
+    TaskDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the task
+          readOnly: true
+        name:
+          type: string
+          description: Task name
+          minLength: 1
+        type:
+          type: string
+          description: Task type
+          enum:
+          - GENERAL
+          - ANAMNESIS
+          - COORDINATION_FITNESS_TEST
+          - HEALTH_FITNESS_TEST
+          - PWC_FITNESS_TEST
+          - MAX_FORCE_FITNESS_TEST
+          - MOBILITY_SCREEN_FITNESS_TEST
+          - BLOOD_PRESSURE_FITNESS_TEST
+          - POLAR_FITNESS_TEST
+          - INBODY_FITNESS_TEST
+          - JAWON_FITNESS_TEST
+        dueDate:
+          type: string
+          format: date
+          description: 'Task completion deadline date. format: yyyy-MM-dd'
+        authorId:
+          type: string
+          description: The author of the task. EGYM account ID
+          minLength: 1
+        targetId:
+          type: string
+          description: The account of task related to. EGYM account ID
+          minLength: 1
+        completerId:
+          type: string
+          description: The account who solved the task. EGYM account ID
+        completed:
+          type: boolean
+          description: If this task has been completed in the gym this will be true, false otherwise.
+      required:
+      - authorId
+      - dueDate
+      - name
+      - targetId
+    ContactDTO:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: The Member telephone number.
+        street:
+          type: string
+          description: Street name in member's address.
+        streetNumber:
+          type: string
+          description: Street number in member's address.
+        zipCode:
+          type: string
+          description: Zip Code in member's address.
+        city:
+          type: string
+          description: City in member's address.
+        state:
+          type: string
+          description: State in member's address.
+        country:
+          type: string
+          description: Country of the member's address in ISO 3166-1 alpha-2.
+          example: DE
+    CorporateFitnessDTO:
+      type: object
+      properties:
+        startTimestamp:
+          type: string
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership will start, in
+            case that is in the future. This field will not be returned in case of an active or past corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
+        endTimestamp:
+          type: string
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership ends. This field
+            is only returned in case there is a defined end timestamp for the corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
+    MemberAccountDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: The EGYM account ID for the Gym Member.
+          readOnly: true
+        email:
+          type: string
+          description: The Member email address. It should be unique within the gym chain.
+          minLength: 1
+        firstName:
+          type: string
+          description: The Member first name.
+          example: John
+          minLength: 1
+        lastName:
+          type: string
+          description: The Member last name.
+          example: Wick
+          minLength: 1
+        dateOfBirth:
+          type: string
+          format: date
+          description: 'The Member date of birth. format: yyyy-MM-dd'
+        gender:
+          type: string
+          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE
+            for the usage of the machines.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        contact:
+          $ref: '#/components/schemas/ContactDTO'
+          description: The user's contact information
+        membership:
+          $ref: '#/components/schemas/MembershipDTO'
+          description: The membership details.
+      required:
+      - email
+      - firstName
+      - gender
+      - lastName
+      - membership
+    MembershipDTO:
+      type: object
+      properties:
+        membershipId:
+          type: string
+          description: Member ID in the gym software. It must be unique for exactly one member in the gym chain.
+          minLength: 1
+        agreementNumber:
+          type: string
+          description: The agreement number is the number of the membership between the member and the gym chain.
+        membershipType:
+          type: string
+          description: Type of the member's membership to determine available features.
+          enum:
+          - BASIC
+          - PREMIUM
+          - PROSPECT
+          - CORPORATE_FITNESS
+        membershipSubType:
+          type: string
+          description: Extension of membershipStatus for further customization for this user. One membershipStatus can have
+            multiple membershipSubType.
+          maxLength: 128
+          minLength: 0
+        endOfContract:
+          type: string
+          format: date
+          description: 'Date when the member''s contract ends. For gyms with automatic contract renewal, send the date when
+            the contract would run out, if cancelled. Update the field when the contract was renewed (manually and automatically
+            renewals). format: yyyy-MM-dd. Must be on or after startOfContract if provided.'
+        startOfContract:
+          type: string
+          format: date
+          description: 'The date when the membership started. format: yyyy-MM-dd'
+        referringMemberId:
+          type: string
+          description: MembershipId of the member who referred this member.
+        barcode:
+          type: string
+          description: Member's barcode to check-in in the gym. Can be visualised on the Branded Member App and used for lookup
+            to verify membership.
+        verificationTAN:
+          type: string
+          description: Mandatory when creating new membership of type 'CORPORATE_FITNESS' or when updating membership to 'CORPORATE_FITNESS'.
+            Member's verification TAN. Can be visualised on the Qualitrain Member App and used for Qualitrain Membership verification.
+        corporateFitness:
+          $ref: '#/components/schemas/CorporateFitnessDTO'
+          description: The corporate fitness details. These fields are returned only in case membershipType=CORPORATE_FITNESS
+          readOnly: true
+      required:
+      - membershipId
+      - membershipType
+      - startOfContract
+    RfidDTO:
+      type: object
+      properties:
+        rfid:
+          type: string
+          description: String representing RFID value in hex (with leading "0x"). Please ensure that the RFID string after
+            "0x" contains an even number of hexadecimal characters and that only RFID information is sent in this field, but
+            no other medium like magnetic stripe card numbers or bar codes.
+          pattern: ^0x([0-9a-fA-F]{2})+$
+        tagFormat:
+          type: string
+          description: The rfid tag format.
+          enum:
+          - HITAG1
+          - MIFARE
+          - LEGIC
+      required:
+      - rfid
+    RfidListDTO:
+      type: object
+      properties:
+        rfids:
+          type: array
+          description: List of the user's RFIDs
+          items:
+            $ref: '#/components/schemas/RfidDTO'
+      required:
+      - rfids
+    UserProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The ID of the product.
+          minLength: 1
+        startDate:
+          type: string
+          format: date
+          description: 'The date from which the specified product is active and can be used by the user. It must be today’s
+            or future date in Timezone of the club. format: yyyy-MM-dd'
+        endDate:
+          type: string
+          format: date
+          description: 'The date to which the specified product is active and can be used by the user. It must be future date
+            in Timezone of the club. format: yyyy-MM-dd. Max date is 2050-12-31'
+      required:
+      - productId
+    AssignNfcTokenRequest:
+      type: object
+      description: Request payload for assigning an NFC token to a member account
+      properties:
+        collectorId:
+          type: integer
+          format: int64
+          description: Google-specific pass issuer ID. Mutually exclusive with passTypeId.
+        passTypeId:
+          type: string
+          description: Apple-specific pass issuer ID. Mutually exclusive with collectorId.
+        token:
+          type: string
+          description: NFC token payload
+          example: deadbeefcafebabe
+          maxLength: 512
+          minLength: 0
+      required:
+      - token
+    Part: {}
+    GymRolesDTO:
+      type: object
+      properties:
+        trainer:
+          type: boolean
+          description: If trainer is true, assign trainer right for account, otherwise remove trainer rights.
+        gymOwner:
+          type: boolean
+          description: If gymOwner is true, assign gymOwner right for account, otherwise remove gymOwner rights.
+    PartnerPushNotificationDTO:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Notification plain text.
+          example: Welcome to the gym!
+          maxLength: 500
+          minLength: 0
+        deeplink:
+          type: string
+          description: Name of the feature for navigate to.
+          example: workouts
+          maxLength: 100
+          minLength: 0
+      required:
+      - text
+    UserPresenceDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Timestamp in milliseconds since epoch for a checkin / checkout event that happened in the past.
+          example: 1612790783000
+    AdmissionDTO:
+      type: object
+      properties:
+        firstAdmission:
+          type: boolean
+          description: If this member has been admitted for the first time in the gym this will be true, false otherwise.
+      required:
+      - firstAdmission
+    PatchMemberAccountDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The Member email address. It should be unique within the gym chain.
+        firstName:
+          type: string
+          description: The Member first name.
+          example: John
+        lastName:
+          type: string
+          description: The Member last name.
+          example: Wick
+        dateOfBirth:
+          type: string
+          format: date
+          description: 'The Member date of birth. format: yyyy-MM-dd'
+        gender:
+          type: string
+          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE
+            for the usage of the machines.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        contact:
+          $ref: '#/components/schemas/ContactDTO'
+          description: The user's contact information
+        membership:
+          $ref: '#/components/schemas/PatchMembershipDTO'
+          description: The membership details.
+    PatchMembershipDTO:
+      type: object
+      properties:
+        membershipId:
+          type: string
+          description: Member ID in the gym software. It must be unique for exactly one member in the gym chain.
+        agreementNumber:
+          type: string
+          description: The agreement number is the number of the membership between the member and the gym chain.
+        membershipType:
+          type: string
+          description: Type of the member's membership to determine available features.
+          enum:
+          - BASIC
+          - PREMIUM
+          - PROSPECT
+          - CORPORATE_FITNESS
+        membershipSubType:
+          type: string
+          description: Extension of membershipStatus for further customization for this user. One membershipStatus can have
+            multiple membershipSubType.
+          maxLength: 128
+          minLength: 0
+        endOfContract:
+          type: string
+          format: date
+          description: 'Date when the member''s contract ends. For gyms with automatic contract renewal, send the date when
+            the contract would run out, if cancelled. Update the field when the contract was renewed (manually and automatically
+            renewals). format: yyyy-MM-dd. Must be on or after startOfContract if provided.'
+        startOfContract:
+          type: string
+          format: date
+          description: 'The date when the membership started. format: yyyy-MM-dd'
+        referringMemberId:
+          type: string
+          description: MembershipId of the member who referred this member.
+        barcode:
+          type: string
+          description: Member's barcode to check-in in the gym. Can be visualised on the Branded Member App and used for lookup
+            to verify membership.
+    ProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The ID of the product.
+          readOnly: true
+        title:
+          type: string
+          description: Product title.
+          readOnly: true
+        description:
+          type: string
+          description: Product description.
+          readOnly: true
+        scope:
+          type: string
+          description: The scope of the bookable package.
+          enum:
+          - LOCATION
+          - CHAIN
+          - BRAND
+    PageableResponseMemberAccountDTO:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int32
+          example: 0
+        limit:
+          type: integer
+          format: int32
+          example: 10
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberAccountDTO'
+        total:
+          type: integer
+          format: int64
+          example: 100
+        hasNext:
+          type: boolean
+          example: true
+        nextAfterId:
+          type: integer
+          format: int32
+          description: Cursor to request the next page
+          example: 12545
+    NfcTokenDTO:
+      type: object
+      description: Represents an NFC token assigned to a member account
+      properties:
+        token:
+          type: string
+          description: NFC token payload
+          example: deadbeefcafebabe
+  securitySchemes:
+    mms:
+      type: apiKey
+      description: Authentication is validated via an API key that is generated by EGYM for each gym location. This API key
+        will not be identical with the access token used in the EGYM Gym API v1
+      name: x-api-key
+      in: header
+x-tagGroups:
+- name: Member Account Management
+  tags:
+  - Member Account
+  - Member Account Roles
+  - Member RFIDs
+  - Products booking
+- name: NFC management (Beta version)
+  tags:
+  - Member Account NFC
+- name: Member Migration
+  tags:
+  - Migrating members
+- name: Gym Visit Management
+  tags:
+  - Gym Visit
+- name: Trainer Task Management
+  tags:
+  - Trainer Task
+- name: Integration
+  tags:
+  - Webhooks
+  - Push notifications

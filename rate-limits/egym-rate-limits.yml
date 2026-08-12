@@ -1,0 +1,48 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/rate-limits
+docs:
+- https://developer.egym.com/mms-api-v2/rate-limits
+- https://developer.egym.com/mms-api-v2/errors#429-too-many-requests
+limit_count: 1
+rate_limits:
+- api: EGYM MMS API V2
+  scope: per-api-key
+  algorithm: token-bucket
+  bucket_capacity: 60
+  refill: 60 tokens per 10 seconds (6 tokens/second)
+  limit: 6
+  window: 1s
+  burst: 60
+  cost_per_request: 1
+  exhaustion_status: 429
+  note: 'Each API key gets its own token bucket with a capacity of 60 tokens refilling
+    continuously at 6 tokens/second. Because refill is continuous rather than a fixed
+    10-second window, sustained traffic at or below 6 requests/second can continue
+    indefinitely and bursts are permitted up to the tokens currently accumulated.
+    Changed from a fixed time-window limiter to token-bucket on 2026-07-21 per the
+    published change log.'
+  source: https://developer.egym.com/mms-api-v2/rate-limits
+response_headers:
+- header: X-RateLimit-Remaining
+  api: EGYM MMS API V2
+  description: Tokens remaining in the caller's bucket. EGYM documents this on every
+    response and instructs clients to use it to slow down proactively before hitting
+    the limit.
+  source: https://developer.egym.com/mms-api-v2/errors#429-too-many-requests
+  in_openapi: false
+retry_guidance:
+  status: 429
+  retry_after_header: false
+  documented: 'On 429, wait before retrying and reduce sustained request rate. EGYM
+    notes that because the bucket refills continuously rather than resetting on a fixed
+    schedule, staying under the documented rate is sufficient to avoid further 429s.
+    No Retry-After header is documented.'
+  source: https://developer.egym.com/mms-api-v2/errors#429-too-many-requests
+gaps:
+- 'X-RateLimit-Remaining is documented in prose but is NOT declared as a response header
+  in any of the eight OpenAPI documents, so a generated client will not surface it.'
+- 'No published rate limits were found for the Data Hub API, Data Export API, the two
+  Equipment Vendor APIs, the User Connect API or MMS API v1 — only MMS API V2 documents
+  a limiter.'
+- 'No Retry-After header and no RateLimit-* (RFC 9331/IETF draft) headers are documented.'

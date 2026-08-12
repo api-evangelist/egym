@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for EGYM Canonical GroupX Classes API
+  version: 1.0.0
+extends: openapi/egym-canonical-groupx-classes-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/egym-canonical-groupx-classes-openapi.yml (harvested verbatim from developer.egym.com/_spec/)
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: egym
+    x-apievangelist-api: canonical-groupx-classes
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://developer.egym.com/
+    x-apievangelist-upstream-version: '1.0'
+    x-apievangelist-kind: blueprint — a contract EGYM asks MMS vendors to IMPLEMENT on their own host, not an API
+      EGYM operates
+    x-apievangelist-server-note: servers[] is the placeholder https://example.org/<partner>/group-classes/v1.0 because
+      the partner supplies the host
+    x-apievangelist-gap: 422 responses declare cause/reason semantics in prose but attach no schema and no media
+      type
+- target: $
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/egym-authentication.yml
+      conventions: conventions/egym-conventions.yml
+      errors: errors/egym-problem-types.yml
+      lifecycle: lifecycle/egym-lifecycle.yml
+      data_model: data-model/egym-data-model.yml
+      mcp: mcp/egym-mcp.yml

@@ -1,0 +1,87 @@
+generated: '2026-08-12'
+method: searched
+source: https://registry.npmjs.org/ + https://github.com/egym + https://developer.egym.com/mwa/docs/mwa-logger
+registries_probed: [npm, PyPI, Maven Central, NuGet, pkg.go.dev, RubyGems, Packagist, crates.io]
+package_count: 3
+official_count: 3
+
+summary: 'EGYM publishes no server-side API client SDK for any of its eight REST APIs — there
+  is no egym package on npm, PyPI, Maven Central, NuGet, Go modules, RubyGems, Packagist or
+  crates.io that wraps the MMS, Data Hub, Equipment Vendor or User Connect APIs. What EGYM does
+  publish, under the @egym npm scope, is the toolkit for its Micro Web Application (MWA)
+  programme: libraries a partner uses to build a web app that runs INSIDE the EGYM Branded
+  Member App. All three are first-party, actively released (all within ten days of this probe),
+  and map one-to-one onto repositories in github.com/egym.'
+
+packages:
+- language: typescript
+  registry: npm
+  name: '@egym/mwa-utils'
+  url: https://www.npmjs.com/package/@egym/mwa-utils
+  install: npm install --save @egym/mwa-utils
+  official: true
+  version: 0.8.0
+  published: '2026-08-04'
+  repository: https://github.com/egym/lib-mwa-utils
+  covers: EGYM Micro Web Applications
+  description: 'Utility functions for MWA apps, intended for use across all MWA apps — both
+    EGYM-built and external partner apps — to maintain backward compatibility with the EGYM
+    Branded Member App.'
+  wraps_rest_api: false
+- language: typescript
+  registry: npm
+  name: '@egym/mwa-logger'
+  url: https://www.npmjs.com/package/@egym/mwa-logger
+  install: npm install @egym/mwa-logger --save
+  official: true
+  version: 0.3.2
+  published: '2026-08-03'
+  repository: https://github.com/egym/lib-mwa-logger
+  covers: EGYM Micro Web Applications
+  description: 'On-screen logger component that captures and displays request/response data
+    exchanged between the web app and the native host app. Ships an <EgymMwaDevtools /> React
+    component. Documented at https://developer.egym.com/mwa/docs/mwa-logger.'
+  wraps_rest_api: false
+- language: typescript
+  registry: npm
+  name: '@egym/capacitor-nfc-pass-wallet'
+  url: https://www.npmjs.com/package/@egym/capacitor-nfc-pass-wallet
+  install: npm install @egym/capacitor-nfc-pass-wallet
+  official: true
+  version: 0.4.0
+  published: '2026-08-03'
+  repository: https://github.com/egym/lib-capacitor-nfc-pass-wallet
+  covers: NFC wallet membership passes
+  description: 'Capacitor plugin plus native SDKs for partners to implement Apple/Google Wallet
+    NFC passes in their own apps. Pairs with the NFC login grant added to the Equipment Vendor
+    API in version 1.1.1 and with the MMS API V2 NFC token operations.'
+  wraps_rest_api: false
+  languages_in_repo: [Java, TypeScript, Swift]
+
+reference_implementations:
+  note: 'Not published to a registry — cloned from GitHub. EGYM ships four reference host apps
+    for the MWA programme.'
+  repos:
+  - {name: mwa-reference, url: 'https://github.com/egym/mwa-reference', language: TypeScript, updated: '2026-07-21', description: Example micro web application structure and native-interaction mechanics.}
+  - {name: ios-mwa-reference, url: 'https://github.com/egym/ios-mwa-reference', language: Swift, updated: '2026-07-16', description: Native iOS host app exposing native features to an MWA.}
+  - {name: android-mwa-reference, url: 'https://github.com/egym/android-mwa-reference', language: Kotlin, updated: '2026-07-16', description: Native Android host app.}
+  - {name: react-native-mwa-reference, url: 'https://github.com/egym/react-native-mwa-reference', updated: '2026-07-16', description: React Native host app.}
+  - {name: web-portal-ios, url: 'https://github.com/egym/web-portal-ios', language: Swift, updated: '2026-01-23', description: Thin layer on top of Ionic Portals.}
+
+github_org:
+  url: https://github.com/egym
+  public_repos: 23
+  note: 'Of 23 public repositories, roughly half are forks of third-party CI/build tooling
+    (test-reporter, paths-filter, buf-setup-action, install-nix-action, android-emulator-runner,
+    hcledit, rppal, stm32f0xx-hal, zxingify-objc, swift-snapshot-testing). The first-party
+    output is the MWA toolkit, the NFC wallet plugin, the reference host apps and GenLint.'
+
+gaps:
+- 'No first-party REST client for MMS API V2 (43 operations), Data Hub, Data Export, either
+  Equipment Vendor API or User Connect. Integrators generate their own client or hand-roll HTTP.'
+- 'No PyPI, Maven Central, NuGet, Go, RubyGems, Packagist or crates.io presence at all —
+  notable because the MMS integration audience is gym management software vendors, who are
+  disproportionately .NET and Java shops.'
+- 'No CLI. See cli/ — none exists.'
+- 'The @egym npm scope is not indexed by the npm search API (scope:egym returns 0 results),
+  so the packages are only findable if you already know their exact names from the docs.'

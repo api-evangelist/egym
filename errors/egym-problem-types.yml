@@ -1,0 +1,447 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/ (all eight EGYM OpenAPI documents), enriched from https://developer.egym.com/mms-api-v2/errors
+format: custom-json
+rfc9457: false
+envelope:
+  media_type: application/json
+  schema: ErrorDTO
+  fields:
+  - timestamp
+  - path
+  - status
+  - error
+  - errorCode
+  - message
+  - errors
+  - metadata
+  note: EGYM uses a bespoke JSON error envelope, not application/problem+json. The stable machine-readable discriminator
+    is the errorCode string; see errors/egym-error-codes.yml for the enumerated registry.
+problem_count: 32
+problems:
+- spec: openapi/egym-canonical-groupx-classes-openapi.yml
+  status: 422
+  media_types: []
+  schema: []
+  descriptions:
+  - "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n\
+    * cause `addToWaitlistFailed`\n  * reason `lackOfProduct` -- if operation can't be perform"
+  - "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n\
+    * cause `bookingFailed`\n  * reason `lackOfProduct` -- if operation can't be performed bec"
+  operation_count: 5
+  example_operations:
+  - addAttendeeToClass
+  - addAttendeeToWaitlist
+  - removeAttendeeFromClass
+  - removeAttendeeFromWaitlist
+- spec: openapi/egym-data-export-openapi.yml
+  status: 400
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Bad Request
+  operation_count: 4
+  example_operations:
+  - getBodyMeasurement
+  - getCardioMeasurements
+  - getStrengthMeasurements
+  - getWorkouts
+- spec: openapi/egym-data-export-openapi.yml
+  status: 401
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Unauthorized
+  operation_count: 4
+  example_operations:
+  - getBodyMeasurement
+  - getCardioMeasurements
+  - getStrengthMeasurements
+  - getWorkouts
+- spec: openapi/egym-data-export-openapi.yml
+  status: 403
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Forbidden
+  operation_count: 4
+  example_operations:
+  - getBodyMeasurement
+  - getCardioMeasurements
+  - getStrengthMeasurements
+  - getWorkouts
+- spec: openapi/egym-data-export-openapi.yml
+  status: 404
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Not Found
+  operation_count: 4
+  example_operations:
+  - getBodyMeasurement
+  - getCardioMeasurements
+  - getStrengthMeasurements
+  - getWorkouts
+- spec: openapi/egym-data-export-openapi.yml
+  status: 500
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Internal Server Error
+  operation_count: 4
+  example_operations:
+  - getBodyMeasurement
+  - getCardioMeasurements
+  - getStrengthMeasurements
+  - getWorkouts
+- spec: openapi/egym-data-hub-openapi.yml
+  status: 400
+  media_types: []
+  schema: []
+  descriptions: []
+  operation_count: 6
+  example_operations:
+  - createAsyncExportJob
+  - getAnalyticsExport
+  - getBodyMeasurementsExport
+  - getFlexibilityMeasurementsExport
+- spec: openapi/egym-data-hub-openapi.yml
+  status: 401
+  media_types: []
+  schema: []
+  descriptions: []
+  operation_count: 8
+  example_operations:
+  - createAsyncExportJob
+  - getAnalyticsExport
+  - getAsyncExportJobStatus
+  - getBodyMeasurementsExport
+- spec: openapi/egym-data-hub-openapi.yml
+  status: 403
+  media_types: []
+  schema: []
+  descriptions: []
+  operation_count: 8
+  example_operations:
+  - createAsyncExportJob
+  - getAnalyticsExport
+  - getAsyncExportJobStatus
+  - getBodyMeasurementsExport
+- spec: openapi/egym-data-hub-openapi.yml
+  status: 404
+  media_types: []
+  schema: []
+  descriptions: []
+  operation_count: 1
+  example_operations:
+  - getAsyncExportJobStatus
+- spec: openapi/egym-data-hub-openapi.yml
+  status: 500
+  media_types: []
+  schema: []
+  descriptions: []
+  operation_count: 8
+  example_operations:
+  - createAsyncExportJob
+  - getAnalyticsExport
+  - getAsyncExportJobStatus
+  - getBodyMeasurementsExport
+- spec: openapi/egym-equipment-vendor-server-openapi.yml
+  status: 400
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Bad Request
+  operation_count: 4
+  example_operations:
+  - createBodyMeasurement
+  - createCardioMeasurement
+  - createFlexibilityMeasurement
+  - createToken
+- spec: openapi/egym-equipment-vendor-server-openapi.yml
+  status: 401
+  media_types:
+  - application/json
+  schema:
+  - TokenResponseDTO
+  - UserDetailsDTO
+  descriptions:
+  - Unauthorized
+  operation_count: 5
+  example_operations:
+  - createBodyMeasurement
+  - createCardioMeasurement
+  - createFlexibilityMeasurement
+  - createToken
+- spec: openapi/egym-equipment-vendor-server-openapi.yml
+  status: 404
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Not Found
+  operation_count: 5
+  example_operations:
+  - createBodyMeasurement
+  - createCardioMeasurement
+  - createFlexibilityMeasurement
+  - createToken
+- spec: openapi/egym-equipment-vendor-server-openapi.yml
+  status: 500
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Internal Server Error
+  operation_count: 5
+  example_operations:
+  - createBodyMeasurement
+  - createCardioMeasurement
+  - createFlexibilityMeasurement
+  - createToken
+- spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  status: 400
+  media_types:
+  - application/json
+  schema:
+  - ApiErrorResponseDTO
+  descriptions:
+  - Bad Request
+  operation_count: 26
+  example_operations:
+  - acceptTermsAndConditions
+  - assignRfid
+  - create
+  - createBodyMeasurement
+- spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  status: 401
+  media_types: []
+  schema: []
+  descriptions:
+  - Unauthorized
+  operation_count: 27
+  example_operations:
+  - acceptTermsAndConditions
+  - assignRfid
+  - create
+  - createBodyMeasurement
+- spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  status: 403
+  media_types:
+  - application/json
+  schema:
+  - ApiErrorResponseDTO
+  descriptions:
+  - Forbidden
+  operation_count: 1
+  example_operations:
+  - getUserActivityInformation
+- spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  status: 404
+  media_types:
+  - application/json
+  schema:
+  - ApiErrorResponseDTO
+  descriptions:
+  - Not Found
+  operation_count: 23
+  example_operations:
+  - acceptTermsAndConditions
+  - assignRfid
+  - create
+  - createBodyMeasurement
+- spec: openapi/egym-equipment-vendor-standalone-openapi.yml
+  status: 500
+  media_types:
+  - application/json
+  schema:
+  - ApiErrorResponseDTO
+  descriptions:
+  - Internal Server Error
+  operation_count: 30
+  example_operations:
+  - acceptTermsAndConditions
+  - assignRfid
+  - create
+  - createBodyMeasurement
+- spec: openapi/egym-mms-api-v1-openapi.yml
+  status: 413
+  media_types: []
+  schema: []
+  descriptions:
+  - 'Request Entity Too Large.
+
+    Overall request size is limited to 16 MB.
+
+    It is usually caused by passing extensive data in the field `imageData`.'
+  operation_count: 1
+  example_operations:
+  - POST /user/publish
+- spec: openapi/egym-mms-api-v1-openapi.yml
+  status: 4XX
+  media_types:
+  - application/json
+  schema:
+  - ErrorDto
+  descriptions:
+  - Client Error
+  operation_count: 13
+  example_operations:
+  - GET /gym/product
+  - GET /gym/product/{productId}
+  - GET /task
+  - GET /task/{taskId}
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 400
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Bad Request
+  operation_count: 42
+  example_operations:
+  - addRFIDToUser
+  - assignAccountNfcToken
+  - assignRoles
+  - checkAdmission
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 401
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Unauthorized
+  operation_count: 42
+  example_operations:
+  - addRFIDToUser
+  - assignAccountNfcToken
+  - assignRoles
+  - checkAdmission
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 403
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Forbidden
+  operation_count: 42
+  example_operations:
+  - addRFIDToUser
+  - assignAccountNfcToken
+  - assignRoles
+  - checkAdmission
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 404
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Not Found
+  operation_count: 42
+  example_operations:
+  - addRFIDToUser
+  - assignAccountNfcToken
+  - assignRoles
+  - checkAdmission
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 409
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Conflict
+  operation_count: 5
+  example_operations:
+  - createTask
+  - createWebhook
+  - partialUpdate
+  - publishAccount
+- spec: openapi/egym-mms-api-v2-openapi.yml
+  status: 500
+  media_types:
+  - application/json
+  schema:
+  - ErrorDTO
+  descriptions:
+  - Internal Server Error
+  operation_count: 42
+  example_operations:
+  - addRFIDToUser
+  - assignAccountNfcToken
+  - assignRoles
+  - checkAdmission
+- spec: openapi/egym-user-connect-openapi.yml
+  status: 400
+  media_types:
+  - application/json
+  schema:
+  - ValidationErrorDto
+  descriptions:
+  - Bad Request
+  - Bad Request — validation failure
+  operation_count: 4
+  example_operations:
+  - submitBloodPressureMeasurement
+  - submitRestingHeartRateMeasurement
+  - submitVo2MaxMeasurement
+  - submitWorkout
+- spec: openapi/egym-user-connect-openapi.yml
+  status: 401
+  media_types:
+  - application/json
+  schema:
+  - WorkoutBriefResponse
+  descriptions:
+  - Unauthorized — missing or invalid JWT
+  operation_count: 1
+  example_operations:
+  - submitWorkout
+- spec: openapi/egym-user-connect-openapi.yml
+  status: 502
+  media_types:
+  - application/json
+  schema:
+  - WorkoutBriefResponse
+  descriptions:
+  - Bad Gateway — server-workout downstream error
+  operation_count: 1
+  example_operations:
+  - submitWorkout
+- spec: openapi/egym-user-connect-openapi.yml
+  status: 503
+  media_types:
+  - application/json
+  schema:
+  - WorkoutBriefResponse
+  descriptions:
+  - Service Unavailable — server-workout circuit breaker open
+  operation_count: 1
+  example_operations:
+  - submitWorkout
+gaps:
+- No response uses application/problem+json, so RFC 9457 client tooling cannot parse EGYM errors generically.
+- The Canonical GroupX Classes blueprint declares 422 responses with cause/reason semantics but attaches no schema
+  and no media type, so an implementing partner has no machine-readable contract for the error body it is expected
+  to return.
+- MMS API v1 collapses every failure into a single 4XX range response rather than enumerating status codes.
+- No 429 response is declared in any OpenAPI document even though MMS API V2 documents a 429 rate-limit response
+  in prose.

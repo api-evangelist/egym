@@ -1,0 +1,4211 @@
+openapi: 3.1.0
+info:
+  title: Equipment Vendor API (for standalone clients)
+  description: "At EGYM, we believe that fitness is the soul of healthy living. Work together with partners to help us bringing\
+    \ new ways of working out to\nmillions of gym members, and new ways of prescribing exercises to hundred of thousands of\
+    \ gym trainers, all around the world.\n\nEGYM provides a Fitness Platform for the Connected Gym so you can help us with\
+    \ the mission to ***make the gym work for everyone***.\nEGYM provides a global account that is not scoped for a specific\
+    \ tenant, brand or gym. The account is called EGYM ID. The EGYM ID allows\nusers to use different services of the gym.\
+    \ The EGYM ID is used for the login to EGYM hardware and software products and conneceted equipment.\n\nEGYM works with\
+    \ the best of breed of the fitness industry. In this documentation, we provide tools and info needed to build a variety\
+    \ of workout\nexperiences that integrate directly with the EGYM Ecosystem. We are happy to welcome you as a partner of\
+    \ EGYM.\n\n---\n\n# \U0001F4E6 Changelog of Documentation\n\n| Version | Changes |\n|---------|---------|\n| **1.2.0**\
+    \ | ✅ Added support for **Genius Training Plans** — see [`GET /api/v1/cardio/training-plans`] and [`GET /api/v1/strength/training-plans`]|\n\
+    | **1.1.0** | \U0001F510 Introduced **NFC-based login** via Apple/Google Wallet — see [`POST /api/v1/oauth/token`](#tag/OAuth/operation/token)\
+    \ |\n\n---\n\n# \U0001F510 Authentication\n\nThe Equipment Vendor API authentication is based on the OAuth 2.0 as specified\
+    \ in the [RFC6749](https://tools.ietf.org/html/rfc6749),\nmore concretely on the [Resource Owner Password Credentials\
+    \ Grant](https://tools.ietf.org/html/rfc6749#page-37) due to constraint\nenvironment that can be found in our partner\
+    \ devices, i.e. devices with no screen or using the RFID for user identification.\n\nCurrently, different methods for\
+    \ obtaining the Access Token are made available:\n\n- By specifying **user credentials**\n- By specifying **RFID**\n-\
+    \ **By specifying NFC (Wallet) credentials** *(since v1.1.0)*\n\nThe OAuth `client_id` and `client_secret` are issued\
+    \ by EGYM to each partner (vendor) for each gym. These are used in a `Basic` authentication header as:\n\n```\nAuthorization:\
+    \ Basic Base64(client_id:client_secret)\n```\n\n---\n\n## \U0001F511 User Credentials (EGYM ID)\n\n_This is the classic\
+    \ Resource Owner Password Grant._\n\n\n```http\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\n\
+    Content-Type: application/x-www-form-urlencoded\n\ngrant_type=password&machine_type=bike&serial_number=ser123&username=johndoe&password=•••\n\
+    ```\n\n---\n\n## \U0001F4F6 User RFID\n\n\n```http\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\n\
+    Content-Type: application/x-www-form-urlencoded\n\ngrant_type=rfid&machine_type=bike&serial_number=ser123&rfid=AB12CD34&rfid_format=MIFARE\n\
+    ```\n\n---\n\n## \U0001F4F1 NFC Login (Apple / Google Wallet)\n\n_Introduced in v1.1.0_\n\nThis method uses NFC payloads\
+    \ from Apple/Google Wallet. Use `grant_type=nfc` and supply:\n\n- `payload`: the NFC data string\n- `transponder_type`:\
+    \ either `APPLE` or `GOOGLE`\n- One of:\n  - `issuer_id`: the Wallet issuer identifier (e.g., `com.egym.apple`)\n  - `configuration_index`:\
+    \ the DotOrigin VTAP slot ID\n\nExamples:\n\n```APPLE\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\n\
+    Content-Type: application/x-www-form-urlencoded\n\ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&transponder_type=APPLE&issuer_id=com.egym.apple\n\
+    ```\n\n```GOOGLE\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\
+    \ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&transponder_type=GOOGLE&issuer_id=123456789\n```\n\
+    \n```VTAP\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\
+    \ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&configuration_index=2\n```\n\n\n## \U0001F4DC Terms\
+    \ and Conditions Handling\n\nSome users may not have accepted the latest EGYM Terms and Conditions (T&C). In that case,\
+    \ the user details will indicate that the user did not accepted them yet and partners must handle T&C interaction:\n\n\
+    ### 1. Retrieve the T&C and privacy policy\n\n```T&C\nGET /api/v1/ressources/terms-and-conditions\nContent-Type: text/html\n\
+    \nlocale=en_US\n```\n\n```PP\nGET /api/v1/ressources/privacy-policy\nContent-Type: text/html\n\nlocale=en_US\n```\nResponse\
+    \ will be terms.\n\n\n### 2. Prompt the user to accept or decline\n\n- If **accepted**, proceed to step 3\n- If **declined**,\
+    \ exit the login flow gracefully\n\n### 3. Submit confirmation of acceptance\n\n```http\nPUT /api/v1/users/terms-and-conditions\n\
+    Authorization: Bearer {access_token}\nContent-Type: application/json\n\nlocale=en_US\n```\n\n---\n\n## ⏱ Rate Limit\n\n\
+    Authentication is rate-limited per `client_id`: **10 requests per second**.\n\n---\n\n# \U0001F504 Integration Flow Overview\n\
+    \n```plaintext\n[Authenticate (POST /oauth/token)]\n              ↓\n[Get User Details (GET /users)]\n              ↓\n\
+    \  ┌────────────────────────────┬────────────────────────────┐\n  │                            │                     \
+    \       │\n  │   Fitness Equipment        │   Measurement Devices       │\n  │                            │          \
+    \                  │\n  │ - Get Training Plan        │ - Submit Measurements       │\n  │   → GET /training-plans    │\
+    \   → POST /measurements/*    │\n  │ - Submit Workout           │                            │\n  │   → POST /workouts\
+    \         │                            │\n  └────────────────────────────┴────────────────────────────┘\n```\n\n---\n\n\
+    # ⚠️ Error Handling\n\nAll endpoints return descriptive errors when something goes wrong.\n\n### Common HTTP Status Codes\n\
+    \n| Code | Meaning         | Notes |\n|------|------------------|-------|\n| 200  | OK               | Success |\n| 204\
+    \  | No Content       | Success, no response body |\n| 400  | Bad Request      | Validation or field error |\n| 401  |\
+    \ Unauthorized     | Missing or invalid auth - credentials are invalid |\n| 403  | Forbidden        | Insufficient permission\
+    \ - endpoint is not available for equipment type|\n| 404  | Not Found        | Resource doesn't exist - unknown RFID|\n\
+    | 500  | Internal Error   | Something unexpected |\n\n### Sample Error Response\n\n```json\n{\n  \"message\": \"Invalid\
+    \ input\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"username\",\n      \"message\": \"Must not be null\"\n    }\n\
+    \  ]\n}\n```\n\n---\n\nIf you have any questions or need help integrating, contact us at [integrations@egym.com](mailto:integrations@egym.com).\n\
+    \n---\n\n# \U0001F4DD Integration FAQ – Standalone Devices API\n\nThis section addresses common technical integration\
+    \ questions specific to the **Standalone Devices** model.\n\n## 1. Supported Login Types\n- **EGYM ID Login** (`grant_type=password`):\
+    \ EGYM Username & password\n- **RFID Login** (`grant_type=rfid`): RFID number + format\n- **NFC Login** (`grant_type=nfc`):\
+    \ NFC payload + issuer ID or configuration index\n\n## 2. Handling Terms & Conditions\nIf the user has not accepted the\
+    \ latest Terms & Conditions (T&C):\n1. Retrieve T&C URL: `GET /users/{userId}/terms`\n2. Display link to user for acceptance/rejection\n\
+    3. If accepted: `POST /users/{userId}/terms/accept`\n4. If rejected: exit the login flow gracefully\n\n## 3. Key Endpoints\
+    \ for Standalone Integrations\n- Authentication: `POST /oauth/token`\n- User details: `GET /users`\n- Training plan: `GET\
+    \ /training-plans`\n- Workout results: `POST /workouts`\n- Measurements: `POST /measurements/*`\n\n## 4. Error Handling\
+    \ Best Practices\n- **401 Unauthorized**: Invalid/missing credentials or token\n- **403 Forbidden**: Permission issue\n\
+    - **429 Too Many Requests**: Rate limit exceeded; retry after delay\n- Important: Provide meaningful error messages to\
+    \ the user (not just error codes, ideally with localized description), or silently retry when user experience requires\n\
+    \n## 5. Rate Limits\n- Authentication: 10 requests/second per `client_id`\n- Other endpoints: See API documentation\n\n\
+    ## 6. Testing\n- Use the **EGYM Sandbox** with provided test credentials.\n- Test credentials are prodvided by EGYM\n\
+    - Test login flows, training plan retrieval, workout submission, and T&C handling\n\n## 7. What if I send the same measurement\
+    \ twice?**\nUse a different `uniqueMeasurementId` each time.\n\n## .When should I use `issuerId` vs `configurationIndex`\
+    \ in NFC?**\nThese are alternatives for identifying the wallet pass source. Provide one depending on the integration project\
+    \ with EGYM. Configuration Index is only supported when using the Dot Origin VTAP readers.\n"
+  termsOfService: https://egym.com/us/terms/
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  license:
+    name: Pending License
+    url: https://egym.com/
+  version: 1.2.0
+servers:
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+paths:
+  /api/v1/users:
+    get:
+      tags:
+      - User
+      summary: User Details
+      description: This endpoint returns a user
+      operationId: getUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentUserDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    put:
+      tags:
+      - User
+      summary: User Details
+      description: This endpoint updates the current user. The endpoint is only enabled if there is a specific use case to
+        update user records.
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/users/terms-and-conditions:
+    put:
+      tags:
+      - User
+      summary: Accept Terms and Conditions
+      description: This endpoint when invoked will save the information that the user accepted the eGym Terms and Conditions.
+      operationId: acceptTermsAndConditions
+      parameters:
+      - name: locale
+        in: query
+        description: Defines the locale in ISO 15897 standard format.
+        required: true
+        schema:
+          type: string
+        example: en_US
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/users/image:
+    put:
+      tags:
+      - User
+      summary: Set user's avatar
+      description: This endpoint sets the user's avatar.
+      operationId: uploadUserImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/cardio/tests/{cardioTestId}:
+    put:
+      tags:
+      - Cardio Test
+      summary: Update Test
+      description: This endpoint should be invoked in order to create a new step into an ongoing cardio test
+      operationId: updateTest
+      parameters:
+      - name: cardioTestId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCardioTestDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardioTestResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/cardio/reminders:
+    put:
+      tags:
+      - Cardio Test
+      summary: Postpone Reminder
+      description: This endpoint should be invoked in order to postpone the reminder of a cardio test
+      operationId: postponeReminder
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/users/rfid:
+    post:
+      tags:
+      - User
+      summary: Assign RFID
+      description: This endpoint assigns one RFID to the user. If the RFID is already assigned to another user, it will be
+        re-assigned to this user.
+      operationId: assignRfid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfidDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/strength/workouts:
+    post:
+      tags:
+      - Strength Workouts
+      summary: Create Workout
+      description: This endpoint creates a strength workout
+      operationId: createWorkout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StrengthWorkoutDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/open-exercises/workouts:
+    post:
+      tags:
+      - Open Exercise Workouts
+      summary: Create
+      description: This endpoint creates an open exercise workout
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenExerciseWorkoutDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Login
+      description: This endpoint logs in the user and returns the access token
+      operationId: token
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              oneOf:
+              - $ref: '#/components/schemas/DeviceTokenRequestDTO'
+              - $ref: '#/components/schemas/NfcTokenRequestDTO'
+              - $ref: '#/components/schemas/PasswordTokenRequestDTO'
+              - $ref: '#/components/schemas/RefreshTokenRequestDTO'
+              - $ref: '#/components/schemas/RfidTokenRequestDTO'
+              - $ref: '#/components/schemas/XidTokenRequestDTO'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - partner: []
+  /api/v1/measurements/flexibility:
+    get:
+      tags:
+      - Flexibility Measurement
+      summary: Get Flexibility Measurement
+      description: This endpoint retrieves the latest flexibility measurement of the user
+      operationId: getUserFlexibilityMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of FlexibilityMetricType values to include in the response. When omitted, all available metric
+          types are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - RANGE_OF_MOVEMENT_SCORE
+            - SYMMETRIC_SCORE
+            - HARMONY_SCORE
+            - TOTAL_SCORE
+            - ADDUCTOR_LEFT_DEGREE
+            - ADDUCTOR_LEFT_SCORE
+            - ADDUCTOR_RIGHT_DEGREE
+            - ADDUCTOR_RIGHT_SCORE
+            - ADDUCTOR_RANGE_OF_MOTION_SCORE
+            - ADDUCTOR_SYMMETRY_SCORE
+            - LEG_BACKSIDE_LYING_LEFT_DEGREE
+            - LEG_BACKSIDE_LYING_LEFT_SCORE
+            - LEG_BACKSIDE_LYING_RIGHT_DEGREE
+            - LEG_BACKSIDE_LYING_RIGHT_SCORE
+            - LEG_BACKSIDE_LYING_RANGE_OF_MOTION_SCORE
+            - LEG_BACKSIDE_LYING_SYMMETRY_SCORE
+            - LEG_BACKSIDE_STANDING_LEFT_DEGREE
+            - LEG_BACKSIDE_STANDING_LEFT_SCORE
+            - LEG_BACKSIDE_STANDING_RIGHT_DEGREE
+            - LEG_BACKSIDE_STANDING_RIGHT_SCORE
+            - LEG_BACKSIDE_STANDING_RANGE_OF_MOTION_SCORE
+            - LEG_BACKSIDE_STANDING_SYMMETRY_SCORE
+            - LEG_EXTENSION_LEFT_DEGREE
+            - LEG_EXTENSION_LEFT_SCORE
+            - LEG_EXTENSION_RIGHT_DEGREE
+            - LEG_EXTENSION_RIGHT_SCORE
+            - LEG_EXTENSION_RANGE_OF_MOTION_SCORE
+            - LEG_EXTENSION_SYMMETRY_SCORE
+            - CHEST_LYING_LEFT_DEGREE
+            - CHEST_LYING_LEFT_SCORE
+            - CHEST_LYING_RIGHT_DEGREE
+            - CHEST_LYING_RIGHT_SCORE
+            - CHEST_LYING_RANGE_OF_MOTION_SCORE
+            - CHEST_LYING_SYMMETRY_SCORE
+            - CHEST_SITTING_LEFT_DEGREE
+            - CHEST_SITTING_LEFT_SCORE
+            - CHEST_SITTING_RIGHT_DEGREE
+            - CHEST_SITTING_RIGHT_SCORE
+            - CHEST_SITTING_RANGE_OF_MOTION_SCORE
+            - CHEST_SITTING_SYMMETRY_SCORE
+            - HIP_FLEXOR_LEFT_DEGREE
+            - HIP_FLEXOR_LEFT_SCORE
+            - HIP_FLEXOR_RIGHT_DEGREE
+            - HIP_FLEXOR_RIGHT_SCORE
+            - HIP_FLEXOR_RANGE_OF_MOTION_SCORE
+            - HIP_FLEXOR_SYMMETRY_SCORE
+            - TORSO_MUSCLES_LYING_LEFT_DEGREE
+            - TORSO_MUSCLES_LYING_LEFT_SCORE
+            - TORSO_MUSCLES_LYING_RIGHT_DEGREE
+            - TORSO_MUSCLES_LYING_RIGHT_SCORE
+            - TORSO_MUSCLES_LYING_RANGE_OF_MOTION_SCORE
+            - TORSO_MUSCLES_LYING_SYMMETRY_SCORE
+            - TORSO_MUSCLES_SITTING_LEFT_DEGREE
+            - TORSO_MUSCLES_SITTING_LEFT_SCORE
+            - TORSO_MUSCLES_SITTING_RIGHT_DEGREE
+            - TORSO_MUSCLES_SITTING_RIGHT_SCORE
+            - TORSO_MUSCLES_SITTING_RANGE_OF_MOTION_SCORE
+            - TORSO_MUSCLES_SITTING_SYMMETRY_SCORE
+            - SHOULDER_NECK_LEFT_DEGREE
+            - SHOULDER_NECK_LEFT_SCORE
+            - SHOULDER_NECK_RIGHT_DEGREE
+            - SHOULDER_NECK_RIGHT_SCORE
+            - SHOULDER_NECK_RANGE_OF_MOTION_SCORE
+            - SHOULDER_NECK_SYMMETRY_SCORE
+            - CALF_LEFT_DEGREE
+            - CALF_LEFT_SCORE
+            - CALF_RIGHT_DEGREE
+            - CALF_RIGHT_SCORE
+            - CALF_RANGE_OF_MOTION_SCORE
+            - CALF_SYMMETRY_SCORE
+            - TORSO_LATERAL_FLEXION_LEFT_DEGREE
+            - TORSO_LATERAL_FLEXION_RIGHT_DEGREE
+            - TORSO_LATERAL_FLEXION_LEFT_NORMALIZED
+            - TORSO_LATERAL_FLEXION_RIGHT_NORMALIZED
+            - NECK_LATERAL_FLEXION_LEFT_DEGREE
+            - NECK_LATERAL_FLEXION_RIGHT_DEGREE
+            - NECK_LATERAL_FLEXION_LEFT_NORMALIZED
+            - NECK_LATERAL_FLEXION_RIGHT_NORMALIZED
+            - CHEST_EXTENSION_LEFT_DEGREE
+            - CHEST_EXTENSION_RIGHT_DEGREE
+            - CHEST_EXTENSION_LEFT_NORMALIZED
+            - CHEST_EXTENSION_RIGHT_NORMALIZED
+            - HIP_EXTENSION_LEFT_DEGREE
+            - HIP_EXTENSION_RIGHT_DEGREE
+            - HIP_EXTENSION_LEFT_NORMALIZED
+            - HIP_EXTENSION_RIGHT_NORMALIZED
+            - HAMSTRING_EXTENSION_LEFT_DEGREE
+            - HAMSTRING_EXTENSION_RIGHT_DEGREE
+            - HAMSTRING_EXTENSION_LEFT_NORMALIZED
+            - HAMSTRING_EXTENSION_RIGHT_NORMALIZED
+            - SQUAT_DEPTH
+            - SQUAT_SHOULDER_DEGREE
+            - SQUAT_BACK_DEGREE
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestFlexibilityMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    post:
+      tags:
+      - Flexibility Measurement
+      summary: Create Flexibility Measurement
+      description: This endpoint creates a Flexibility measurement for the user
+      operationId: createFlexibilityMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/measurements/cardio:
+    get:
+      tags:
+      - Cardio Measurement
+      summary: Get Cardio Measurement
+      description: This endpoint retrieves the latest cardio measurement of the user
+      operationId: getUserCardioMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of CardioMetricType values to include in the response. When omitted, all available metric types
+          are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - RESTING_HEART_RATE
+            - VO2MAX
+            - SYSTOLIC_PRESSURE
+            - DIASTOLIC_PRESSURE
+            - MAX_WATTS
+            - TRAINING_SUITABILITY
+            - CARDIO_STRESS_INDEX
+            - CARDIO_FIT_LEVEL
+            - HEART_RATE_ZONE_RECOVERY_LOW
+            - HEART_RATE_ZONE_RECOVERY_TOP
+            - HEART_RATE_ZONE_BASICI_LOW
+            - HEART_RATE_ZONE_BASICI_TOP
+            - HEART_RATE_ZONE_BASICII_LOW
+            - HEART_RATE_ZONE_BASICII_TOP
+            - HEART_RATE_ZONE_THRESHOLD_LOW
+            - HEART_RATE_ZONE_THRESHOLD_TOP
+            - HEART_RATE_ZONE_HIGH_INTENSIVE_LOW
+            - HEART_RATE_ZONE_HIGH_INTENSIVE_TOP
+            - PERFORMANCE_FIT_LEVEL
+            - ABSOLUTE_VO2_MAX
+            - PERFORMANCE_ZONE_RECOVERY_LOW
+            - PERFORMANCE_ZONE_RECOVERY_TOP
+            - PERFORMANCE_ZONE_BASICI_LOW
+            - PERFORMANCE_ZONE_BASICI_TOP
+            - PERFORMANCE_ZONE_BASICII_LOW
+            - PERFORMANCE_ZONE_BASICII_TOP
+            - PERFORMANCE_ZONE_THRESHOLD_LOW
+            - PERFORMANCE_ZONE_THRESHOLD_TOP
+            - PERFORMANCE_ZONE_HIGH_INTENSIVE_LOW
+            - PERFORMANCE_ZONE_HIGH_INTENSIVE_TOP
+            - FATTY_ACID_METABOLISM_PERCENTS
+            - CARBONHYDRATE_METABOLISM_PERCENTS
+            - CARBONHYDRATE_METABOLISM_RATING
+            - O2_UPTAKE_PERCENTS
+            - CO2_EMISSION_PERCENTS
+            - O2_UPTAKE_RATING
+            - CARDIO_FIT_LEVEL_MIN
+            - CARDIO_FIT_LEVEL_LOW
+            - CARDIO_FIT_LEVEL_MID
+            - CARDIO_FIT_LEVEL_TOP
+            - CARDIO_FIT_LEVEL_MAX
+            - CARDIO_STRESS_INDEX_MIN
+            - CARDIO_STRESS_INDEX_LOW
+            - CARDIO_STRESS_INDEX_MID
+            - CARDIO_STRESS_INDEX_TOP
+            - CARDIO_STRESS_INDEX_MAX
+            - WORKOUT_READINESS
+            - RESTING_HEART_RATE_MIN
+            - RESTING_HEART_RATE_LOW
+            - RESTING_HEART_RATE_MID
+            - RESTING_HEART_RATE_TOP
+            - RESTING_HEART_RATE_MAX
+            - BLOOD_OXYGEN_LEVEL_SPO2
+            - BLOOD_OXYGEN_LEVEL_SPO2_MIN
+            - BLOOD_OXYGEN_LEVEL_SPO2_LOW
+            - BLOOD_OXYGEN_LEVEL_SPO2_MID
+            - BLOOD_OXYGEN_LEVEL_SPO2_TOP
+            - BLOOD_OXYGEN_LEVEL_SPO2_MAX
+            - PARTNER_CARDIO_BIOAGE
+            - PARTNER_CARDIO_BIOAGE_MIN
+            - PARTNER_CARDIO_BIOAGE_LOW
+            - PARTNER_CARDIO_BIOAGE_MID
+            - PARTNER_CARDIO_BIOAGE_TOP
+            - PARTNER_CARDIO_BIOAGE_MAX
+            - O2_UPTAKE_PERCENTS_MIN
+            - O2_UPTAKE_PERCENTS_LOW
+            - O2_UPTAKE_PERCENTS_MID
+            - O2_UPTAKE_PERCENTS_TOP
+            - O2_UPTAKE_PERCENTS_MAX
+            - PARTNER_FITNESS_LEVEL
+            - ESTIMATED_FUNCTIONAL_THRESHOLD_POWER_WATT
+            - FUNCTIONAL_THRESHOLD_POWER_WATT
+            - ESTIMATED_MAX_HEART_RATE_BPM
+            - MAX_HEART_RATE_BPM
+            - HEART_RATE_BPM
+            - PULSE_BPM
+            - MEAN_ARTERY_PRESSURE_MMHG
+            - PULSE_PRESSURE_BPM
+            - RATE_PRESSURE_PRODUCT
+            - INDIVIDUAL_ANAEROBIC_THRESHOLD
+            - HEART_RATE_RECOVERY_RATING
+            - METABOLIC_FLEXIBILITY_RATING
+            - STRESS_LEVEL_METABOLISM_RATING
+            - VENTILATORY_THRESHOLD_1
+            - VENTILATORY_THRESHOLD_2
+            - EXERCISE_INTENSITY_AT_MAXIMUM_FAT_OXIDATION
+            - PEAK_POWER_WATTS
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestCardioMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    post:
+      tags:
+      - Cardio Measurement
+      summary: Create Cardio Measurement
+      description: This endpoint creates a cardio measurement for the user
+      operationId: createCardioMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/measurements/body:
+    get:
+      tags:
+      - Body Measurement
+      summary: Get Body Measurement
+      description: This endpoint retrieves the latest body measurement of the user
+      operationId: getUserBodyMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of BodyMetricType values to include in the response. When omitted, all available metric types
+          are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - BMI
+            - WEIGHT_KG
+            - HEIGHT_CM
+            - BODY_FAT_PERCENTS
+            - WAIST_TO_HIP_RATIO
+            - HIP_CM
+            - WAIST_CM
+            - BODY_MUSCLE_PERCENTS
+            - BODY_FAT_MASS_KG
+            - SKELETAL_MUSCLE_MASS_KG
+            - SKELETAL_MUSCLE_MASS_PERCENTS
+            - FAT_FREE_MASS_KG
+            - FAT_FREE_MASS_PERCENTS
+            - SOFT_LEAN_MASS_KG
+            - BODY_MINERALS_KG
+            - BODY_PROTEIN_KG
+            - INTRA_CELLULAR_WATER_LITER
+            - EXTRA_CELLULAR_WATER_LITER
+            - EXTRA_CELLULAR_WATER_LOW_LITER
+            - EXTRA_CELLULAR_WATER_MID_LITER
+            - EXTRA_CELLULAR_WATER_TOP_LITER
+            - ECW_TBW_PERCENT
+            - ECW_TBW_PERCENT_LOW
+            - ECW_TBW_PERCENT_MID
+            - ECW_TBW_PERCENT_TOP
+            - BODY_PHASE_ANGLE
+            - BODY_PHASE_ANGLE_MIN
+            - BODY_PHASE_ANGLE_LOW
+            - BODY_PHASE_ANGLE_MID
+            - BODY_PHASE_ANGLE_TOP
+            - BODY_PHASE_ANGLE_MAX
+            - FAT_MASS_INDEX
+            - FAT_FREE_MASS_INDEX
+            - VISCERAL_FAT_AREA_CM2
+            - VISCERAL_ADIPOSE_TISSUE_KG
+            - VISCERAL_ADIPOSE_TISSUE_KG_MIN
+            - VISCERAL_ADIPOSE_TISSUE_KG_LOW
+            - VISCERAL_ADIPOSE_TISSUE_KG_MID
+            - VISCERAL_ADIPOSE_TISSUE_KG_TOP
+            - VISCERAL_ADIPOSE_TISSUE_KG_MAX
+            - TOTAL_ENERGY_EXPENDITURE
+            - RESTING_ENERGY_EXPENDITURE
+            - RESTING_ENERGY_EXPENDITURE_NORM
+            - RESTING_ENERGY_EXPENDITURE_RATING
+            - RESTING_ENERGY_EXPENDITURE_RATING_MIN
+            - RESTING_ENERGY_EXPENDITURE_RATING_LOW
+            - RESTING_ENERGY_EXPENDITURE_RATING_MID
+            - RESTING_ENERGY_EXPENDITURE_RATING_TOP
+            - RESTING_ENERGY_EXPENDITURE_RATING_MAX
+            - RECOMMENDED_RESTING_ENERGY_EXPENDITURE
+            - SEGMENTAL_LEAN_RIGHT_ARM_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_KG
+            - SEGMENTAL_LEAN_TRUNK_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_KG
+            - SEGMENTAL_FAT_LEFT_ARM_KG
+            - SEGMENTAL_FAT_TRUNK_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_KG
+            - SEGMENTAL_FAT_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_TRUNK_KG
+            - SEGMENTAL_MUSCLE_TRUNK_LOW_KG
+            - SEGMENTAL_MUSCLE_TRUNK_TOP_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_TOP_KG
+            - BODY_WEIGHT_MIN_KG
+            - BODY_WEIGHT_LOW_KG
+            - BODY_WEIGHT_MID_KG
+            - BODY_WEIGHT_TOP_KG
+            - BODY_WEIGHT_MAX_KG
+            - BODY_FAT_MASS_LOW_KG
+            - BODY_FAT_MASS_MID_KG
+            - BODY_FAT_MASS_TOP_KG
+            - SKELETAL_MUSCLE_MASS_MIN_KG
+            - SKELETAL_MUSCLE_MASS_LOW_KG
+            - SKELETAL_MUSCLE_MASS_MID_KG
+            - SKELETAL_MUSCLE_MASS_TOP_KG
+            - SKELETAL_MUSCLE_MASS_MAX_KG
+            - SOFT_LEAN_MASS_LOW_KG
+            - SOFT_LEAN_MASS_MID_KG
+            - SOFT_LEAN_MASS_TOP_KG
+            - VISCERAL_ADIPOSE_TISSUE_LOW_LITER
+            - VISCERAL_ADIPOSE_TISSUE_MID_LITER
+            - VISCERAL_ADIPOSE_TISSUE_TOP_LITER
+            - BODY_WATER_PERCENTS
+            - BODY_WATER_LITER
+            - BODY_WATER_MIN_LITER
+            - BODY_WATER_LOW_LITER
+            - BODY_WATER_MID_LITER
+            - BODY_WATER_TOP_LITER
+            - BODY_WATER_MAX_LITER
+            - INTRA_CELLULAR_WATER_PERCENT
+            - INTRA_CELLULAR_WATER_LOW_KG
+            - INTRA_CELLULAR_WATER_MID_KG
+            - INTRA_CELLULAR_WATER_TOP_KG
+            - FAT_MASS_INDEX_LOW
+            - FAT_MASS_INDEX_MID
+            - FAT_MASS_INDEX_TOP
+            - SEGMENTAL_LEAN_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_MID_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_LOW_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_MID_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_TOP_KG
+            - SEGMENTAL_LEAN_TRUNK_LOW_KG
+            - SEGMENTAL_LEAN_TRUNK_MID_KG
+            - SEGMENTAL_LEAN_TRUNK_TOP_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_MID_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_LOW_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_MID_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_TOP_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_MID_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_FAT_LEFT_ARM_LOW_KG
+            - SEGMENTAL_FAT_LEFT_ARM_MID_KG
+            - SEGMENTAL_FAT_LEFT_ARM_TOP_KG
+            - SEGMENTAL_FAT_TRUNK_LOW_KG
+            - SEGMENTAL_FAT_TRUNK_MID_KG
+            - SEGMENTAL_FAT_TRUNK_TOP_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_MID_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_FAT_LEFT_LEG_LOW_KG
+            - SEGMENTAL_FAT_LEFT_LEG_MID_KG
+            - SEGMENTAL_FAT_LEFT_LEG_TOP_KG
+            - SEGMENTAL_ANKLE_RIGHT_TO_KNEE_RIGHT_CM
+            - SEGMENTAL_ANKLE_LEFT_TO_KNEE_LEFT_CM
+            - SEGMENTAL_KNEE_RIGHT_TO_HIP_RIGHT_CM
+            - SEGMENTAL_HIP_RIGHT_TO_PELVIS_CM
+            - SEGMENTAL_FOOT_LEFT_TO_ANKLE_LEFT_CM
+            - SEGMENTAL_KNEE_LEFT_TO_HIP_LEFT_CM
+            - SEGMENTAL_HIP_LEFT_TO_PELVIS_CM
+            - SEGMENTAL_PELVIS_TO_SPINE_NAVAL_CM
+            - SEGMENTAL_SPINE_NAVAL_TO_SPINE_CHEST_CM
+            - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_RIGHT_CM
+            - SEGMENTAL_CLAVICLE_RIGHT_TO_SHOULDER_RIGHT_CM
+            - SEGMENTAL_SHOULDER_RIGHT_TO_ELBOW_RIGHT_CM
+            - SEGMENTAL_ELBOW_RIGHT_TO_WRIST_RIGHT_CM
+            - SEGMENTAL_WRIST_RIGHT_TO_HAND_RIGHT_CM
+            - SEGMENTAL_HAND_RIGHT_TO_HAND_TIP_RIGHT_CM
+            - SEGMENTAL_WRIST_RIGHT_TO_THUMB_RIGHT_CM
+            - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_LEFT_CM
+            - SEGMENTAL_CLAVICLE_LEFT_TO_SHOULDER_LEFT_CM
+            - SEGMENTAL_SHOULDER_LEFT_TO_ELBOW_LEFT_CM
+            - SEGMENTAL_ELBOW_LEFT_TO_WRIST_LEFT_CM
+            - SEGMENTAL_WRIST_LEFT_TO_HAND_LEFT_CM
+            - SEGMENTAL_HAND_LEFT_TO_HAND_TIP_LEFT_CM
+            - SEGMENTAL_WRIST_LEFT_TO_THUMB_LEFT_CM
+            - SEGMENTAL_SPINE_CHEST_TO_NECK_CM
+            - SEGMENTAL_NECK_TO_HEAD_CM
+            - SEGMENTAL_HEAD_TO_NOSE_CM
+            - BODY_FAT_PERCENTS_MIN
+            - BODY_FAT_PERCENTS_LOW
+            - BODY_FAT_PERCENTS_MID
+            - BODY_FAT_PERCENTS_TOP
+            - BODY_FAT_PERCENTS_MAX
+            - BODY_PROTEIN_LOW_KG
+            - BODY_PROTEIN_TOP_KG
+            - BODY_MINERALS_LOW_KG
+            - BODY_MINERALS_TOP_KG
+            - FAT_FREE_MASS_LOW_KG
+            - FAT_FREE_MASS_TOP_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_PERCENT
+            - SEGMENTAL_LEAN_LEFT_ARM_PERCENT
+            - SEGMENTAL_LEAN_TRUNK_PERCENT
+            - SEGMENTAL_LEAN_RIGHT_LEG_PERCENT
+            - SEGMENTAL_LEAN_LEFT_LEG_PERCENT
+            - BODY_WATER_RIGHT_ARM_LITER
+            - BODY_WATER_RIGHT_ARM_LOW_LITER
+            - BODY_WATER_RIGHT_ARM_TOP_LITER
+            - BODY_WATER_LEFT_ARM_LITER
+            - BODY_WATER_LEFT_ARM_LOW_LITER
+            - BODY_WATER_LEFT_ARM_TOP_LITER
+            - BODY_WATER_TRUNK_LITER
+            - BODY_WATER_TRUNK_LOW_LITER
+            - BODY_WATER_TRUNK_TOP_LITER
+            - BODY_WATER_RIGHT_LEG_LITER
+            - BODY_WATER_RIGHT_LEG_LOW_LITER
+            - BODY_WATER_RIGHT_LEG_TOP_LITER
+            - BODY_WATER_LEFT_LEG_LITER
+            - BODY_WATER_LEFT_LEG_LOW_LITER
+            - BODY_WATER_LEFT_LEG_TOP_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+            - ECW_TBW_RIGHT_ARM_PERCENT
+            - ECW_TBW_LEFT_ARM_PERCENT
+            - ECW_TBW_TRUNK_PERCENT
+            - ECW_TBW_RIGHT_LEG_PERCENT
+            - ECW_TBW_LEFT_LEG_PERCENT
+            - SEGMENTAL_FAT_RIGHT_ARM_PERCENT
+            - SEGMENTAL_FAT_LEFT_ARM_PERCENT
+            - SEGMENTAL_FAT_TRUNK_PERCENT
+            - SEGMENTAL_FAT_RIGHT_LEG_PERCENT
+            - SEGMENTAL_FAT_LEFT_LEG_PERCENT
+            - VISCERAL_FAT_LEVEL_CM2
+            - OBESITY_DEGREE
+            - BODY_CELL_MASS_KG
+            - ARMS_CM
+            - MUSCLES_ARMS_CM
+            - RIGHT_CALF_CM
+            - LEFT_CALF_CM
+            - GLUTES_CM
+            - BONE_MINERAL_CONTENT
+            - TBW_FFM
+            - NECK_CM
+            - CHEST_CM
+            - ABDOMEN_CM
+            - RIGHT_ARM_CM
+            - LEFT_ARM_CM
+            - RIGHT_THIGH_CM
+            - LEFT_THIGH_CM
+            - THIGHS_CM
+            - SKELETAL_MUSCLE_INDEX_KG_M2
+            - BUST_CM
+            - HIPS_CM
+            - BODY_BONES_KG
+            - EXTRA_CELLULAR_WATER_PERCENT
+            - EXTRA_CELLULAR_WATER_LOW_PERCENT
+            - EXTRA_CELLULAR_WATER_TOP_PERCENT
+            - SEGMENTAL_FAT_PERCENT_RIGHT_LEG_SCORE
+            - SEGMENTAL_FAT_PERCENT_LEFT_LEG_SCORE
+            - SEGMENTAL_FAT_PERCENT_RIGHT_ARM_SCORE
+            - SEGMENTAL_FAT_PERCENT_LEFT_ARM_SCORE
+            - SEGMENTAL_FAT_PERCENT_TRUNK_SCORE
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_SCORE
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_SCORE
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_SCORE
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_SCORE
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_SCORE
+            - VISCERAL_FAT_RATING
+            - VISCERAL_FAT_RATING_LOW
+            - VISCERAL_FAT_RATING_TOP
+            - LEG_MUSCLE_SCORE
+            - SEGMENTAL_PHASE_ANGLE_RIGHT_LEG_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_LEFT_LEG_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_RIGHT_ARM_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_LEFT_ARM_ANGLE
+            - SKELETAL_MUSCLE_MASS_INDEX_SCORE
+            - PARTNER_SCORE
+            - BODY_FAT_MASS_MAX_KG
+            - BODY_FAT_MASS_MIN_KG
+            - BASAL_METABOLIC_RATE_KJ
+            - EXTRA_CELL_MASS_KG
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MIN
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_LOW
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MID
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_TOP
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MAX
+            - UPPER_RIGHT_ARM_CM
+            - UPPER_LEFT_ARM_CM
+            - LOWER_RIGHT_ARM_CM
+            - LOWER_LEFT_ARM_CM
+            - UPPER_RIGHT_LEG_CM
+            - UPPER_LEFT_LEG_CM
+            - LOWER_RIGHT_LEG_CM
+            - LOWER_LEFT_LEG_CM
+            - PARTNER_METABOLIC_BIO_AGE
+            - BIO_WELLNESS_INDEX
+            - SUBCUTANEOUS_FAT_MASS_KG
+            - SUBCUTANEOUS_FAT_MASS_PERCENT
+            - BMI_LOW_KG
+            - BMI_TOP_KG
+            - SKELETAL_MUSCLE_MASS_LOW_PERCENTS
+            - SKELETAL_MUSCLE_MASS_TOP_PERCENTS
+            - FAT_FREE_MASS_LOW_PERCENTS
+            - FAT_FREE_MASS_TOP_PERCENTS
+            - VISCERAL_FAT_AREA_LOW_CM2
+            - VISCERAL_FAT_AREA_TOP_CM2
+            - WAIST_TO_HIP_RATIO_MIN
+            - WAIST_TO_HIP_RATIO_MAX
+            - BODY_WATER_LOW_PERCENTS
+            - BODY_WATER_TOP_PERCENTS
+            - BASAL_METABOLIC_RATE_LOW_KJ
+            - BASAL_METABOLIC_RATE_TOP_KJ
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LOW_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_TOP_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_TOP_KG
+            - VISCERAL_FAT_LOW_RATING
+            - VISCERAL_FAT_TOP_RATING
+            - SEGMENTAL_PHASE_ANGLE_TRUNK_KG
+            - FAT_FREE_MASS_INDEX_Z_SCORE
+            - SKELETAL_MUSCLE_MASS_Z_SCORE
+            - FAT_MASS_INDEX_Z_SCORE
+            - FAT_FREE_MASS_INDEX_MIN
+            - FAT_FREE_MASS_INDEX_LOW
+            - FAT_FREE_MASS_INDEX_MID
+            - FAT_FREE_MASS_INDEX_TOP
+            - FAT_FREE_MASS_INDEX_MAX
+            - SKELETAL_MUSCLE_INDEX_MIN
+            - SKELETAL_MUSCLE_INDEX_LOW
+            - SKELETAL_MUSCLE_INDEX_MID
+            - SKELETAL_MUSCLE_INDEX_TOP
+            - SKELETAL_MUSCLE_INDEX_MAX
+            - APPENDICULAR_SKELETAL_MUSCLE_MASS_KG
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_KG_M2
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_LOW
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_MID
+            - BODY_FAT_SCORE
+            - BODY_MUSCLE_SCORE
+            - OBESITY_DEGREE_PERCENT
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestBodyMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    post:
+      tags:
+      - Body Measurement
+      summary: Create Body Measurement
+      description: This endpoint creates a body measurement for the user
+      operationId: createBodyMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/machines/heartbeat:
+    post:
+      tags:
+      - Machine
+      summary: Machine heartbeat
+      description: This endpoint receives machine heartbeat requests (signals)
+      operationId: machineHeartbeat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MachineHeartbeatRequestDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - partner: []
+  /api/v1/cardio/workouts:
+    post:
+      tags:
+      - Cardio Workouts
+      summary: Create Workout
+      description: This endpoint creates a cardio workout
+      operationId: createWorkout_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardioWorkoutDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/cardio/tests:
+    post:
+      tags:
+      - Cardio Test
+      summary: Initialise Test
+      description: This endpoint should be invoked in order to create and initialize a cardio test for a user
+      operationId: initialiseTest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialCardioTestDTO'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardioTestResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/users/activity-levels:
+    get:
+      tags:
+      - Statistics
+      summary: User Activity Level
+      description: This endpoint will return activity level summary of the user.
+      operationId: getUserActivityInformation
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityLevelResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/strength/training-plans:
+    get:
+      tags:
+      - Strength Workouts
+      summary: Get Training Plans
+      description: This endpoint returns a user strength training plan
+      operationId: findAllTrainingPlans
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StrengthTrainingPlansDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/resources/terms-and-conditions:
+    get:
+      tags:
+      - Resource
+      summary: Terms and Conditions
+      description: This endpoint returns the EGYM terms and conditions
+      operationId: getTermsAndConditions
+      parameters:
+      - name: locale
+        in: query
+        description: Provide the locale in ISO 15897 standard format.
+        required: true
+        schema:
+          type: string
+        example: en_US
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security: []
+  /api/v1/resources/privacy-policy:
+    get:
+      tags:
+      - Resource
+      summary: Privacy Policy
+      description: This endpoint returns the EGYM privacy policy
+      operationId: getPrivacyPolicy
+      parameters:
+      - name: locale
+        in: query
+        description: Provide the locale in ISO 15897 standard format.
+        required: true
+        schema:
+          type: string
+        example: en_US
+      responses:
+        '200':
+          description: OK
+          content:
+            text/html:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security: []
+  /api/v1/points:
+    get:
+      tags:
+      - Statistics
+      summary: User Points
+      description: This endpoint returns the EGYM activity points of the user.
+      operationId: getWorkoutPoints
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkoutHistoryPointsDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/partners/info:
+    get:
+      tags:
+      - Partners
+      summary: info
+      description: This endpoint returns the partner information which is related to the given credentials, if these credentials
+        are invalid it will return a HTTP 401 UNAUTHORIZED error code.
+      operationId: info
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartnerInfoDTO'
+        '401':
+          description: Unauthorized
+      security:
+      - partner: []
+  /api/v1/oauth/.well-known/jwks.json:
+    get:
+      tags:
+      - OAuth
+      summary: well-known
+      description: This endpoint returns a JSON Web Key (JWK) set.
+      operationId: wellKnown
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example:
+                  keys:
+                  - kty: RSA
+                    kid: '1'
+                    alg: RS256
+                    e: AQAB
+                    n: jvb
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security: []
+  /api/v1/measurements/flexibility/history:
+    get:
+      tags:
+      - Flexibility Measurement
+      summary: Get Flexibility History for a user
+      description: This endpoint retrieves flexibility measurements history for the user with pagination support
+      operationId: getUserFlexibilityHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value
+          are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies
+          its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlexibilityMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/measurements/cardio/history:
+    get:
+      tags:
+      - Cardio Measurement
+      summary: Get Cardio History for a user
+      description: This endpoint retrieves cardio measurements history for the user with pagination support
+      operationId: getUserCardioHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value
+          are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies
+          its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardioMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/measurements/body/history:
+    get:
+      tags:
+      - Body Measurement
+      summary: Get Body History for a user
+      description: This endpoint retrieves body measurements history for the user with pagination support
+      operationId: getUserBodyHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value
+          are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies
+          its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BodyMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+  /api/v1/images/{imageId}:
+    get:
+      tags:
+      - Image
+      summary: Image
+      description: This endpoint returns the specified image
+      operationId: getImage
+      parameters:
+      - name: imageId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: imageType
+        in: query
+        description: Defines the type of an image.
+        required: false
+        schema:
+          type: string
+          default: AVATAR
+          enum:
+          - EXERCISE
+          - EQUIPMENT
+          - AVATAR
+          - COVER
+          - GYM_BANNER
+          - GYM_PROFILE
+          - GYM_HEADER
+          - GYM
+          - CHART
+          - BLOG
+          - PARTNER
+          - MOBILESPLASH
+          - SIGNATURE
+          - CARDIOSCAN
+          - MUSCLES
+          - SHARED
+      - name: imageSize
+        in: query
+        description: Different image sizes (the actual pixel size depends on the type of image)
+        required: false
+        schema:
+          type: string
+          default: MEDIUM
+          enum:
+          - TINY
+          - SMALL
+          - MEDIUM
+          - BIG
+          - ORIGINAL
+      responses:
+        '200':
+          description: OK
+          content:
+            image/*:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security: []
+  /api/v1/cardio/training-plans:
+    get:
+      tags:
+      - Cardio Workouts
+      summary: Get Training Plans
+      description: This endpoint returns a user cardio training plan
+      operationId: findAllTrainingPlans_1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardioTrainingPlansDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+components:
+  schemas:
+    UpdateUserDTO:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        dateOfBirth:
+          type: string
+          format: date
+          description: The user's date of birth in ISO 8601 format (yyyy-MM-dd).
+        gender:
+          type: string
+          description: The user's gender.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        optIns:
+          type: object
+          additionalProperties:
+            type: boolean
+          description: The list of opt-ins to be enabled/disabled.
+        locale:
+          type: string
+          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
+          example: en_US
+        unitSystem:
+          type: string
+          description: The user's preferred unit system.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+          example: METRIC
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding
+            failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom
+            error code.
+          example: USER_NOT_FOUND
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    UpdateCardioTestDTO:
+      type: object
+      properties:
+        levelId:
+          type: integer
+          format: int32
+          description: The level id.
+          example: 1
+        stepCompletionType:
+          type: string
+          description: The completion type.
+          enum:
+          - COMPLETED
+          - ABORTED
+        ratedPerceivedExertion:
+          type: string
+          description: The rated perceived exertion.
+          enum:
+          - NO_EFFORT
+          - VERY_EASY
+          - EASY
+          - COMFORTABLE
+          - SOMEWHAT_DIFFICULT
+          - DIFFICULT
+          - HARD
+          - VERY_HARD
+          - EXTREMELY_HARD
+          - MAXIMAL_EFFORT
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - levelId
+      - stepCompletionType
+    CardioLevelDTO:
+      type: object
+      properties:
+        levelId:
+          type: integer
+          format: int32
+          description: Identifier for this cardio level.
+          example: 1
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+        watts:
+          type: number
+          format: double
+          description: Power/Resistance in watts.
+          example: 100
+        stepsPerMinute:
+          type: number
+          format: double
+          description: The number of steps per minute for the activity.
+          example: 80
+        resistance:
+          type: number
+          format: double
+          description: The resistance of the exercise.
+          example: 3
+        rotationsPerMinute:
+          type: number
+          format: double
+          description: The rotations per minute.
+          example: 60
+        stepHeight:
+          type: number
+          format: double
+          description: The height of each step.
+          example: 10
+        speed:
+          type: number
+          format: double
+          description: The speed of the exercise in metres per second.
+          example: '0.666'
+        incline:
+          type: number
+          format: double
+          description: The incline of the exercise.
+          example: 3
+        rampAngle:
+          type: number
+          format: double
+          description: The angle of the ramp.
+          example: 2
+        strideLengthZone:
+          type: number
+          format: double
+          description: The stride length zone.
+          example: 2
+    CardioTestResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifier for this cardio test.
+          example: 1
+        testLevel:
+          $ref: '#/components/schemas/CardioLevelDTO'
+          description: The Cardio Test level.
+        cardioTestResult:
+          $ref: '#/components/schemas/CardioTestResultDTO'
+          description: The Cardio Test result.
+        instructions:
+          type: array
+          description: The instructions to the next step.
+          items:
+            type: string
+            enum:
+            - CONTINUE
+            - FINISH
+            - REQUEST_TRAINING_GOAL
+            - REQUEST_TRAINING_PROGRAM
+            - REQUEST_HEIGHT
+            - REQUEST_WEIGHT
+            - REQUEST_GENDER
+            - REQUEST_DATE_OF_BIRTH
+            - TERMS_AND_CONDITIONS
+            - SUGGEST_CARDIO_TEST
+            - FIRST_CARDIO_TEST
+            - TEST_SKIPPED
+          uniqueItems: true
+    CardioTestResultDTO:
+      type: object
+      properties:
+        results:
+          type: array
+          description: The historical results.
+          items:
+            $ref: '#/components/schemas/HistoricalCardioResultDTO'
+        cardioAge:
+          type: integer
+          format: int32
+          description: The cardio age result.
+          example: 26
+        vo2max:
+          type: number
+          format: double
+          description: The maximum rate of oxygen consumption measured.
+          example: '45.1'
+    HistoricalCardioResultDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The date of the test.
+          example: 1553074068097
+        maxWatts:
+          type: number
+          format: double
+          description: The max watts.
+          example: 200
+        cardioAge:
+          type: integer
+          format: int32
+          description: The cardio age result.
+          example: 26
+        vo2max:
+          type: number
+          format: double
+          description: The maximum rate of oxygen consumption measured.
+          example: '45.1'
+    RfidDTO:
+      type: object
+      properties:
+        rfidFormat:
+          type: string
+          description: The RFID format.
+          enum:
+          - HITAG1
+          - HITAG2
+          - EM4001
+          - EM4002
+          - EM4100
+          - EM4102
+          - EM4022
+          - MIFARE
+          - LEGIC
+          - NFC_EGYM_APPLE
+          - NFC_EGYM_GOOGLE
+          - NFC_EXTERNAL_APPLE
+          - NFC_EXTERNAL_GOOGLE
+        rfid:
+          type: string
+          description: The RFID.
+          minLength: 1
+      required:
+      - rfid
+      - rfidFormat
+    StrengthWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        sets:
+          type: array
+          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
+          items:
+            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - sets
+      - startTimestamp
+      - uniqueExerciseId
+    StrengthWorkoutSetDTO:
+      type: object
+      properties:
+        setId:
+          type: integer
+          format: int32
+          description: 'The set id, the set IDs should be a sequential number, 1st set: 1, 2nd set: 2, etc.'
+          example: 1
+        weight:
+          type: number
+          format: double
+          description: The weight setting, in Kilogram <b>(kg)</b>, used in this set.
+          example: 100
+        repetitions:
+          type: integer
+          format: int32
+          description: The number of repetitions of this set.
+          example: 12
+        rangeOfMotion:
+          type: number
+          format: double
+          description: The length between start and returning point, in millimetres <b>(mm)</b>.
+          example: 250
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the set.
+          example: 10
+        restTime:
+          type: integer
+          format: int64
+          description: Rest/Recovery time in milliseconds.
+          example: 20000
+      required:
+      - repetitions
+      - setId
+      - weight
+    OpenExerciseWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        averageHeartRate:
+          type: integer
+          format: int32
+          description: The average heart rate of this workout in <b>beats/min (bpm)</b>.
+          example: 150
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        intervals:
+          type: array
+          description: The open-exercises workout intervals (sets of exercises).
+          items:
+            $ref: '#/components/schemas/OpenExerciseWorkoutIntervalDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - intervals
+      - startTimestamp
+      - uniqueExerciseId
+    OpenExerciseWorkoutIntervalDTO:
+      type: object
+      properties:
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - duration
+    AppleVasPassType:
+      allOf:
+      - $ref: '#/components/schemas/IssuerId'
+      - type: object
+        properties:
+          passTypeId:
+            type: string
+    DeviceTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          device_token:
+            type: string
+            description: The EGYM-signed device token
+          obfuscated_user_id:
+            type: string
+            description: The user ID for authentication
+            minLength: 1
+      description: Device Token Request for a user, using an egym-signed partner
+      required:
+      - grant_type
+      - machine_type
+      - obfuscated_user_id
+      - serial_number
+      title: DeviceTokenRequestDTO
+    GoogleSmartTapCollector:
+      allOf:
+      - $ref: '#/components/schemas/IssuerId'
+      - type: object
+        properties:
+          collectorId:
+            type: integer
+            format: int32
+    IssuerId: {}
+    NfcTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          payload:
+            type: string
+            description: 'The NFC payload.
+
+
+              The NFC payload is a string that represents the NFC data contained in a wallet pass.
+
+
+              The string must be no more than 64 bytes long and may only contain ASCII characters.
+
+
+              In the case of an Apple Wallet pass, corresponds to the `message` property of the
+
+              [`Pass.NFC`](https://developer.apple.com/documentation/walletpasses/pass/nfc#properties)
+
+              object.
+
+
+              In the case of a Google Wallet pass, corresponds to the `smartTapRedemptionValue` property
+
+              of the
+
+              [`GenericObject`](https://developers.google.com/wallet/reference/rest/v1/genericobject#GenericObject.FIELDS.smart_tap_redemption_value)
+
+              resource.
+
+              '
+            maxLength: 64
+            minLength: 1
+          transponder_type:
+            type: string
+            description: The pass type of the NFC data. Can be Apple or Google.
+            enum:
+            - APPLE
+            - GOOGLE
+          issuer_id:
+            description: The issuer of the NFC data. Required if keySlot is not provided.
+            oneOf:
+            - $ref: '#/components/schemas/AppleVasPassType'
+            - $ref: '#/components/schemas/GoogleSmartTapCollector'
+          configuration_index:
+            $ref: '#/components/schemas/VtapConfigurationIndex'
+            description: The VTAP configuration index read. Required if issuerId is not provided.
+      description: NFC Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - payload
+      - serial_number
+      - transponder_type
+      title: NFCTokenRequestDTO
+    PasswordTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          username:
+            type: string
+            description: Username. Mandatory if the grant_type is password.
+            minLength: 1
+          password:
+            type: string
+            description: Password. Mandatory if the grant_type is password.
+            minLength: 1
+      description: Password Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - password
+      - serial_number
+      - username
+      title: PasswordTokenRequestDTO
+    RefreshTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          refresh_token:
+            type: string
+            description: The refresh token. Mandatory if the grant_type is refresh_token.
+            minLength: 1
+      description: Refresh Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - refresh_token
+      - serial_number
+      title: RefreshTokenRequestDTO
+    RfidTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          rfid:
+            type: string
+            description: RFID serial number. Mandatory if the grant_type is rfid.
+            minLength: 1
+          rfid_format:
+            type: string
+            description: RFID Format. Mandatory if the grant_type is rfid.
+            enum:
+            - HITAG1
+            - HITAG2
+            - EM4001
+            - EM4002
+            - EM4100
+            - EM4102
+            - EM4022
+            - MIFARE
+            - LEGIC
+            - NFC_EGYM_APPLE
+            - NFC_EGYM_GOOGLE
+            - NFC_EXTERNAL_APPLE
+            - NFC_EXTERNAL_GOOGLE
+      description: RFID Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - rfid
+      - rfid_format
+      - serial_number
+      title: RfidTokenRequestDTO
+    TokenRequestDTO:
+      type: object
+      discriminator:
+        propertyName: grant_type
+        mapping:
+          PASSWORD: '#/components/schemas/PasswordTokenRequestDTO'
+          RFID: '#/components/schemas/RfidTokenRequestDTO'
+          REFRESH_TOKEN: '#/components/schemas/RefreshTokenRequestDTO'
+          XID: '#/components/schemas/XidTokenRequestDTO'
+          NFC: '#/components/schemas/NfcTokenRequestDTO'
+          DEVICE: '#/components/schemas/DeviceTokenRequestDTO'
+      properties:
+        grant_type:
+          type: string
+          description: The grant type.
+          enum:
+          - PASSWORD
+          - RFID
+          - REFRESH_TOKEN
+          - XID
+          - NFC
+          - DEVICE
+        serial_number:
+          type: string
+          description: The unique serial number of the machine.
+          minLength: 1
+        machine_type:
+          type: string
+          description: The machine type name of the device.
+          minLength: 1
+        locale:
+          type: string
+          description: The locale, if there is the need to override it during the login process.
+          example: en_US
+        measurement_system:
+          type: string
+          description: The measurement system, if there is the need to override it during the login process.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+        machine_sw_version:
+          type: string
+          description: The version of the Software running on the Machine.
+          example: 5.3.7.323
+        egym_sw_version:
+          type: string
+          description: The version of the EGYM Software running on the machine.
+          example: '3.589'
+      required:
+      - grant_type
+      - machine_type
+      - serial_number
+    VtapConfigurationIndex:
+      type: object
+      properties:
+        configurationIndex:
+          type: integer
+          format: int32
+    XidTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          xid:
+            type: string
+            description: xID is used to log in a user together with the passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+          passcode:
+            type: string
+            description: The passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+      description: xID Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - passcode
+      - serial_number
+      - xid
+      title: XidTokenRequestDTO
+    TokenResponseDTO:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token
+        expiration_time:
+          type: integer
+          format: int64
+          description: The expiration time of the access token
+          example: 1672531200000
+        refresh_token:
+          type: string
+          description: The refresh token
+        token_type:
+          type: string
+          description: The type of token
+    MeasurementDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference
+            to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement
+            submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    MachineHeartbeatRequestDTO:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+          description: The unique serial number of the machine.
+          minLength: 1
+        machineType:
+          type: string
+          description: The machine type name of the device.
+          minLength: 1
+      required:
+      - machineType
+      - serialNumber
+    CardioWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        averageHeartRate:
+          type: integer
+          format: int32
+          description: The average heart rate of this workout in <b>beats/min (bpm)</b>.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        averagePace:
+          type: number
+          format: double
+          description: the average pace of this workout in min/km
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: The workout's metadata as key-value pairs.
+        intervals:
+          type: array
+          description: The cardio workout intervals (sets of exercises).
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - intervals
+      - startTimestamp
+      - uniqueExerciseId
+    CardioWorkoutIntervalDTO:
+      type: object
+      properties:
+        rampAngle:
+          type: integer
+          format: int32
+          description: The angle of the ramp.
+          example: 1
+        resistance:
+          type: number
+          format: double
+          description: The resistance.
+          example: 1
+        speed:
+          type: number
+          format: double
+          description: The speed in m/s.
+          example: '2.7777'
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 5000
+        distance:
+          type: number
+          format: double
+          description: The distance in meters.
+          example: '13.8'
+        heartRate:
+          type: integer
+          format: int32
+          description: The average heart rate of this Interval in beats/min (bpm).
+          example: 130
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the interval.
+          example: 5
+        stepsPerMinute:
+          type: integer
+          format: int32
+          description: The steps per minutes.
+          example: 70
+        steps:
+          type: integer
+          format: int32
+          description: The number of steps during the interval.
+          example: 10
+        stepHeight:
+          type: integer
+          format: int32
+          description: The step height.
+          example: 2
+        strideLengthZone:
+          type: integer
+          format: int32
+          description: The stride length zone.
+          example: 1
+        rotations:
+          type: integer
+          format: int32
+          description: The rotations, in rotations per minute (rpm).
+          example: 50
+        incline:
+          type: number
+          format: double
+          description: The incline.
+          example: '1.5'
+        floors:
+          type: integer
+          format: int32
+          description: The floors.
+          example: 1
+        watts:
+          type: number
+          format: double
+          description: Power/Resistance in watts.
+          example: 200
+    CardioUserInfoDTO:
+      type: object
+      properties:
+        height:
+          type: number
+          format: double
+          description: The body height of the user in centimeters.
+          example: 180
+        weight:
+          type: number
+          format: double
+          description: The body weight of the user in kilograms.
+          example: 75
+        trainingGoal:
+          type: string
+          deprecated: true
+          description: The user training goal.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+        trainingProgram:
+          type: string
+          description: The user training program.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+          - IMMUNITY
+        dateOfBirth:
+          type: string
+          format: date
+          description: User date of birth in ISO 8601 format (yyyy-MM-dd).
+        gender:
+          type: string
+          description: User gender.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+    InitialCardioTestDTO:
+      type: object
+      properties:
+        personalFitnessRating:
+          type: string
+          description: The personal fitness rating.
+          enum:
+          - NOT_FIT
+          - AVERAGE
+          - VERY_FIT
+        userInfo:
+          $ref: '#/components/schemas/CardioUserInfoDTO'
+          description: The user information that needs to be updated while initializing the cardio test.
+      required:
+      - personalFitnessRating
+      - userInfo
+    CardioTestUserInfoDTO:
+      type: object
+      properties:
+        reminder:
+          type: integer
+          format: int64
+          description: The date of the next cardio-test.
+          example: 1553074207520
+        instructions:
+          type: array
+          description: The instructions to the next step.
+          items:
+            type: string
+            enum:
+            - CONTINUE
+            - FINISH
+            - REQUEST_TRAINING_GOAL
+            - REQUEST_TRAINING_PROGRAM
+            - REQUEST_HEIGHT
+            - REQUEST_WEIGHT
+            - REQUEST_GENDER
+            - REQUEST_DATE_OF_BIRTH
+            - TERMS_AND_CONDITIONS
+            - SUGGEST_CARDIO_TEST
+            - FIRST_CARDIO_TEST
+            - TEST_SKIPPED
+          uniqueItems: true
+    EquipmentUserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User
+            is not linked to EGYM account.
+          example: -1c2yqo37vn9m
+        bmaUserId:
+          type: string
+          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6.
+            Only available during xID authentication
+          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        image:
+          $ref: '#/components/schemas/ImageReferenceDTO'
+          description: The user profile image.
+        email:
+          type: string
+          description: The email address of the user. Not available by default. Only available if needed for use case.
+        gender:
+          type: string
+          description: The gender of the user.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        dateOfBirth:
+          type: string
+          format: date
+          description: The date of birth in ISO 8601 format (yyyy-MM-dd).
+        optIns:
+          type: object
+          additionalProperties:
+            type: boolean
+          description: List of opt-ins.
+        height:
+          type: number
+          format: double
+          description: The body height of the user in centimeters.
+          example: 180
+        weight:
+          type: number
+          format: double
+          description: The body weight of the user in kilograms.
+          example: 75
+        locale:
+          type: string
+          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
+          example: en_US
+        unitSystem:
+          type: string
+          description: The user Unit System.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+        trainingGoal:
+          type: string
+          deprecated: true
+          description: The user training goal.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+        trainingProgram:
+          type: string
+          description: The Smart Cardio training program.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+          - IMMUNITY
+        trainingPlanPreferences:
+          $ref: '#/components/schemas/TrainingPlanPreferencesDTO'
+          description: Training Preferences of the User. Deprecates trainingGoal and trainingProgram.
+        onboardingChecklist:
+          $ref: '#/components/schemas/OnboardingChecklistDTO'
+          description: Genius Onboarding Checklist of the User. Denotes the onboarding progress statuses for the user.
+        termsAndConditionsAccepted:
+          type: boolean
+          description: Informs if the terms and conditions of EGYM have been accepted.
+        cardioTestInfo:
+          $ref: '#/components/schemas/CardioTestUserInfoDTO'
+          description: The cardio test user information. It is enabled only for Smart Cardio.
+      required:
+      - firstName
+    ImageReferenceDTO:
+      type: object
+      properties:
+        imageType:
+          type: string
+          enum:
+          - EXERCISE
+          - EQUIPMENT
+          - AVATAR
+          - COVER
+          - GYM_BANNER
+          - GYM_PROFILE
+          - GYM_HEADER
+          - GYM
+          - CHART
+          - BLOG
+          - PARTNER
+          - MOBILESPLASH
+          - SIGNATURE
+          - CARDIOSCAN
+          - MUSCLES
+          - SHARED
+        imageId:
+          type: string
+    OnboardingChecklistDTO:
+      type: object
+      properties:
+        preferences:
+          $ref: '#/components/schemas/Status'
+          description: Status of training preferences selection genius onboarding checklist item
+        strengthTest:
+          $ref: '#/components/schemas/Status'
+          description: Status of strength test genius onboarding checklist item
+        bodyMeasurement:
+          $ref: '#/components/schemas/Status'
+          description: Status of body measurement genius onboarding checklist item
+        machineSettingsMeasurements:
+          $ref: '#/components/schemas/Status'
+          description: Genius Onboarding checklist item status that checks if the user has machine settings generated by Fitness
+            Hub
+    Status:
+      type: object
+      properties:
+        state:
+          type: string
+          description: Denotes whether the onboarding checklist item is complete, incomplete or expired
+          enum:
+          - UNSPECIFIED
+          - INCOMPLETE
+          - COMPLETE
+          - EXPIRED
+        expiresAt:
+          type: string
+          format: date-time
+          description: Date of expiration for this checklist item
+    TrainingMuscleGroupPreferenceDTO:
+      type: object
+      properties:
+        muscleGroup:
+          type: string
+          description: Denotes which muscle group is targeted in this preference setting
+          enum:
+          - NECK_AND_SHOULDERS
+          - ARMS
+          - CHEST
+          - UPPER_BACK
+          - ABDOMINAL
+          - LOWER_BACK
+          - HIP
+          - BUTTOCK
+          - THIGHS
+          - CALVES
+        muscleGroupIntent:
+          type: string
+          description: Denotes the intention with the targeted muscle group. Currently can be Focus or Exclude
+          enum:
+          - FOCUS
+          - EXCLUDE
+    TrainingPlanPreferencesDTO:
+      type: object
+      properties:
+        trainingGoalType:
+          type: string
+          description: Goal type overrides the trainingGoal and trainingProgram
+          enum:
+          - WEIGHT_LOSS
+          - MUSCLE_BUILDING
+          - GENERAL_FITNESS
+          - BODY_TONING
+          - REHA_FIT
+          - ATHLETIC
+        trainingExperience:
+          type: string
+          description: Denotes the user experience level from beginner to very advanced
+          enum:
+          - BEGINNER
+          - BEGINNER_INTERMEDIATE
+          - INTERMEDIATE
+          - INTERMEDIATE_ADVANCED
+          - ADVANCED
+          - VERY_ADVANCED
+        daysPerWeek:
+          type: integer
+          format: int32
+          description: User's preference for number of training days in a week
+          maximum: 7
+          minimum: 1
+        trainingMuscleGroupPreferences:
+          type: array
+          description: Denotes the user's muscle targeting preferences
+          items:
+            $ref: '#/components/schemas/TrainingMuscleGroupPreferenceDTO'
+        workoutDurationInMinutes:
+          type: integer
+          format: int32
+          description: User's preferred duration for a training session
+          minimum: 5
+    ActivityLevelResponseDTO:
+      type: object
+      properties:
+        level:
+          type: string
+          description: User activity level (e.g. Bronze, Gold, etc.)
+        points:
+          type: integer
+          format: int32
+          description: User number of activity points
+          example: 10
+        goal:
+          type: integer
+          format: int32
+          description: Number of points to achieve next activity level
+          example: 999
+        maintainPointsCount:
+          type: integer
+          format: int32
+          description: Number of points to approve current activity level
+          example: 400
+        daysLeft:
+          type: integer
+          format: int32
+          description: Number of days to earn 'goal' to achieve next activity level
+          example: 27
+    GeniusStrengthWorkoutDTO:
+      type: object
+      properties:
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that identifies the session for the user.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        sets:
+          type: array
+          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
+          items:
+            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
+    StrengthTrainingPlansDTO:
+      type: object
+      properties:
+        trainer:
+          type: array
+          description: The training plan exercises prescribed by a trainer.
+          items:
+            $ref: '#/components/schemas/TrainerStrengthWorkoutDTO'
+        genius:
+          type: array
+          description: The AI (Genius) generated training plan exercises.
+          items:
+            $ref: '#/components/schemas/GeniusStrengthWorkoutDTO'
+    TrainerStrengthWorkoutDTO:
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/UserDTO'
+          description: Information about the author of the workout.
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that the trainer will give to their exercise.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        sets:
+          type: array
+          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
+          items:
+            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User
+            is not linked to EGYM account.
+          example: -1c2yqo37vn9m
+        bmaUserId:
+          type: string
+          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6.
+            Only available during xID authentication
+          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        image:
+          $ref: '#/components/schemas/ImageReferenceDTO'
+          description: The user profile image.
+      required:
+      - firstName
+    WorkoutHistoryPointsDTO:
+      type: object
+      properties:
+        todaysPoints:
+          type: array
+          description: The activity points of the current day
+          items:
+            $ref: '#/components/schemas/WorkoutPointsDTO'
+        pointsByDay:
+          type: array
+          description: The activity points summed daily and grouped by exercise type
+          items:
+            $ref: '#/components/schemas/WorkoutPointsDTO'
+    WorkoutPointsDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The exercise timestamp
+          example: 1552262400000
+        exerciseType:
+          type: string
+          description: The exercise type
+          enum:
+          - ENDURANCE
+          - STRENGTH
+          - MOBILITY
+          - SPORT
+          - FITNESS_CLASS
+          - EGYM_CIRCLE
+          - EGYM_MACHINE
+          - DAILY_ROUTINE
+          - COORDINATION
+        points:
+          type: integer
+          format: int64
+          description: The total activity points
+          example: 10
+    PartnerInfoDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The partner name.
+        createdAt:
+          type: integer
+          format: int64
+          description: The date of creation.
+          example: 1672531200000
+        featureFlags:
+          type: array
+          description: The feature flags enabled for this gym.
+          items:
+            type: string
+    LatestFlexibilityMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of flexibility metric types to their latest recorded numeric values. Keys are FlexibilityMetricType
+            enum string values. Score metrics (e.g. TOTAL_SCORE, RANGE_OF_MOVEMENT_SCORE) are on a 0–100 scale; degree metrics
+            (e.g. ADDUCTOR_LEFT_DEGREE) represent the measured angle in degrees. Only metrics that have been measured for
+            the user are present in the response.
+          example:
+            TOTAL_SCORE: 78
+            RANGE_OF_MOVEMENT_SCORE: 85
+            SYMMETRIC_SCORE: 72.5
+            ADDUCTOR_LEFT_DEGREE: 42
+            ADDUCTOR_RIGHT_DEGREE: 44
+    FlexibilityMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of flexibility metrics for this measurement
+          items:
+            $ref: '#/components/schemas/FlexibilityMetricDTO'
+    FlexibilityMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the flexibility metric
+          enum:
+          - RANGE_OF_MOVEMENT_SCORE
+          - SYMMETRIC_SCORE
+          - HARMONY_SCORE
+          - TOTAL_SCORE
+          - ADDUCTOR_LEFT_DEGREE
+          - ADDUCTOR_LEFT_SCORE
+          - ADDUCTOR_RIGHT_DEGREE
+          - ADDUCTOR_RIGHT_SCORE
+          - ADDUCTOR_RANGE_OF_MOTION_SCORE
+          - ADDUCTOR_SYMMETRY_SCORE
+          - LEG_BACKSIDE_LYING_LEFT_DEGREE
+          - LEG_BACKSIDE_LYING_LEFT_SCORE
+          - LEG_BACKSIDE_LYING_RIGHT_DEGREE
+          - LEG_BACKSIDE_LYING_RIGHT_SCORE
+          - LEG_BACKSIDE_LYING_RANGE_OF_MOTION_SCORE
+          - LEG_BACKSIDE_LYING_SYMMETRY_SCORE
+          - LEG_BACKSIDE_STANDING_LEFT_DEGREE
+          - LEG_BACKSIDE_STANDING_LEFT_SCORE
+          - LEG_BACKSIDE_STANDING_RIGHT_DEGREE
+          - LEG_BACKSIDE_STANDING_RIGHT_SCORE
+          - LEG_BACKSIDE_STANDING_RANGE_OF_MOTION_SCORE
+          - LEG_BACKSIDE_STANDING_SYMMETRY_SCORE
+          - LEG_EXTENSION_LEFT_DEGREE
+          - LEG_EXTENSION_LEFT_SCORE
+          - LEG_EXTENSION_RIGHT_DEGREE
+          - LEG_EXTENSION_RIGHT_SCORE
+          - LEG_EXTENSION_RANGE_OF_MOTION_SCORE
+          - LEG_EXTENSION_SYMMETRY_SCORE
+          - CHEST_LYING_LEFT_DEGREE
+          - CHEST_LYING_LEFT_SCORE
+          - CHEST_LYING_RIGHT_DEGREE
+          - CHEST_LYING_RIGHT_SCORE
+          - CHEST_LYING_RANGE_OF_MOTION_SCORE
+          - CHEST_LYING_SYMMETRY_SCORE
+          - CHEST_SITTING_LEFT_DEGREE
+          - CHEST_SITTING_LEFT_SCORE
+          - CHEST_SITTING_RIGHT_DEGREE
+          - CHEST_SITTING_RIGHT_SCORE
+          - CHEST_SITTING_RANGE_OF_MOTION_SCORE
+          - CHEST_SITTING_SYMMETRY_SCORE
+          - HIP_FLEXOR_LEFT_DEGREE
+          - HIP_FLEXOR_LEFT_SCORE
+          - HIP_FLEXOR_RIGHT_DEGREE
+          - HIP_FLEXOR_RIGHT_SCORE
+          - HIP_FLEXOR_RANGE_OF_MOTION_SCORE
+          - HIP_FLEXOR_SYMMETRY_SCORE
+          - TORSO_MUSCLES_LYING_LEFT_DEGREE
+          - TORSO_MUSCLES_LYING_LEFT_SCORE
+          - TORSO_MUSCLES_LYING_RIGHT_DEGREE
+          - TORSO_MUSCLES_LYING_RIGHT_SCORE
+          - TORSO_MUSCLES_LYING_RANGE_OF_MOTION_SCORE
+          - TORSO_MUSCLES_LYING_SYMMETRY_SCORE
+          - TORSO_MUSCLES_SITTING_LEFT_DEGREE
+          - TORSO_MUSCLES_SITTING_LEFT_SCORE
+          - TORSO_MUSCLES_SITTING_RIGHT_DEGREE
+          - TORSO_MUSCLES_SITTING_RIGHT_SCORE
+          - TORSO_MUSCLES_SITTING_RANGE_OF_MOTION_SCORE
+          - TORSO_MUSCLES_SITTING_SYMMETRY_SCORE
+          - SHOULDER_NECK_LEFT_DEGREE
+          - SHOULDER_NECK_LEFT_SCORE
+          - SHOULDER_NECK_RIGHT_DEGREE
+          - SHOULDER_NECK_RIGHT_SCORE
+          - SHOULDER_NECK_RANGE_OF_MOTION_SCORE
+          - SHOULDER_NECK_SYMMETRY_SCORE
+          - CALF_LEFT_DEGREE
+          - CALF_LEFT_SCORE
+          - CALF_RIGHT_DEGREE
+          - CALF_RIGHT_SCORE
+          - CALF_RANGE_OF_MOTION_SCORE
+          - CALF_SYMMETRY_SCORE
+          - TORSO_LATERAL_FLEXION_LEFT_DEGREE
+          - TORSO_LATERAL_FLEXION_RIGHT_DEGREE
+          - TORSO_LATERAL_FLEXION_LEFT_NORMALIZED
+          - TORSO_LATERAL_FLEXION_RIGHT_NORMALIZED
+          - NECK_LATERAL_FLEXION_LEFT_DEGREE
+          - NECK_LATERAL_FLEXION_RIGHT_DEGREE
+          - NECK_LATERAL_FLEXION_LEFT_NORMALIZED
+          - NECK_LATERAL_FLEXION_RIGHT_NORMALIZED
+          - CHEST_EXTENSION_LEFT_DEGREE
+          - CHEST_EXTENSION_RIGHT_DEGREE
+          - CHEST_EXTENSION_LEFT_NORMALIZED
+          - CHEST_EXTENSION_RIGHT_NORMALIZED
+          - HIP_EXTENSION_LEFT_DEGREE
+          - HIP_EXTENSION_RIGHT_DEGREE
+          - HIP_EXTENSION_LEFT_NORMALIZED
+          - HIP_EXTENSION_RIGHT_NORMALIZED
+          - HAMSTRING_EXTENSION_LEFT_DEGREE
+          - HAMSTRING_EXTENSION_RIGHT_DEGREE
+          - HAMSTRING_EXTENSION_LEFT_NORMALIZED
+          - HAMSTRING_EXTENSION_RIGHT_NORMALIZED
+          - SQUAT_DEPTH
+          - SQUAT_SHOULDER_DEGREE
+          - SQUAT_BACK_DEGREE
+          example: RANGE_OF_MOVEMENT_SCORE
+        value:
+          type: number
+          description: The value of the metric
+          example: '85.0'
+    LatestCardioMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of cardio metric types to their latest recorded numeric values. Keys are CardioMetricType enum
+            string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            RESTING_HEART_RATE: 62
+            VO2MAX: 48.5
+            SYSTOLIC_PRESSURE: 120
+            DIASTOLIC_PRESSURE: 80
+            MAX_WATTS: 310
+    CardioMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of cardio metrics for this measurement
+          items:
+            $ref: '#/components/schemas/CardioMetricDTO'
+    CardioMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the cardio metric
+          enum:
+          - RESTING_HEART_RATE
+          - VO2MAX
+          - SYSTOLIC_PRESSURE
+          - DIASTOLIC_PRESSURE
+          - MAX_WATTS
+          - TRAINING_SUITABILITY
+          - CARDIO_STRESS_INDEX
+          - CARDIO_FIT_LEVEL
+          - HEART_RATE_ZONE_RECOVERY_LOW
+          - HEART_RATE_ZONE_RECOVERY_TOP
+          - HEART_RATE_ZONE_BASICI_LOW
+          - HEART_RATE_ZONE_BASICI_TOP
+          - HEART_RATE_ZONE_BASICII_LOW
+          - HEART_RATE_ZONE_BASICII_TOP
+          - HEART_RATE_ZONE_THRESHOLD_LOW
+          - HEART_RATE_ZONE_THRESHOLD_TOP
+          - HEART_RATE_ZONE_HIGH_INTENSIVE_LOW
+          - HEART_RATE_ZONE_HIGH_INTENSIVE_TOP
+          - PERFORMANCE_FIT_LEVEL
+          - ABSOLUTE_VO2_MAX
+          - PERFORMANCE_ZONE_RECOVERY_LOW
+          - PERFORMANCE_ZONE_RECOVERY_TOP
+          - PERFORMANCE_ZONE_BASICI_LOW
+          - PERFORMANCE_ZONE_BASICI_TOP
+          - PERFORMANCE_ZONE_BASICII_LOW
+          - PERFORMANCE_ZONE_BASICII_TOP
+          - PERFORMANCE_ZONE_THRESHOLD_LOW
+          - PERFORMANCE_ZONE_THRESHOLD_TOP
+          - PERFORMANCE_ZONE_HIGH_INTENSIVE_LOW
+          - PERFORMANCE_ZONE_HIGH_INTENSIVE_TOP
+          - FATTY_ACID_METABOLISM_PERCENTS
+          - CARBONHYDRATE_METABOLISM_PERCENTS
+          - CARBONHYDRATE_METABOLISM_RATING
+          - O2_UPTAKE_PERCENTS
+          - CO2_EMISSION_PERCENTS
+          - O2_UPTAKE_RATING
+          - CARDIO_FIT_LEVEL_MIN
+          - CARDIO_FIT_LEVEL_LOW
+          - CARDIO_FIT_LEVEL_MID
+          - CARDIO_FIT_LEVEL_TOP
+          - CARDIO_FIT_LEVEL_MAX
+          - CARDIO_STRESS_INDEX_MIN
+          - CARDIO_STRESS_INDEX_LOW
+          - CARDIO_STRESS_INDEX_MID
+          - CARDIO_STRESS_INDEX_TOP
+          - CARDIO_STRESS_INDEX_MAX
+          - WORKOUT_READINESS
+          - RESTING_HEART_RATE_MIN
+          - RESTING_HEART_RATE_LOW
+          - RESTING_HEART_RATE_MID
+          - RESTING_HEART_RATE_TOP
+          - RESTING_HEART_RATE_MAX
+          - BLOOD_OXYGEN_LEVEL_SPO2
+          - BLOOD_OXYGEN_LEVEL_SPO2_MIN
+          - BLOOD_OXYGEN_LEVEL_SPO2_LOW
+          - BLOOD_OXYGEN_LEVEL_SPO2_MID
+          - BLOOD_OXYGEN_LEVEL_SPO2_TOP
+          - BLOOD_OXYGEN_LEVEL_SPO2_MAX
+          - PARTNER_CARDIO_BIOAGE
+          - PARTNER_CARDIO_BIOAGE_MIN
+          - PARTNER_CARDIO_BIOAGE_LOW
+          - PARTNER_CARDIO_BIOAGE_MID
+          - PARTNER_CARDIO_BIOAGE_TOP
+          - PARTNER_CARDIO_BIOAGE_MAX
+          - O2_UPTAKE_PERCENTS_MIN
+          - O2_UPTAKE_PERCENTS_LOW
+          - O2_UPTAKE_PERCENTS_MID
+          - O2_UPTAKE_PERCENTS_TOP
+          - O2_UPTAKE_PERCENTS_MAX
+          - PARTNER_FITNESS_LEVEL
+          - ESTIMATED_FUNCTIONAL_THRESHOLD_POWER_WATT
+          - FUNCTIONAL_THRESHOLD_POWER_WATT
+          - ESTIMATED_MAX_HEART_RATE_BPM
+          - MAX_HEART_RATE_BPM
+          - HEART_RATE_BPM
+          - PULSE_BPM
+          - MEAN_ARTERY_PRESSURE_MMHG
+          - PULSE_PRESSURE_BPM
+          - RATE_PRESSURE_PRODUCT
+          - INDIVIDUAL_ANAEROBIC_THRESHOLD
+          - HEART_RATE_RECOVERY_RATING
+          - METABOLIC_FLEXIBILITY_RATING
+          - STRESS_LEVEL_METABOLISM_RATING
+          - VENTILATORY_THRESHOLD_1
+          - VENTILATORY_THRESHOLD_2
+          - EXERCISE_INTENSITY_AT_MAXIMUM_FAT_OXIDATION
+          - PEAK_POWER_WATTS
+          example: HEART_RATE
+        value:
+          type: number
+          description: The value of the metric
+          example: '120.5'
+    LatestBodyMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string
+            values. Only metrics that have been measured for the user are present in the response.
+          example:
+            BMI: 22.5
+            WEIGHT_KG: 75
+            HEIGHT_CM: 180
+            BODY_FAT_PERCENTS: 18.3
+            WAIST_CM: 82
+    BodyMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of body metrics for this measurement
+          items:
+            $ref: '#/components/schemas/BodyMetricDTO'
+    BodyMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the body metric
+          enum:
+          - BMI
+          - WEIGHT_KG
+          - HEIGHT_CM
+          - BODY_FAT_PERCENTS
+          - WAIST_TO_HIP_RATIO
+          - HIP_CM
+          - WAIST_CM
+          - BODY_MUSCLE_PERCENTS
+          - BODY_FAT_MASS_KG
+          - SKELETAL_MUSCLE_MASS_KG
+          - SKELETAL_MUSCLE_MASS_PERCENTS
+          - FAT_FREE_MASS_KG
+          - FAT_FREE_MASS_PERCENTS
+          - SOFT_LEAN_MASS_KG
+          - BODY_MINERALS_KG
+          - BODY_PROTEIN_KG
+          - INTRA_CELLULAR_WATER_LITER
+          - EXTRA_CELLULAR_WATER_LITER
+          - EXTRA_CELLULAR_WATER_LOW_LITER
+          - EXTRA_CELLULAR_WATER_MID_LITER
+          - EXTRA_CELLULAR_WATER_TOP_LITER
+          - ECW_TBW_PERCENT
+          - ECW_TBW_PERCENT_LOW
+          - ECW_TBW_PERCENT_MID
+          - ECW_TBW_PERCENT_TOP
+          - BODY_PHASE_ANGLE
+          - BODY_PHASE_ANGLE_MIN
+          - BODY_PHASE_ANGLE_LOW
+          - BODY_PHASE_ANGLE_MID
+          - BODY_PHASE_ANGLE_TOP
+          - BODY_PHASE_ANGLE_MAX
+          - FAT_MASS_INDEX
+          - FAT_FREE_MASS_INDEX
+          - VISCERAL_FAT_AREA_CM2
+          - VISCERAL_ADIPOSE_TISSUE_KG
+          - VISCERAL_ADIPOSE_TISSUE_KG_MIN
+          - VISCERAL_ADIPOSE_TISSUE_KG_LOW
+          - VISCERAL_ADIPOSE_TISSUE_KG_MID
+          - VISCERAL_ADIPOSE_TISSUE_KG_TOP
+          - VISCERAL_ADIPOSE_TISSUE_KG_MAX
+          - TOTAL_ENERGY_EXPENDITURE
+          - RESTING_ENERGY_EXPENDITURE
+          - RESTING_ENERGY_EXPENDITURE_NORM
+          - RESTING_ENERGY_EXPENDITURE_RATING
+          - RESTING_ENERGY_EXPENDITURE_RATING_MIN
+          - RESTING_ENERGY_EXPENDITURE_RATING_LOW
+          - RESTING_ENERGY_EXPENDITURE_RATING_MID
+          - RESTING_ENERGY_EXPENDITURE_RATING_TOP
+          - RESTING_ENERGY_EXPENDITURE_RATING_MAX
+          - RECOMMENDED_RESTING_ENERGY_EXPENDITURE
+          - SEGMENTAL_LEAN_RIGHT_ARM_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_KG
+          - SEGMENTAL_LEAN_TRUNK_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_KG
+          - SEGMENTAL_FAT_LEFT_ARM_KG
+          - SEGMENTAL_FAT_TRUNK_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_KG
+          - SEGMENTAL_FAT_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_TRUNK_KG
+          - SEGMENTAL_MUSCLE_TRUNK_LOW_KG
+          - SEGMENTAL_MUSCLE_TRUNK_TOP_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_TOP_KG
+          - BODY_WEIGHT_MIN_KG
+          - BODY_WEIGHT_LOW_KG
+          - BODY_WEIGHT_MID_KG
+          - BODY_WEIGHT_TOP_KG
+          - BODY_WEIGHT_MAX_KG
+          - BODY_FAT_MASS_LOW_KG
+          - BODY_FAT_MASS_MID_KG
+          - BODY_FAT_MASS_TOP_KG
+          - SKELETAL_MUSCLE_MASS_MIN_KG
+          - SKELETAL_MUSCLE_MASS_LOW_KG
+          - SKELETAL_MUSCLE_MASS_MID_KG
+          - SKELETAL_MUSCLE_MASS_TOP_KG
+          - SKELETAL_MUSCLE_MASS_MAX_KG
+          - SOFT_LEAN_MASS_LOW_KG
+          - SOFT_LEAN_MASS_MID_KG
+          - SOFT_LEAN_MASS_TOP_KG
+          - VISCERAL_ADIPOSE_TISSUE_LOW_LITER
+          - VISCERAL_ADIPOSE_TISSUE_MID_LITER
+          - VISCERAL_ADIPOSE_TISSUE_TOP_LITER
+          - BODY_WATER_PERCENTS
+          - BODY_WATER_LITER
+          - BODY_WATER_MIN_LITER
+          - BODY_WATER_LOW_LITER
+          - BODY_WATER_MID_LITER
+          - BODY_WATER_TOP_LITER
+          - BODY_WATER_MAX_LITER
+          - INTRA_CELLULAR_WATER_PERCENT
+          - INTRA_CELLULAR_WATER_LOW_KG
+          - INTRA_CELLULAR_WATER_MID_KG
+          - INTRA_CELLULAR_WATER_TOP_KG
+          - FAT_MASS_INDEX_LOW
+          - FAT_MASS_INDEX_MID
+          - FAT_MASS_INDEX_TOP
+          - SEGMENTAL_LEAN_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_MID_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_LOW_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_MID_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_TOP_KG
+          - SEGMENTAL_LEAN_TRUNK_LOW_KG
+          - SEGMENTAL_LEAN_TRUNK_MID_KG
+          - SEGMENTAL_LEAN_TRUNK_TOP_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_MID_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_LOW_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_MID_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_TOP_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_MID_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_FAT_LEFT_ARM_LOW_KG
+          - SEGMENTAL_FAT_LEFT_ARM_MID_KG
+          - SEGMENTAL_FAT_LEFT_ARM_TOP_KG
+          - SEGMENTAL_FAT_TRUNK_LOW_KG
+          - SEGMENTAL_FAT_TRUNK_MID_KG
+          - SEGMENTAL_FAT_TRUNK_TOP_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_MID_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_FAT_LEFT_LEG_LOW_KG
+          - SEGMENTAL_FAT_LEFT_LEG_MID_KG
+          - SEGMENTAL_FAT_LEFT_LEG_TOP_KG
+          - SEGMENTAL_ANKLE_RIGHT_TO_KNEE_RIGHT_CM
+          - SEGMENTAL_ANKLE_LEFT_TO_KNEE_LEFT_CM
+          - SEGMENTAL_KNEE_RIGHT_TO_HIP_RIGHT_CM
+          - SEGMENTAL_HIP_RIGHT_TO_PELVIS_CM
+          - SEGMENTAL_FOOT_LEFT_TO_ANKLE_LEFT_CM
+          - SEGMENTAL_KNEE_LEFT_TO_HIP_LEFT_CM
+          - SEGMENTAL_HIP_LEFT_TO_PELVIS_CM
+          - SEGMENTAL_PELVIS_TO_SPINE_NAVAL_CM
+          - SEGMENTAL_SPINE_NAVAL_TO_SPINE_CHEST_CM
+          - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_RIGHT_CM
+          - SEGMENTAL_CLAVICLE_RIGHT_TO_SHOULDER_RIGHT_CM
+          - SEGMENTAL_SHOULDER_RIGHT_TO_ELBOW_RIGHT_CM
+          - SEGMENTAL_ELBOW_RIGHT_TO_WRIST_RIGHT_CM
+          - SEGMENTAL_WRIST_RIGHT_TO_HAND_RIGHT_CM
+          - SEGMENTAL_HAND_RIGHT_TO_HAND_TIP_RIGHT_CM
+          - SEGMENTAL_WRIST_RIGHT_TO_THUMB_RIGHT_CM
+          - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_LEFT_CM
+          - SEGMENTAL_CLAVICLE_LEFT_TO_SHOULDER_LEFT_CM
+          - SEGMENTAL_SHOULDER_LEFT_TO_ELBOW_LEFT_CM
+          - SEGMENTAL_ELBOW_LEFT_TO_WRIST_LEFT_CM
+          - SEGMENTAL_WRIST_LEFT_TO_HAND_LEFT_CM
+          - SEGMENTAL_HAND_LEFT_TO_HAND_TIP_LEFT_CM
+          - SEGMENTAL_WRIST_LEFT_TO_THUMB_LEFT_CM
+          - SEGMENTAL_SPINE_CHEST_TO_NECK_CM
+          - SEGMENTAL_NECK_TO_HEAD_CM
+          - SEGMENTAL_HEAD_TO_NOSE_CM
+          - BODY_FAT_PERCENTS_MIN
+          - BODY_FAT_PERCENTS_LOW
+          - BODY_FAT_PERCENTS_MID
+          - BODY_FAT_PERCENTS_TOP
+          - BODY_FAT_PERCENTS_MAX
+          - BODY_PROTEIN_LOW_KG
+          - BODY_PROTEIN_TOP_KG
+          - BODY_MINERALS_LOW_KG
+          - BODY_MINERALS_TOP_KG
+          - FAT_FREE_MASS_LOW_KG
+          - FAT_FREE_MASS_TOP_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_PERCENT
+          - SEGMENTAL_LEAN_LEFT_ARM_PERCENT
+          - SEGMENTAL_LEAN_TRUNK_PERCENT
+          - SEGMENTAL_LEAN_RIGHT_LEG_PERCENT
+          - SEGMENTAL_LEAN_LEFT_LEG_PERCENT
+          - BODY_WATER_RIGHT_ARM_LITER
+          - BODY_WATER_RIGHT_ARM_LOW_LITER
+          - BODY_WATER_RIGHT_ARM_TOP_LITER
+          - BODY_WATER_LEFT_ARM_LITER
+          - BODY_WATER_LEFT_ARM_LOW_LITER
+          - BODY_WATER_LEFT_ARM_TOP_LITER
+          - BODY_WATER_TRUNK_LITER
+          - BODY_WATER_TRUNK_LOW_LITER
+          - BODY_WATER_TRUNK_TOP_LITER
+          - BODY_WATER_RIGHT_LEG_LITER
+          - BODY_WATER_RIGHT_LEG_LOW_LITER
+          - BODY_WATER_RIGHT_LEG_TOP_LITER
+          - BODY_WATER_LEFT_LEG_LITER
+          - BODY_WATER_LEFT_LEG_LOW_LITER
+          - BODY_WATER_LEFT_LEG_TOP_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+          - ECW_TBW_RIGHT_ARM_PERCENT
+          - ECW_TBW_LEFT_ARM_PERCENT
+          - ECW_TBW_TRUNK_PERCENT
+          - ECW_TBW_RIGHT_LEG_PERCENT
+          - ECW_TBW_LEFT_LEG_PERCENT
+          - SEGMENTAL_FAT_RIGHT_ARM_PERCENT
+          - SEGMENTAL_FAT_LEFT_ARM_PERCENT
+          - SEGMENTAL_FAT_TRUNK_PERCENT
+          - SEGMENTAL_FAT_RIGHT_LEG_PERCENT
+          - SEGMENTAL_FAT_LEFT_LEG_PERCENT
+          - VISCERAL_FAT_LEVEL_CM2
+          - OBESITY_DEGREE
+          - BODY_CELL_MASS_KG
+          - ARMS_CM
+          - MUSCLES_ARMS_CM
+          - RIGHT_CALF_CM
+          - LEFT_CALF_CM
+          - GLUTES_CM
+          - BONE_MINERAL_CONTENT
+          - TBW_FFM
+          - NECK_CM
+          - CHEST_CM
+          - ABDOMEN_CM
+          - RIGHT_ARM_CM
+          - LEFT_ARM_CM
+          - RIGHT_THIGH_CM
+          - LEFT_THIGH_CM
+          - THIGHS_CM
+          - SKELETAL_MUSCLE_INDEX_KG_M2
+          - BUST_CM
+          - HIPS_CM
+          - BODY_BONES_KG
+          - EXTRA_CELLULAR_WATER_PERCENT
+          - EXTRA_CELLULAR_WATER_LOW_PERCENT
+          - EXTRA_CELLULAR_WATER_TOP_PERCENT
+          - SEGMENTAL_FAT_PERCENT_RIGHT_LEG_SCORE
+          - SEGMENTAL_FAT_PERCENT_LEFT_LEG_SCORE
+          - SEGMENTAL_FAT_PERCENT_RIGHT_ARM_SCORE
+          - SEGMENTAL_FAT_PERCENT_LEFT_ARM_SCORE
+          - SEGMENTAL_FAT_PERCENT_TRUNK_SCORE
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_SCORE
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_SCORE
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_SCORE
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_SCORE
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_SCORE
+          - VISCERAL_FAT_RATING
+          - VISCERAL_FAT_RATING_LOW
+          - VISCERAL_FAT_RATING_TOP
+          - LEG_MUSCLE_SCORE
+          - SEGMENTAL_PHASE_ANGLE_RIGHT_LEG_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_LEFT_LEG_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_RIGHT_ARM_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_LEFT_ARM_ANGLE
+          - SKELETAL_MUSCLE_MASS_INDEX_SCORE
+          - PARTNER_SCORE
+          - BODY_FAT_MASS_MAX_KG
+          - BODY_FAT_MASS_MIN_KG
+          - BASAL_METABOLIC_RATE_KJ
+          - EXTRA_CELL_MASS_KG
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MIN
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_LOW
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MID
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_TOP
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MAX
+          - UPPER_RIGHT_ARM_CM
+          - UPPER_LEFT_ARM_CM
+          - LOWER_RIGHT_ARM_CM
+          - LOWER_LEFT_ARM_CM
+          - UPPER_RIGHT_LEG_CM
+          - UPPER_LEFT_LEG_CM
+          - LOWER_RIGHT_LEG_CM
+          - LOWER_LEFT_LEG_CM
+          - PARTNER_METABOLIC_BIO_AGE
+          - BIO_WELLNESS_INDEX
+          - SUBCUTANEOUS_FAT_MASS_KG
+          - SUBCUTANEOUS_FAT_MASS_PERCENT
+          - BMI_LOW_KG
+          - BMI_TOP_KG
+          - SKELETAL_MUSCLE_MASS_LOW_PERCENTS
+          - SKELETAL_MUSCLE_MASS_TOP_PERCENTS
+          - FAT_FREE_MASS_LOW_PERCENTS
+          - FAT_FREE_MASS_TOP_PERCENTS
+          - VISCERAL_FAT_AREA_LOW_CM2
+          - VISCERAL_FAT_AREA_TOP_CM2
+          - WAIST_TO_HIP_RATIO_MIN
+          - WAIST_TO_HIP_RATIO_MAX
+          - BODY_WATER_LOW_PERCENTS
+          - BODY_WATER_TOP_PERCENTS
+          - BASAL_METABOLIC_RATE_LOW_KJ
+          - BASAL_METABOLIC_RATE_TOP_KJ
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LOW_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_TOP_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_TOP_KG
+          - VISCERAL_FAT_LOW_RATING
+          - VISCERAL_FAT_TOP_RATING
+          - SEGMENTAL_PHASE_ANGLE_TRUNK_KG
+          - FAT_FREE_MASS_INDEX_Z_SCORE
+          - SKELETAL_MUSCLE_MASS_Z_SCORE
+          - FAT_MASS_INDEX_Z_SCORE
+          - FAT_FREE_MASS_INDEX_MIN
+          - FAT_FREE_MASS_INDEX_LOW
+          - FAT_FREE_MASS_INDEX_MID
+          - FAT_FREE_MASS_INDEX_TOP
+          - FAT_FREE_MASS_INDEX_MAX
+          - SKELETAL_MUSCLE_INDEX_MIN
+          - SKELETAL_MUSCLE_INDEX_LOW
+          - SKELETAL_MUSCLE_INDEX_MID
+          - SKELETAL_MUSCLE_INDEX_TOP
+          - SKELETAL_MUSCLE_INDEX_MAX
+          - APPENDICULAR_SKELETAL_MUSCLE_MASS_KG
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_KG_M2
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_LOW
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_MID
+          - BODY_FAT_SCORE
+          - BODY_MUSCLE_SCORE
+          - OBESITY_DEGREE_PERCENT
+          example: WEIGHT_KG
+        value:
+          type: number
+          description: The value of the metric
+          example: '75.5'
+    CardioTrainingPlansDTO:
+      type: object
+      properties:
+        trainer:
+          type: array
+          description: The training plan exercises prescribed by a trainer.
+          items:
+            $ref: '#/components/schemas/TrainerCardioWorkoutDTO'
+        smart:
+          type: array
+          description: The SMART training plan exercises.
+          items:
+            $ref: '#/components/schemas/SmartCardioWorkoutDTO'
+        genius:
+          type: array
+          description: The AI (Genius) generated training plan exercises.
+          items:
+            $ref: '#/components/schemas/GeniusCardioWorkoutDTO'
+    GeniusCardioWorkoutDTO:
+      type: object
+      properties:
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that identifies the session for the user.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        intervals:
+          type: array
+          description: The cardio workout intervals.
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+    SmartCardioWorkoutDTO:
+      type: object
+      properties:
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        smartExerciseName:
+          type: string
+          description: Exercise name.
+          enum:
+          - BOOST_METABOLISM
+          - GET_LEAN
+          - CARDIO_VARIETY
+          - BASELINE_ENDURANCE
+          - FASTER_REGENERATION
+          - GET_FASTER
+          - HIGH_END_ENDURANCE
+          - INCREASE_BLOOD_FLOW
+          - COME_BACK
+          - WARM_UP
+          - COOL_DOWN
+          - COMBINED_CARDIO
+          - ONLY_CARDIO
+          - MIGROS_POTENTIAL_1
+          - MIGROS_POTENTIAL_2
+          - MIGROS_EXHAUSTION_1
+          - MIGROS_EXHAUSTION_2
+          - MIGROS_RESISTANCE_TO_TIRED_1
+          - MIGROS_RESISTANCE_TO_TIRED_2
+        intensity:
+          type: string
+          description: Exercise intensity.
+          enum:
+          - VERY_HIGH
+          - HIGH
+          - MODERATE
+          - LIGHT
+          - VERY_LIGHT
+        smartTrainingMethod:
+          type: string
+          description: Smart Workout Training Method.
+          enum:
+          - CONTINUOUS
+          - INTERVAL
+          - HILL
+          - VARIETY
+          - PYRAMID
+        trainingGoal:
+          type: string
+          deprecated: true
+          description: The user training goal.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - SPINAL
+          - REHASPORT
+        trainingProgram:
+          type: string
+          description: The user training program.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+          - IMMUNITY
+        intervals:
+          type: array
+          description: The smart cardio workout intervals.
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+    TrainerCardioWorkoutDTO:
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/UserDTO'
+          description: Information about the author of the workout.
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that the trainer will give to their exercise.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain
+            the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should
+            contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        intervals:
+          type: array
+          description: The trainer cardio workout intervals.
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/oauth/token
+          scopes: {}
+x-tagGroups:
+- name: Authentication
+  tags:
+  - OAuth
+- name: Partners Information
+  tags:
+  - Partners
+- name: Measurements
+  tags:
+  - Body Measurement
+  - Cardio Measurement
+  - Flexibility Measurement
+- name: User
+  tags:
+  - User
+  - Image
+  - Statistics
+- name: Machine
+  tags:
+  - Machine
+- name: Resource
+  tags:
+  - Resource
+- name: Workouts
+  tags:
+  - Strength Workouts
+  - Cardio Workouts
+  - Open Exercise Workouts
+- name: Cardio Test
+  tags:
+  - Cardio Test
+- name: Logging
+  tags:
+  - Logging

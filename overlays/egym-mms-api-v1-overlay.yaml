@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for EGYM MMS API v1
+  version: 1.0.0
+extends: openapi/egym-mms-api-v1-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: openapi/egym-mms-api-v1-openapi.yml (harvested verbatim from developer.egym.com/_spec/)
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: egym
+    x-apievangelist-api: mms-api-v1
+    x-apievangelist-harvested: '2026-08-12'
+    x-apievangelist-source: https://developer.egym.com/
+    x-apievangelist-upstream-version: 1.0.0
+    x-apievangelist-status: legacy — EGYM requires v2 for new projects
+    x-apievangelist-gap: no operationIds are declared on any of the 13 operations, so this document cannot be referenced
+      by operationId
+- target: $
+  update:
+    x-apievangelist-artifacts:
+      authentication: authentication/egym-authentication.yml
+      conventions: conventions/egym-conventions.yml
+      errors: errors/egym-problem-types.yml
+      lifecycle: lifecycle/egym-lifecycle.yml
+      data_model: data-model/egym-data-model.yml
+      mcp: mcp/egym-mcp.yml

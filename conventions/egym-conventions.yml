@@ -1,0 +1,251 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/authentication
+docs:
+- https://developer.egym.com/mms-api-v2/authentication
+- https://developer.egym.com/mms-api-v2/errors
+- https://developer.egym.com/mms-api-v2/error-handling
+- https://developer.egym.com/mms-api-v2/rate-limits
+- https://developer.egym.com/data-hub/authentication
+- https://developer.egym.com/user-connect-api/docs/authentication
+- https://developer.egym.com/general/webhooks
+scope: 'Cross-cutting request/response semantics observed across all eight EGYM OpenAPI
+  documents and the developer-portal conceptual pages. EGYM does not publish a single
+  API-conventions page; this artifact is assembled from the per-API authentication,
+  errors, error-handling and rate-limit pages plus the specs themselves.'
+
+authentication:
+  style: mixed-per-audience
+  summary: 'Three distinct auth models, one per integration audience, rather than one
+    platform-wide scheme.'
+  models:
+  - name: gym-scoped API key
+    mechanism: apiKey
+    location: header
+    parameter: x-api-key
+    applies_to: [MMS API V2, Data Hub API, Data Export API, Equipment Vendor API (server-to-server) partner calls]
+    note: 'Key is bound to a single gym location and carries granular permissions. EGYM
+      resolves partner identity, gym location name, gym legacy id and permissions from
+      the key, which is why Data Hub export endpoints take no gym id parameter at all.'
+  - name: legacy access token
+    mechanism: apiKey
+    location: header
+    parameter: X-ACCESS-TOKEN
+    applies_to: [MMS API v1]
+    note: Explicitly documented as NOT the same value as the MMS v2 x-api-key.
+  - name: user-scoped EGYM ID JWT
+    mechanism: http bearer
+    format: JWT
+    applies_to: [Equipment Vendor API (standalone clients), Equipment Vendor API (server-to-server) user calls, User Connect API]
+    note: 'Obtained from POST /api/v1/oauth/token with grantType RFID, NFC, ENCRYPTED_USER_ID,
+      OBFUSCATED_USER_ID or REFRESH_TOKEN. On User Connect the token is a standard EGYM ID
+      token the member can revoke from EGYM ID settings — the only EGYM surface governed by
+      end-user consent rather than a gym contract.'
+  - name: partner client credentials
+    mechanism: oauth2 clientCredentials
+    token_url: /api/v1/oauth/token
+    applies_to: [Equipment Vendor API (standalone clients)]
+    note: Declared with an empty scopes map; see scopes/egym-scopes.yml.
+  - name: partner gateway bearer key
+    mechanism: http bearer
+    parameter: 'Authorization: Bearer <API key>'
+    applies_to: [Pay with Wellpass]
+    note: 'A fourth model. Keys are issued per PARTNER (not per gym location) and retrieved
+      from the EGYM Partner Integration Portal. All requests go through the EGYM partner
+      gateway, which authenticates and then forwards to the Pay with Wellpass service —
+      partners never call that service directly, and the base URL is issued at onboarding
+      rather than published.'
+    source: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+  transport: HTTPS only. EGYM documents that plain-HTTP calls fail on MMS v2, Data Hub and User Connect.
+  cross_link: authentication/egym-authentication.yml
+
+idempotency:
+  supported: partial
+  key_header: null
+  summary: 'EGYM publishes no idempotency KEY. There is no Idempotency-Key (or equivalent)
+    parameter or header in any of the nine documented API surfaces. What EGYM does publish is
+    one explicitly idempotent operation and one validate-before-commit mechanism, both on the
+    Pay with Wellpass money-moving surface, plus a typed 409 conflict vocabulary everywhere
+    else. An agent can therefore retry some EGYM calls safely and must not retry others, and
+    the difference is documented — which is why this is recorded as partial rather than false.'
+  documented_idempotent_operations:
+  - api: Pay with Wellpass
+    operation: POST {baseUrl}/rest/paymentmethod/cancel
+    statement: 'The endpoint is idempotent: cancelling an already-cancelled booking returns
+      204 without any further effect.'
+    source: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+  safe_by_method:
+    note: 'Standard HTTP idempotency holds where EGYM uses PUT and DELETE for replacement and
+      removal — updateAccount, updateUsersRfids, assignAccountNfcToken, deleteRfid,
+      deleteWebhook, deleteImage, eraseAccountMembershipData. EGYM makes no explicit statement
+      about these, so this is HTTP semantics, not a provider guarantee.'
+  dry_run:
+    api: Pay with Wellpass
+    parameter: dryRun
+    description: 'The same endpoint validates and redeems. dryRun: true checks the code, the
+      email owner, the price ceiling and booking overlap without redeeming; dryRun: false
+      redeems and charges. A rehearsal mechanism rather than a dedupe mechanism.'
+    caveat: 'EGYM warns all validations re-run on confirmation, so a passed dry run can still
+      fail — the dry run reduces the failure rate but does not make the confirm safe to retry.'
+  not_idempotent_and_unprotected:
+  - 'POST /api/v2/accounts (publishAccount) — a retried timeout can create a duplicate member.'
+  - 'POST /api/v1/measurements/{body,cardio,flexibility} — returns 204 with no body, so a
+    retried timeout can double-post into a member''s health record with no way to detect it.'
+  - 'POST {baseUrl}/rest/paymentmethod/validate with dryRun: false — charges the member''s
+    credit wallet, with no idempotency key and no read-back operation to check whether the
+    charge landed.'
+  conflict_detection:
+    note: 'Everywhere except Pay with Wellpass, duplicate creates surface AFTER the fact as
+      typed 409 errorCodes — userEmailConflict, userEmailUsedByAnotherAccountConflict,
+      membershipExists, generalConflict, webhookUrlAlreadyRegistered,
+      tanAssociatedWithAnotherAccount, forbiddenAccountMerge — which EGYM requires callers to
+      handle and documents in a dedicated tutorial. Detecting a duplicate is weaker than
+      suppressing one, but it is a real, typed, machine-readable contract.'
+    docs: https://developer.egym.com/mms-api-v2/tutorials/conflicts-resolution
+  partial_update: 'MMS API V2 offers both PUT /api/v2/accounts/{accountId} (full replace)
+    and PATCH /api/v2/accounts/{accountId} (partialUpdate, added 2025-08-28), so callers can
+    avoid clobbering fields they do not own.'
+
+pagination:
+  style: offset-limit
+  applies_to: [MMS API V2 listAccounts]
+  parameters:
+  - name: offset
+    in: query
+    type: integer
+    default: 0
+    minimum: 0
+  - name: limit
+    in: query
+    type: integer
+    default: 10
+    maximum: 100
+    minimum: 0
+  response_envelope: PageableResponseMemberAccountDTO
+  response_envelope_fields:
+  - {name: offset, type: integer}
+  - {name: limit, type: integer}
+  - {name: items, type: array}
+  - {name: total, type: integer, note: Total matching records.}
+  - {name: hasNext, type: boolean}
+  - {name: nextAfterId, type: integer, note: 'Cursor to request the next page — the envelope
+      supports BOTH offset paging and cursor paging, but only offset/limit are exposed as
+      request parameters, so nextAfterId cannot actually be passed back in. A consumer sees a
+      cursor it has no parameter to use.'}
+  incremental_sync:
+  - name: fromTimestamp
+    in: query
+    format: date-time
+  - name: toTimestamp
+    in: query
+    format: date-time
+  - name: modifiedSince
+    note: Used on the equipment-vendor surface for delta reads.
+  cursor_variant:
+    parameter: lastId
+    applies_to: [Equipment Vendor API (standalone clients)]
+  note: 'Pagination is not uniform across the platform — only MMS API V2 listAccounts
+    declares offset/limit with a pageable envelope. The Data Hub and Data Export exports
+    are bounded by startDate/endDate rather than paged, and the asynchronous export job
+    surface exists specifically to handle result sets too large for a synchronous read.'
+
+filtering_and_lookup:
+  note: 'MMS API V2 exposes dedicated lookup-by-identifier routes rather than query filters:
+    /accounts/membership/{membershipId}, /accounts/email/{email}, /accounts/rfid/{rfid},
+    /accounts/nfc/{nfc}, plus /accounts/corporate-fitness for the Wellpass cohort.'
+  scoping_parameter:
+    name: currentGymOnly
+    default: true
+    note: Controls whether a list is scoped to the key's gym or the whole chain.
+
+error_envelope:
+  format: custom-json
+  rfc9457: false
+  variants: 3
+  variants_note: 'EGYM ships three incompatible error shapes: the ErrorDTO envelope below on
+    every OpenAPI-described API; a typed business-error envelope (type / description /
+    possibleExplanation / data) on Pay with Wellpass; and a NestJS-style payload-validation
+    envelope (statusCode / error / message[]) also on Pay with Wellpass. A client cannot parse
+    EGYM errors with one code path.'
+  media_type: application/json
+  schema: ErrorDTO
+  fields:
+  - timestamp
+  - path
+  - requestId
+  - status
+  - error
+  - errorCode
+  - message
+  - fieldErrors
+  - metadata
+  fields_note: 'The specification names the constraint-violation array fieldErrors and includes
+    a requestId; the published errors documentation page calls the array "errors" and never
+    mentions requestId. Spec and docs disagree — trust the spec.'
+  example: |
+    {
+      "timestamp": "2023-04-11T14:35:48.499+0000",
+      "path": "/api/v2/accounts",
+      "status": 404,
+      "error": "Not Found",
+      "errorCode": "notFound",
+      "message": "User's chain profile was not found.",
+      "metadata": { "entity": "CHAIN_PROFILE" }
+    }
+  note: 'Machine-readable in practice — errorCode is a stable enumerated string and
+    metadata.entity narrows a 404 to the exact missing resource type — but the envelope
+    is a bespoke shape, not application/problem+json, so RFC 9457 tooling will not parse it.'
+  cross_link: errors/egym-error-codes.yml
+
+versioning:
+  scheme: uri-path
+  current:
+  - MMS API V2 at /api/v2
+  - MMS API v1 at /v1 (legacy)
+  - Equipment Vendor APIs at /api/v1
+  - Data Hub at /api/v1
+  - User Connect per-resource (/workouts/v1, /measurements/v1.0)
+  policy: 'EGYM states "We support the latest API version only" on the MMS change log and
+    "for any new projects it is required to use v2" on the general-info page.'
+  cross_link: lifecycle/egym-lifecycle.yml
+
+request_tracing:
+  request_id_header: null
+  request_id_field: requestId
+  note: 'No request-id / correlation-id RESPONSE HEADER is documented or declared in any spec.
+    A trace identifier does exist, but only inside the error body: ErrorDTO.requestId
+    (example "de625cf1-1"). So a caller can quote a request id when reporting a failure, but
+    cannot correlate a SUCCESSFUL call — the id is only ever returned on an error, and the
+    documentation pages that describe the error envelope omit requestId entirely.'
+  source: openapi/egym-mms-api-v2-openapi.yml#/components/schemas/ErrorDTO
+
+rate_limit_signalling:
+  header: X-RateLimit-Remaining
+  status_on_exhaustion: 429
+  retry_after: false
+  cross_link: rate-limits/egym-rate-limits.yml
+
+events:
+  mechanism: webhooks
+  transport: HTTPS POST, JSON
+  auth_to_receiver: x-api-key header carrying a partner-supplied secret
+  timeout: 5 seconds
+  requirement: HTTPS endpoints with valid SSL certificates only; must be reachable without VPN
+  cross_link: asyncapi/egym-events-webhooks.yml
+
+blueprint_headers:
+  note: 'The Canonical GroupX Classes blueprint — the contract EGYM asks MMS vendors to
+    implement on their own hosts — defines its own header convention that the vendor must
+    honour: X-Client-ID (partner credential), X-Chain-ID, X-Location-ID and X-User-ID, each
+    gated by a corresponding metaOption flag, each returning 400 when missing and 401 when
+    invalid.'
+  source: https://developer.egym.com/mms-blueprints/canonical-classes
+
+data_governance:
+  note: 'EGYM publishes a two-bucket data model that determines which contract a caller is
+    operating under: "Gym Data" (names, birthdays, contract information — processed on behalf
+    of the gym, no per-user consent needed) versus "Workout Data" (workout results, health
+    data, training plans — managed on behalf of the member, who chooses what to share).
+    A webhook-event consent filter was added on 2026-06-24. This split is why the User Connect
+    API is user-token authenticated while every other surface is gym-key authenticated.'
+  source: https://developer.egym.com/general/data-privacy

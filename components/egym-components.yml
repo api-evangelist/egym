@@ -1,0 +1,87 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mwa/docs/introduction
+docs:
+- https://developer.egym.com/mwa/docs/introduction
+- https://developer.egym.com/mwa/docs/architecture
+- https://developer.egym.com/mwa/docs/custom-mwa-widgets-on-egym-bma-app-dashboard
+- https://developer.egym.com/mwa/docs/partner-token-pass-through
+- https://developer.egym.com/mwa/docs/native_interface_and_plugins
+- https://developer.egym.com/partner-gui/docs
+- https://developer.egym.com/mwa/docs/policies
+
+summary: 'EGYM''s embeddable-component surface is unusual: it is not a set of widgets a partner
+  drops into their own website, it is two host-side embedding programmes that run PARTNER code
+  inside EGYM-controlled surfaces (or EGYM code inside partner hardware). Both are documented
+  in depth on the developer portal with their own sections, reference apps and upgrade policies.'
+
+families:
+- family: Micro Web Applications (MWA)
+  kind: embedded-web-app-in-native-host
+  description: 'A partner-authored web application that runs inside a WebView hosted by the
+    EGYM Branded Member App (BMA), exposed to the member as a dashboard entry point. The
+    native shell grants the web app access to native mobile features through a Capacitor
+    plugin bridge. Partners can render a plain dashboard card or a fully custom widget with a
+    loading skeleton and dynamically reported height.'
+  surfaces:
+  - {name: Dashboard card, description: 'Standard entry point with configurable title, background image or colour, and icon.'}
+  - {name: Custom MWA widget, description: 'Full custom widget rendered on the BMA dashboard, using a shared loading skeleton served from /widgets-skeletons/<route>.html and a contentLoadingDidFinish command to dismiss it.'}
+  - {name: EGYM Training Experience in a partner app, description: 'The inverse direction — EGYM ships its training experience as a feature embedded in the PARTNER''s own mobile application.', docs: 'https://developer.egym.com/mwa/docs/enterprise_egym_feature_as_a_product'}
+  loader_libraries:
+  - {name: '@egym/mwa-utils', registry: npm, purpose: 'Shared utilities for backward compatibility with the BMA host.'}
+  - {name: '@egym/mwa-logger', registry: npm, purpose: 'On-screen <EgymMwaDevtools /> request/response logger for debugging the web-to-native bridge.'}
+  runtime: Capacitor (v4 to v5 migration documented)
+  auth_bridge:
+    name: Partner Token Pass-Through
+    docs: https://developer.egym.com/mwa/docs/partner-token-pass-through
+    description: The host app passes a partner token into the embedded web app so the MWA can call the partner's own backend as the signed-in member.
+  reference_apps:
+  - {repo: 'https://github.com/egym/mwa-reference', role: Example MWA structure and native-interaction mechanics.}
+  - {repo: 'https://github.com/egym/ios-mwa-reference', role: Native iOS host.}
+  - {repo: 'https://github.com/egym/android-mwa-reference', role: Native Android host.}
+  - {repo: 'https://github.com/egym/react-native-mwa-reference', role: React Native host.}
+  - {repo: 'https://github.com/egym/web-portal-ios', role: Thin layer over Ionic Portals.}
+  build_and_release:
+    ci: Ionic Appflow
+    docs:
+    - https://developer.egym.com/mwa/docs/appflow_dashboard
+    - https://developer.egym.com/mwa/docs/development-workflow
+    - https://developer.egym.com/mwa/docs/release-workflow
+  upgrade_policy: https://developer.egym.com/mwa/docs/policies
+  changelog: https://developer.egym.com/mwa/docs/changelog
+
+- family: EGYM Cardio UI (Partner GUI)
+  kind: embedded-web-ui-in-equipment-console
+  description: 'EGYM''s own member-facing training UI, running inside the WebView of a cardio
+    equipment vendor''s console. The vendor implements a JavaScript interface — a vendorApi
+    object exposing getEquipmentInfo() for vendor differentiation, plus console settings and a
+    key/value local data store that should survive console reboots for future offline support —
+    and EGYM''s UI binds to it through an Equipment Abstraction layer with a per-partner
+    Partner Binding component.'
+  screen_states:
+  - Walkin state
+  - Login state
+  - Workout Pre-Training State
+  - Workout Summary State
+  - EGYM Fitness Test workflow
+  conventions:
+    locale: ISO 639 language + ISO 3166-1 country joined by underscore, e.g. en_US
+    unit_systems: [METRIC, IMPERIAL]
+  docs: https://developer.egym.com/partner-gui/docs
+  audience: Cardio equipment vendors
+  pairs_with: EGYM Equipment Vendor API (standalone clients)
+
+- family: NFC wallet passes
+  kind: native-plugin
+  description: 'Capacitor plugin plus native SDKs partners implement in their own apps to issue
+    Apple Wallet / Google Wallet NFC membership passes. Pairs with the NFC login grant added to
+    the Equipment Vendor API in v1.1.1 and with the MMS API V2 NFC token operations
+    (assignAccountNfcToken, getAccountNfcToken, deleteAccountNfcToken, getByNfc).'
+  package: '@egym/capacitor-nfc-pass-wallet'
+  repo: https://github.com/egym/lib-capacitor-nfc-pass-wallet
+
+not_present:
+- 'No hosted checkout, embedded pricing table, or drop-in payment element — EGYM does not sell
+  through an API.'
+- 'No JavaScript element library for a partner''s own website (no egym.js, no web components
+  published for public web pages).'

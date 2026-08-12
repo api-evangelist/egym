@@ -1,0 +1,938 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Equipment Vendor API (for server-to-server cases)",
+    "description": "At EGYM, we believe that fitness is the soul of healthy living. Work together with partners to help us bringing new ways of working out to \nmillions of gym members, and new ways of prescribing exercises to hundred of thousands of gym trainers, all around the world.\n\nEGYM provides a Fitness Platform for the Connected Gym so you can help us with the mission to ***make the gym work for everyone***. \nEGYM provides a global account that is not scoped for a specific tenant, brand or gym. The account is called EGYM ID. The EGYM ID allows \nusers to use different services of the gym. The EGYM ID is used for the login to EGYM hardware and software products and conneceted equipment.   \n\nEGYM works with the best of breed of the fitness industry. In this documentation, we provide tools and info needed to build a variety of workout \nexperiences that integrate directly with the EGYM Ecosystem. We are happy to welcome you as a partner of EGYM.\n\n# Introduction\n\nThe EGYM Equipment Vendor API Server is an open Web service specification that defines methods to connect and save measurements between the\nPartner's Cloud and the EGYM Cloud Platform.\n\nUse the resources below to create, test, and submit your integration to EGYM.\n\n---\n\n# 📦 Changelog of Documentation\n\n| Version | Changes |\n|---------|---------|\n| **1.1.1** | 🔐 Introduced **NFC-based login** via Apple/Google Wallet — see [`POST /api/v1/oauth/token`](#tag/OAuth/operation/token) |\n| **1.1.0** | ✅ Update of Introduction|\n\n---\n\n# Client Authentication\n\nThe Equipment Vendor API Server client authentication is based on the API Key.\n\nCurrently, different methods for obtaining the Access Token are made available, one by specifying the EGYM User ID (encrypted or obfuscated) and another one by specifying \nthe user RFID.\n\n## 🔄 Typical Integration Flow\n\nTo integrate your equipment with the EGYM platform, follow this sequence:\n\n1. **Authenticate via OAuth**  \n   The standard and recommended method is using RFID-based login (`RFID`) or NFC wallet-based login (`NFC`).\n\n   > Logins using `ENCRYPTED_USER_ID`, `OBFUSCATED_USER_ID`, or `REFRESH_TOKEN` are only for special use cases and require prior alignment with EGYM.\n\n2. **Retrieve User Details**  \n   Use the `/api/v1/gyms/{gymId}/users` endpoint with the token to get enriched user data.\n\n3. **Submit a Measurement**  \n   Post workout data (body, cardio, flexibility) to the `/api/v1/measurements/...` endpoint.\n\n> All subsequent requests after login must include the `Authorization: Bearer <accessToken>` header.\n\n```plaintext\n[Authenticate (POST /oauth/token)]\n              ↓\n[Get User Details (GET /gyms/{gymId}/users)]\n              ↓\n[Submit Measurements (POST /measurements/*)]\n\n```\n\n---\n\n## OAuth Login\n\nThe `/api/v1/oauth/token` endpoint supports multiple login methods via the `grantType` field. Select the appropriate grant method and use the corresponding request payload.\n\n### Grant Types and Payload Examples\n\n#### 🏷️ RFID Login (Standard)\n```json\n{\n  \"grantType\": \"RFID\",\n  \"rfid\": \"AB1020CD\",\n  \"rfidFormat\": \"MIFARE\",\n  \"machineName\": \"scale\"\n}\n```\n\n#### 📱 NFC Login (Google Wallet)\n```json\n{\n  \"grantType\": \"NFC\",\n  \"machineName\": \"scale\",\n  \"gymId\": 130,\n  \"payload\": \"nfc-token-data-abc123\",\n  \"transponderType\": \"GOOGLE\",\n  \"issuerId\": {\n    \"collector\": \"123456789\"\n  }\n}\n```\n\n#### 📱 NFC Login (Apple Wallet)\n```json\n{\n  \"grantType\": \"NFC\",\n  \"machineName\": \"scale\",\n  \"gymId\": 130,\n  \"payload\": \"nfc-token-data-abc123\",\n  \"transponderType\": \"APPLE\",\n  \"issuerId\": {\n    \"passTypeId\": \"example.apple.com\"\n  }\n}\n```\n\n#### 🔁 NFC Login (with VTAP Configuration Index)\n```json\n{\n  \"grantType\": \"NFC\",\n  \"machineName\": \"scale\",\n  \"gymId\": 130,\n  \"payload\": \"nfc-token-data-abc123\",\n  \"transponderType\": \"GOOGLE\",\n  \"configurationIndex\": {\n    \"configurationIndex\": \"2\"\n  }\n}\n```\n\n---\n\n#### 🔐 Encrypted User ID (Special Case - Requires Approval)\n```json\n{\n  \"grantType\": \"ENCRYPTED_USER_ID\",\n  \"userId\": 4337273027797130000\n}\n```\n\n#### 🧑 Obfuscated User ID (Special Case - Requires Approval)\n```json\n{\n  \"grantType\": \"OBFUSCATED_USER_ID\",\n  \"obfuscatedUserId\": \"-1c2yqo37vn9m\"\n}\n```\n\n#### 🔄 Refresh Token (Special Case - Requires Approval)\n```json\n{\n  \"grantType\": \"REFRESH_TOKEN\",\n  \"refreshToken\": \"sample-refresh-token-123\"\n}\n```\n\n##\n---\n\n## 👤 Get User Details\n\n\n\n### Endpoint: `/api/v1/gyms/{gymId}/users`\nUse the access token from login to fetch user profile data:\n\nReturns:\n```json\n{\n  \"equipmentUser\": {\n    \"userId\": \"-1c2yqo37vn9m\",\n    \"firstName\": \"Max\",\n    \"lastName\": \"Mustermann\",\n    \"gender\": \"MALE\",\n    \"dateOfBirth\": \"1990-01-01\",\n    \"height\": 180,\n    \"weight\": 75,\n    \"locale\": \"en_US\",\n    \"trainingGoal\": \"MUSCLE_GAIN\"\n  }\n}\n```\n\n---\n\n\n\n## 🏋️ Submit Measurements\n\n\n\n### Endpoint: `/api/v1/measurements/body`\n\n```json\n{\n  \"timestamp\": 1693474800000,\n  \"machineName\": \"smartscale123\",\n  \"gymId\": 130,\n  \"uniqueMeasurementId\": \"unique-id-xyz\",\n  \"data\": {\n    \"weight\": 72.5,\n    \"bodyFat\": 15.3\n  }\n}\n```\n\n- `timestamp`: Milliseconds since epoch\n- `uniqueMeasurementId`: Must be unique for deduplication\n- `data`: Key-value pairs per registered metric\n\nSimilar structure is used for `/measurements/cardio` and `/measurements/flexibility`.\n\n\n\n---\n\n\n\n## 🔒 Security\n\nAll requests must include one of:\n\n- `x-api-key`: For login endpoint\n- `Authorization: Bearer <accessToken>`: For all other endpoints\n\n---\n\n\n\n## ❓ FAQ\n\nThis section addresses common technical integration questions specific to the **Server-to-Server** model.\n\n## 1. Authentication\n- Use the **API-Key** provided by EGYM for your integration\n- API-Key is issued **per gym location**\n- Store securely in your backend; do not expose to client devices\n\n## 2. User Identification\n- Your backend is responsible for mapping user IDs between your system and EGYM\n- Identification methods can include:\n  - RFID/NFC data received from devices\n  - Account linking between your user database and EGYM\n\n## 3. Data Flow\n- Devices send data to your backend\n- Backend sends authenticated API requests to EGYM Cloud\n- Supports both **real-time** and **batched** submissions\n\n## 4. Key Endpoints for Server-to-Server Integrations\n- Authentication: via API-Key in request headers\n- User details: `GET /users`\n- Measurements: `POST /measurements/*`\n\n## 5. Error Handling Best Practices\n- **401 Unauthorized**: Invalid/missing API-Key\n- **403 Forbidden**: Permission issue\n- **429 Too Many Requests**: Rate limit exceeded; retry after delay\n- Implement retry logic with exponential backoff for transient errors\n\n## 6. Rate Limits\n- Standard API limits apply – see API documentation\n- Monitor usage to avoid hitting limits during batch processing\n\n## 7. Testing\n- Use the **EGYM Sandbox** environment for development\n- Test credentials are prodvided by EGYM\n- Test authentication, user mapping, data submission, and error handling\n\n## 8. What if I send the same measurement twice?**  \nUse a different `uniqueMeasurementId` each time.\n\n## 9.When should I use `issuerId` vs `configurationIndex` in NFC?**  \nThese are alternatives for identifying the wallet pass source. Provide one depending on the integration project with EGYM. Configuration Index is only supported when using the Dot Origin VTAP readers.\n---",
+    "termsOfService": "https://egym.com/us/terms/",
+    "contact": {
+      "name": "EGYM GmbH",
+      "url": "https://egym.com/",
+      "email": "support@egym.com"
+    },
+    "version": "1.1.1"
+  },
+  "servers": [
+    {
+      "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/v1/oauth/token": {
+      "post": {
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "Login",
+        "description": "This endpoint logs in the user and returns the access token",
+        "operationId": "createToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "description": "Select the grant type",
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RfidTokenRequestDTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/NfcTokenRequestDTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EncryptedUserIdTokenRequestDTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ObfuscatedUserIdTokenRequestDTO"
+                  },
+                  {
+                    "$ref": "#/components/schemas/RefreshTokenRequestDTO"
+                  }
+                ]
+              },
+              "examples": {
+                "EncryptedUserId": {
+                  "summary": "Encrypted User ID Login",
+                  "value": {
+                    "grantType": "ENCRYPTED_USER_ID",
+                    "userId": 4337273027797130000
+                  }
+                },
+                "ObfuscatedUserId": {
+                  "summary": "Obfuscated User ID Login",
+                  "value": {
+                    "grantType": "OBFUSCATED_USER_ID",
+                    "obfuscatedUserId": "-1c2yqo37vn9m"
+                  }
+                },
+                "RFID": {
+                  "summary": "RFID Login",
+                  "value": {
+                    "grantType": "RFID",
+                    "rfid": "AB1020CD",
+                    "rfidFormat": "MIFARE",
+                    "machineName": "scale"
+                  }
+                },
+                "NFC (Google)": {
+                  "summary": "NFC Login Google",
+                  "value": {
+                    "grantType": "NFC",
+                    "machineName": "scale",
+                    "gymId": 130,
+                    "payload": "nfc-token-data-abc123",
+                    "transponderType": "GOOGLE",
+                    "issuerId": {
+                      "collector": "123456789"
+                    }
+                  }
+                },
+                "NFC (Apple)": {
+                  "summary": "NFC Login Apple",
+                  "value": {
+                    "grantType": "NFC",
+                    "machineName": "scale",
+                    "gymId": 130,
+                    "payload": "nfc-token-data-abc123",
+                    "transponderType": "APPLE",
+                    "issuerId": {
+                      "passTypeId": "example.apple.com"
+                    }
+                  }
+                },
+                "NFC (DotOrigin VTAP ConfigurationIndex)": {
+                  "summary": "NFC Login (VTAP)",
+                  "value": {
+                    "grantType": "NFC",
+                    "machineName": "scale",
+                    "gymId": 130,
+                    "payload": "nfc-token-data-abc123",
+                    "transponderType": "GOOGLE",
+                    "configurationIndex": {
+                      "configurationIndex": "2"
+                    }
+                  }
+                },
+                "RefreshToken": {
+                  "summary": "Refresh Token Login",
+                  "value": {
+                    "grantType": "REFRESH_TOKEN",
+                    "refreshToken": "sample-refresh-token-123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true,
+          "description": "Select from the dropdown the Login method that should be used"
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponseDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "partner": []
+          }
+        ]
+      }
+    },
+    "/api/v1/oauth/.well-known/jwks.json": {
+      "get": {
+        "tags": [
+          "OAuth"
+        ],
+        "summary": "well-known",
+        "description": "This endpoint returns a JSON Web Key (JWK) set.",
+        "operationId": "wellKnown",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": {
+                    "keys": [
+                      {
+                        "kty": "RSA",
+                        "kid": "1",
+                        "alg": "RS256",
+                        "e": "AQAB",
+                        "n": "jvb"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/gyms/{gymId}/users": {
+      "get": {
+        "tags": [
+          "User Details"
+        ],
+        "summary": "Get user details",
+        "description": "This endpoint retrieves user details in the defined gym location",
+        "operationId": "getUserDetails",
+        "parameters": [
+          {
+            "name": "gymId",
+            "in": "path",
+            "description": "The EGYM Gym Location ID.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 130
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailsDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetailsDTO"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/api/v1/measurements/body": {
+      "post": {
+        "tags": [
+          "Body Measurement"
+        ],
+        "summary": "Create Body Measurement",
+        "description": "This endpoint creates a body measurement for the user. See the Body Measurements document for the list of available measurements that can be transferred to EGYM cloud.",
+        "operationId": "createBodyMeasurement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeasurementDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/api/v1/measurements/cardio": {
+      "post": {
+        "tags": [
+          "Cardio Measurement"
+        ],
+        "summary": "Create Cardio Measurement",
+        "description": "This endpoint creates a cardio measurement for the user. See the Cardio Measurements document for the list of available measurements that can be transferred to EGYM cloud.",
+        "operationId": "createCardioMeasurement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeasurementDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    },
+    "/api/v1/measurements/flexibility": {
+      "post": {
+        "tags": [
+          "Flexibility Measurement"
+        ],
+        "summary": "Create Flexibility Measurement",
+        "description": "This endpoint creates a flexibility measurement for the user. See the Flexibility Measurements document for the list of available measurements that can be transferred to EGYM cloud.",
+        "operationId": "createFlexibilityMeasurement",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MeasurementDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDTO"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "user": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MeasurementDTO": {
+        "required": [
+          "data",
+          "gymId",
+          "machineName",
+          "timestamp",
+          "uniqueMeasurementId"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "integer",
+            "description": "The timestamp of when the measurement took place in milliseconds since the epoch time.",
+            "format": "int64",
+            "example": 1553074207520
+          },
+          "machineName": {
+            "type": "string",
+            "description": "The machine name of the equipment that generates the measurement. Machine name needs to be registered at EGYM.",
+            "example": "device123"
+          },
+          "gymId": {
+            "type": "integer",
+            "description": "The EGYM Gym Location ID.",
+            "format": "int64",
+            "example": 130
+          },
+          "uniqueMeasurementId": {
+            "type": "string",
+            "description": "Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.",
+            "example": "f5c15c853c1e46de"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "description": "A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM."
+            },
+            "description": "A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM."
+          }
+        }
+      },
+      "ErrorDTO": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "description": "The timestamp of the request.",
+            "format": "date-time"
+          },
+          "path": {
+            "type": "string",
+            "description": "The path requested."
+          },
+          "requestId": {
+            "type": "string",
+            "description": "The request ID.",
+            "example": "de625cf1-1"
+          },
+          "status": {
+            "type": "integer",
+            "description": "The http status code.",
+            "format": "int32"
+          },
+          "error": {
+            "type": "string",
+            "description": "The error."
+          },
+          "message": {
+            "type": "string",
+            "description": "The message to describe the error."
+          },
+          "fieldErrors": {
+            "type": "array",
+            "description": "The constraint violations.",
+            "items": {
+              "$ref": "#/components/schemas/FieldErrorDTO"
+            }
+          }
+        }
+      },
+      "FieldErrorDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The field name.",
+            "example": "age"
+          },
+          "message": {
+            "type": "string",
+            "description": "The error message.",
+            "example": "Must be greater than 10."
+          },
+          "rejectedValue": {
+            "type": "object",
+            "description": "The rejected value.",
+            "example": 3
+          }
+        },
+        "description": "The constraint violations."
+      },
+      "EncryptedUserIdTokenRequestDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenRequestDTO"
+          },
+          {
+            "properties": {
+              "userId": {
+                "type": "integer",
+                "description": "EGYM User ID encrypted.",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "title": "Encrypted User ID",
+        "description": "Encrypted User ID Login",
+        "type": "object"
+      },
+      "ObfuscatedUserIdTokenRequestDTO": {
+        "required": [
+          "grantType",
+          "obfuscatedUserId"
+        ],
+        "type": "object",
+        "title": "Obfuscated User ID",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenRequestDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "obfuscatedUserId": {
+                "type": "string",
+                "description": "EGYM User ID obfuscated."
+              }
+            }
+          }
+        ]
+      },
+      "RefreshTokenRequestDTO": {
+        "required": [
+          "grantType",
+          "refreshToken"
+        ],
+        "type": "object",
+        "title": "Refresh Token",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenRequestDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "refreshToken": {
+                "type": "string",
+                "description": "The refresh token.",
+                "example": "ab3a16b67..."
+              }
+            }
+          }
+        ]
+      },
+      "RfidTokenRequestDTO": {
+        "required": [
+          "grantType",
+          "machineName",
+          "rfid",
+          "rfidFormat"
+        ],
+        "type": "object",
+        "title": "RFID",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenRequestDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "rfid": {
+                "type": "string",
+                "description": "RFID serial number."
+              },
+              "rfidFormat": {
+                "type": "string",
+                "description": "RFID Format.",
+                "enum": [
+                  "MIFARE",
+                  "LEGIC"
+                ]
+              },
+              "machineName": {
+                "type": "string",
+                "description": "The name of the machine."
+              }
+            }
+          }
+        ]
+      },
+      "NfcTokenRequestDTO": {
+        "required": [
+          "grantType",
+          "machineName",
+          "payload",
+          "transponderType",
+          "gymId"
+        ],
+        "title": "NFC",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TokenRequestDTO"
+          },
+          {
+            "required": [
+              "machineName",
+              "gymId",
+              "payload"
+            ],
+            "properties": {
+              "machineName": {
+                "type": "string",
+                "description": "The name of the machine."
+              },
+              "gymId": {
+                "type": "integer",
+                "example": 130,
+                "description": "The EGYM Gym Location ID. Mandatory if the grant_type is NFC."
+              },
+              "payload": {
+                "type": "string",
+                "description": "The NFC payload. The NFC payload is a string that represents the NFC data contained in a wallet pass. The string must be no more than 64 bytes long and may only contain ASCII characters. In the case of an Apple Wallet pass, corresponds to the `message` property of the [`Pass.NFC`](https://developer.apple.com/documentation/walletpasses/pass/nfc#properties) object. In the case of a Google Wallet pass, corresponds to the `smartTapRedemptionValue` property of the [`GenericObject`](https://developers.google.com/wallet/reference/rest/v1/genericobject#GenericObject.FIELDS.smart_tap_redemption_value) resource. Mandatory if the grant_type is NFC."
+              },
+              "transponderType": {
+                "type": "string",
+                "description": "The pass type of the NFC data. Can be Apple or Google.",
+                "enum": [
+                  "APPLE",
+                  "GOOGLE"
+                ]
+              },
+              "issuerId": {
+                "$ref": "#/components/schemas/IssuerId"
+              },
+              "configurationIndex": {
+                "$ref": "#/components/schemas/VtapKeySlot"
+              }
+            }
+          }
+        ],
+        "x-internal": false,
+        "type": "object"
+      },
+      "IssuerId": {
+        "type": "object",
+        "description": "The issuer of the NFC data. Must be provided if vtap configurationIndex is not provided.",
+        "x-internal": false,
+        "properties": {
+          "passTypeId": {
+            "type": "string",
+            "description": "The Google collector ID of the pass issuer."
+          },
+          "collectorId": {
+            "type": "string",
+            "description": "The Apple pass type ID of the pass issuer."
+          }
+        }
+      },
+      "VtapKeySlot": {
+        "type": "object",
+        "description": "The VTAP configuration index read. Must be provided if issuerId is not provided.",
+        "x-internal": false,
+        "properties": {
+          "configurationIndex": {
+            "type": "string",
+            "example": "2"
+          }
+        },
+        "title": ""
+      },
+      "TokenRequestDTO": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "grantType",
+          "mapping": {
+            "RFID": "#/components/schemas/RfidTokenRequestDTO",
+            "ENCRYPTED_USER_ID": "#/components/schemas/EncryptedUserIdTokenRequestDTO",
+            "OBFUSCATED_USER_ID": "#/components/schemas/ObfuscatedUserIdTokenRequestDTO",
+            "REFRESH_TOKEN": "#/components/schemas/RefreshTokenRequestDTO",
+            "NFC": "#/components/schemas/NfcTokenRequestDTO"
+          }
+        },
+        "description": "Grant Type",
+        "properties": {
+          "grantType": {
+            "type": "string",
+            "description": "The grant type.",
+            "enum": [
+              "RFID",
+              "ENCRYPTED_USER_ID",
+              "REFRESH_TOKEN",
+              "OBFUSCATED_USER_ID",
+              "NFC"
+            ]
+          }
+        },
+        "required": [
+          "grantType"
+        ]
+      },
+      "TokenResponseDTO": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "description": "The access token.",
+            "example": "a9a160b77797f..."
+          },
+          "ab3a16b67...": {
+            "type": "string",
+            "description": "The refresh token."
+          },
+          "expirationTime": {
+            "type": "integer",
+            "description": "The expiration time of the access token.",
+            "format": "int64",
+            "example": 1553074207520
+          }
+        }
+      },
+      "EquipmentUserDetailsDTO": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "The userId assigned by egym, for example -1c2yqo37vn9m.",
+            "example": "-1c2yqo37vn9m"
+          },
+          "email": {
+            "type": "string",
+            "description": "The email address of the user. Not available by default. Only available if needed for use case."
+          },
+          "firstName": {
+            "type": "string",
+            "description": "The user's first name."
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The user's last name."
+          },
+          "gender": {
+            "type": "string",
+            "description": "The gender of the user.",
+            "enum": [
+              "MALE",
+              "FEMALE",
+              "NON_BINARY"
+            ]
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The date of birth in ISO 8601 format (yyyy-MM-dd).",
+            "format": "date"
+          },
+          "height": {
+            "type": "number",
+            "description": "The body height of the user in centimeters.",
+            "format": "double",
+            "example": 180
+          },
+          "weight": {
+            "type": "number",
+            "description": "The body weight of the user in kilograms.",
+            "format": "double",
+            "example": 75
+          },
+          "locale": {
+            "type": "string",
+            "description": "The user locale is either in ISO 15897 standard format. i.e.: 'en_US' or just language. i.e.: 'en'",
+            "example": "en_US"
+          },
+          "unitSystem": {
+            "type": "string",
+            "description": "The user Unit System.",
+            "enum": [
+              "METRIC",
+              "US_CUSTOMARY",
+              "IMPERIAL"
+            ]
+          },
+          "trainingGoal": {
+            "type": "string",
+            "description": "The user training goal.",
+            "enum": [
+              "WEIGHT_LOSS",
+              "FITNESS",
+              "MUSCLE_GAIN",
+              "BBP",
+              "BBP_AND_WEIGHT_LOSS",
+              "REHASPORT"
+            ]
+          },
+          "termsAndConditionsAccepted": {
+            "type": "boolean",
+            "description": "Informs if the terms and conditions have been accepted."
+          }
+        }
+      },
+      "UserDetailsDTO": {
+        "type": "object",
+        "properties": {
+          "equipmentUser": {
+            "$ref": "#/components/schemas/EquipmentUserDetailsDTO"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "user": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "partner": {
+        "type": "apiKey",
+        "name": "x-api-key",
+        "in": "header"
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Authentication",
+      "tags": [
+        "OAuth"
+      ]
+    },
+    {
+      "name": "Measurements",
+      "tags": [
+        "Body Measurement",
+        "Cardio Measurement",
+        "Flexibility Measurement"
+      ]
+    },
+    {
+      "name": "User",
+      "tags": [
+        "User Details"
+      ]
+    }
+  ],
+  "x-internal": false
+}

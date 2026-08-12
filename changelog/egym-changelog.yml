@@ -1,0 +1,133 @@
+generated: '2026-08-12'
+method: searched
+source: https://developer.egym.com/mms-api-v2/change-log
+api: EGYM MMS API V2
+scheme: dated-entries
+format: markdown bullet list, ISO dates, non-backward-compatible items italicised
+current_version: v2
+support_policy: We support the latest API version only.
+entry_count: 22
+window: '2022-10-04 to 2026-07-21 (full published history captured; EGYM publishes the whole list)'
+entries:
+- date: '2026-07-21'
+  breaking: false
+  category: change
+  highlight: Rate limiting moved from a fixed time-window to a token-bucket algorithm, with
+    updated 429 guidance.
+- date: '2026-06-24'
+  breaking: false
+  category: change
+  highlight: Webhook events are now filtered to account for data-sharing consent.
+- date: '2026-05-29'
+  breaking: true
+  category: deprecation
+  highlight: 'Test server URL https://one-mms-service.ext-1.test.co.egym.coffee deprecated
+    and no longer supported; use https://mms.api.ed.ts.egym.coffee instead.'
+- date: '2026-04-08'
+  breaking: false
+  category: addition
+  highlight: Search GroupX Classes response contract in the Class Booking blueprint extended
+    to return the full GroupXClass object instead of brief information only.
+- date: '2026-03-02'
+  breaking: false
+  category: validation
+  highlight: membership.endOfContract can no longer be before membership.startOfContract.
+- date: '2025-12-11'
+  breaking: false
+  category: addition
+  highlight: New API for operations with NFC tokens.
+- date: '2025-09-25'
+  breaking: false
+  category: addition
+  highlight: New Get account role operation and new gymOwner role for Set account role.
+- date: '2025-08-28'
+  breaking: false
+  category: addition
+  highlight: New PATCH operation to partially update an account.
+- date: '2025-08-13'
+  breaking: false
+  category: addition
+  highlight: New NotFound entity TAN added to 404 metadata errors.
+- date: '2024-11-28'
+  breaking: false
+  category: addition
+  highlight: 404 Not Found error extended with entity in metadata.
+- date: '2024-10-21'
+  breaking: false
+  category: addition
+  highlight: New API to list Corporate Fitness member accounts.
+- date: '2024-09-11'
+  breaking: false
+  category: addition
+  highlight: New API to retrieve a member account by RFID.
+- date: '2024-07-22'
+  breaking: false
+  category: addition
+  highlight: New API to retrieve a member account by NFC.
+- date: '2024-07-12'
+  breaking: false
+  category: change
+  highlight: Scope of the RFID update operation narrowed to MMS-only update of a user's RFIDs.
+- date: '2024-04-30'
+  breaking: false
+  category: change
+  highlight: membership.endOfContract made optional.
+- date: '2024-03-21'
+  breaking: false
+  category: addition
+  highlight: New webhook event type MEMBERSHIP_DELETE.
+- date: '2023-12-15'
+  breaking: false
+  category: addition
+  highlight: New API to delete an account image.
+- date: '2023-12-08'
+  breaking: false
+  category: addition
+  highlight: New webhook event type EQUIPMENT_CHECKIN.
+- date: '2023-10-05'
+  breaking: false
+  category: change
+  highlight: Product Booking API updated to support advanced upselling use cases.
+- date: '2023-05-31'
+  breaking: false
+  category: addition
+  highlight: New API to delete an account membership.
+- date: '2023-05-04'
+  breaking: false
+  category: addition
+  highlight: New API to manage a member role in the gym.
+- date: '2023-04-28'
+  breaking: false
+  category: addition
+  highlight: New API for Trainer Tasks management.
+- date: '2023-01-12'
+  breaking: false
+  category: addition
+  highlight: New endpoint to instantly deactivate a product booking for a member.
+- date: '2022-11-14'
+  breaking: false
+  category: addition
+  highlight: New endpoint to retrieve a member account by email.
+- date: '2022-10-04'
+  breaking: false
+  category: addition
+  highlight: New endpoint to list all member accounts.
+- date: '2022-10-04'
+  breaking: true
+  category: change
+  highlight: endDate in the Product Booking Activate API changed to required.
+other_changelogs:
+- api: EGYM Equipment Vendor API (server-to-server)
+  location: In-specification, in info.description as a "Changelog of Documentation" table.
+  entries:
+  - {version: 1.1.1, highlight: 'Introduced NFC-based login via Apple/Google Wallet on POST /api/v1/oauth/token.'}
+  - {version: 1.1.0, highlight: Update of Introduction.}
+  note: Undated — version numbers only, so the age of a change cannot be read.
+- api: EGYM Micro Web Applications (MWA)
+  location: https://developer.egym.com/mwa/docs/changelog
+gaps:
+- 'Only the MMS API V2 has a dated change log. The Data Hub, Data Export, User Connect,
+  Equipment Vendor (standalone) and Canonical GroupX Classes APIs publish none.'
+- 'Breaking changes are signalled by italic formatting in prose, which does not survive
+  machine reading — there is no structured breaking flag, no RSS/Atom feed and no
+  machine-readable changelog endpoint.'
