@@ -1,0 +1,2790 @@
+{
+  "item": [
+    {
+      "id": "86458cd4-e994-410d-a373-59afb0e6a3b9",
+      "name": "L2",
+      "description": {
+        "content": "Operations related to L2 level of integration",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8997b488-9f89-41e9-a64a-bc5c7789c632",
+          "name": "Search Classes",
+          "request": {
+            "name": "Search Classes",
+            "description": {
+              "content": "This operation searches GroupX Classes by date range.\n\n#### Additional contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "locationId",
+                  "value": "<string>",
+                  "description": "(Required) ClubMS Location ID, which indicates Location to search Classes in. This ID is returned by Canonical Locations API or provided manually to EGYM admins.\n\n##### Possible reasons of validation errors:\n* missing => 400\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "endDateTime",
+                  "value": "<dateTime>",
+                  "description": "(Required) Defines end of the timerange for Class search\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* lessThanStartDateTime => 400\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "startDateTime",
+                  "value": "<dateTime>",
+                  "description": "(Required) Defines start of the timerange for Class search\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* greaterThanEndDateTime => 400\n"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1634c6ff-6c5a-403a-95dc-5bf8975cd3e2",
+              "name": "List of found Classes.\n\n##### Contracts\n* Section `brief` is required.\n* If *`metaOption::bookingEnabled`* is true then `free` flag is required, optional otherwise.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "locationId",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "endDateTime",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "startDateTime",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"brief\": {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startDateTime\": \"1955-07-15T20:29:00.745Z\",\n      \"endDateTime\": \"1998-09-16T13:19:32.709Z\",\n      \"locationId\": \"string\",\n      \"free\": false,\n      \"waitlisted\": false,\n      \"childCare\": true,\n      \"reservable\": true,\n      \"instructor\": {\n        \"fullName\": \"string\",\n        \"firstName\": \"string\",\n        \"lastName\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"activity\": {\n        \"name\": \"string\"\n      },\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"details\": {\n      \"description\": \"string\",\n      \"room\": {\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"roomPhotoUrl\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"level\": {\n        \"name\": \"string\",\n        \"description\": \"string\"\n      },\n      \"pricing\": {\n        \"price\": 8676.72443542199\n      },\n      \"legalNotes\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"bookingDetails\": {\n      \"capacity\": 4586,\n      \"booked\": 6925,\n      \"waitlistCapacity\": 3390,\n      \"waitlistBooked\": 8337,\n      \"availableSpots\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    \"attendeeBookingDetails\": {\n      \"exerciserId\": \"string\",\n      \"booked\": true,\n      \"waitlistBooked\": true,\n      \"spotBooked\": \"string\",\n      \"eligibility\": {\n        \"addToClassEligibility\": {\n          \"eligible\": true,\n          \"lackOfProduct\": false,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromClassEligibility\": {\n          \"eligible\": false\n        },\n        \"addToWaitlistEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": false,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromWaitlistEligibility\": {\n          \"eligible\": true\n        },\n        \"bookSpotEligibility\": {\n          \"eligible\": false\n        },\n        \"updateBookingEligibility\": {\n          \"eligible\": false\n        }\n      },\n      \"waitlistPosition\": 4018\n    }\n  },\n  {\n    \"brief\": {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startDateTime\": \"2011-08-01T05:39:52.450Z\",\n      \"endDateTime\": \"1977-01-12T11:47:53.585Z\",\n      \"locationId\": \"string\",\n      \"free\": false,\n      \"waitlisted\": true,\n      \"childCare\": true,\n      \"reservable\": false,\n      \"instructor\": {\n        \"fullName\": \"string\",\n        \"firstName\": \"string\",\n        \"lastName\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"activity\": {\n        \"name\": \"string\"\n      },\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"details\": {\n      \"description\": \"string\",\n      \"room\": {\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"roomPhotoUrl\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"level\": {\n        \"name\": \"string\",\n        \"description\": \"string\"\n      },\n      \"pricing\": {\n        \"price\": 6051.9756280363745\n      },\n      \"legalNotes\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"bookingDetails\": {\n      \"capacity\": 7381,\n      \"booked\": 3397,\n      \"waitlistCapacity\": 8418,\n      \"waitlistBooked\": 6965,\n      \"availableSpots\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    \"attendeeBookingDetails\": {\n      \"exerciserId\": \"string\",\n      \"booked\": false,\n      \"waitlistBooked\": false,\n      \"spotBooked\": \"string\",\n      \"eligibility\": {\n        \"addToClassEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": true,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromClassEligibility\": {\n          \"eligible\": true\n        },\n        \"addToWaitlistEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": true,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromWaitlistEligibility\": {\n          \"eligible\": false\n        },\n        \"bookSpotEligibility\": {\n          \"eligible\": true\n        },\n        \"updateBookingEligibility\": {\n          \"eligible\": false\n        }\n      },\n      \"waitlistPosition\": 2507\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "05c2e75b-58a5-4a74-8367-5a22f2faccb7",
+          "name": "Get Class Details",
+          "request": {
+            "name": "Get Class Details",
+            "description": {
+              "content": "This operation returns all detailed information about GroupX Class.\n\n#### Additional Contracts\n 1. Parameter `exerciserId` is supported only if *`metaOption::bookingEnabled`* = true. If booking is disabled, then 400 status code must be returned when `exerciserId` is specified.\n 2. If *`metaOption::bookingEnabled`* = true, parameter `exerciserId` is optional. If it is specified, then `GroupXClassAttendeeBookingDetails` is provided in response. If `exerciserId` is not specified, then response has no attendee booking details.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "exerciserId",
+                  "value": "<string>",
+                  "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notSupported => 400\n* notFound => 404\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2ccf2eb2-6924-4f82-9911-7f76f4becd16",
+              "name": "Class full information and Attendee Booking Details\n\n##### Contracts\n* If *`metaOption::bookingEnabled`* is true then `free` flag is required, optional otherwise.\n* Section `bookingDetails` is required if *`metaOption::bookingEnabled`* = true, and is not supported otherwise.\n* Section `attendeeBookingDetails` is required only if parameter `exerciserId` was specified.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "exerciserId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "a6739f25-af29-4171-a6c2-04af25d18ab4",
+      "name": "L3",
+      "description": {
+        "content": "Operations related to L3 level of integration",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "832c5ba9-4c97-46cc-9948-447ab7061d5d",
+          "name": "Get Class Details",
+          "request": {
+            "name": "Get Class Details",
+            "description": {
+              "content": "This operation returns all detailed information about GroupX Class.\n\n#### Additional Contracts\n 1. Parameter `exerciserId` is supported only if *`metaOption::bookingEnabled`* = true. If booking is disabled, then 400 status code must be returned when `exerciserId` is specified.\n 2. If *`metaOption::bookingEnabled`* = true, parameter `exerciserId` is optional. If it is specified, then `GroupXClassAttendeeBookingDetails` is provided in response. If `exerciserId` is not specified, then response has no attendee booking details.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "exerciserId",
+                  "value": "<string>",
+                  "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notSupported => 400\n* notFound => 404\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d50107ff-06d5-45dc-bac8-5d1c973234f3",
+              "name": "Class full information and Attendee Booking Details\n\n##### Contracts\n* If *`metaOption::bookingEnabled`* is true then `free` flag is required, optional otherwise.\n* Section `bookingDetails` is required if *`metaOption::bookingEnabled`* = true, and is not supported otherwise.\n* Section `attendeeBookingDetails` is required only if parameter `exerciserId` was specified.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "exerciserId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2017-03-07T07:25:55.123Z\",\n    \"endDateTime\": \"2018-03-11T03:29:54.444Z\",\n    \"locationId\": \"string\",\n    \"free\": true,\n    \"waitlisted\": true,\n    \"childCare\": false,\n    \"reservable\": true,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 4910.738384091523\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 1219,\n    \"booked\": 5038,\n    \"waitlistCapacity\": 3473,\n    \"waitlistBooked\": 417,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": false,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": true,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": true\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": true,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": false\n      }\n    },\n    \"waitlistPosition\": 1889\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fb594cdd-3324-4174-bacc-1ed388036831",
+          "name": "Add Attendee to Class",
+          "request": {
+            "name": "Add Attendee to Class",
+            "description": {
+              "content": "This operation books GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* = true (use status code 404 endpoint not supported).\n#### Additional Contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId",
+                "attendees",
+                ":exerciserId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "spot",
+                  "value": "<string>",
+                  "description": "Spot identifier (e.g. spot number).\n\n##### Possible reasons of validation errors:\n* noFreeSpots => 422\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f641ec73-f1d3-45ad-b732-08ec224c954a",
+              "name": "Class is booked for the Attendee successfully.\nUpdated GroupX Class Details returned.\n\n##### Contracts\nAll sections are required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "spot",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0df09650-0ffe-49c9-a4f5-c01c7a52312f",
+              "name": "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n* cause `bookingFailed`\n  * reason `lackOfProduct` -- if operation can't be performed because of lack of Product\n  * reason `noFreeSpots` -- if the Class does not have free spots in Waitlist\n  * reason `userAlreadyInWaitlist` -- if Exerciser is in this Waitlist already\n  * reason `userAlreadyAttendee` -- if Exerciser is an Attendee of the Class already\n  * reason `userHasPenalty` -- if operation can't be performed because of user's penalty\n  * reason `overlapped` -- if operation can't be performed because class is overlapped\n  * reason `partnerRestriction` -- if operation can't be performed because of any other restrictions on partner side\n  * reason `unknown` -- if adding to Class Waitlist is impossible due to some business rules on Partner side (`message` should contain details)\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "spot",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5fddbfaa-2878-42a6-9303-38e7aad7944e",
+          "name": "Update class booking",
+          "request": {
+            "name": "Update class booking",
+            "description": {
+              "content": "This operation changes booking details of GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::spotBookingEnabled`* = true (use status code 404 endpoint not supported).\n#### Additional Contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId",
+                "attendees",
+                ":exerciserId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "spot",
+                  "value": "<string>",
+                  "description": "Spot identifier (e.g. spot number).\n\n##### Possible reasons of validation errors:\n* noFreeSpots => 422\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "45129ae9-621f-4cf4-b16d-177399928631",
+              "name": "Class is booked for the Attendee successfully.\nUpdated GroupX Class Details returned.\n\n##### Contracts\nAll sections are required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "spot",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "aa9cde73-43e1-4f55-a466-edde1ca86c6a",
+              "name": "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n* cause `bookingFailed`\n  * reason `lackOfProduct` -- if such booking cannot be done because of lack of Product\n  * reason `noFreeSpots` -- if the Class does not have free spots to book or exact spot selected is already occupied\n  * reason `userAlreadyAttendee` -- if Exerciser is an Attendee of the Class already\n  * reason `userAlreadyInWaitlist` -- if Exerciser is in this Waitlist already\n  * reason `overlapped` -- if Exerciser has booked other Class overlapping by time\n  * reason `unknown` -- Class booking is impossible due to some business rules on Partner side (`message` should contain details)\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "spot",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2236e5e8-02a5-4324-93dc-ba8f1018fa2f",
+          "name": "Remove Attendee from Class",
+          "request": {
+            "name": "Remove Attendee from Class",
+            "description": {
+              "content": "This operation cancels GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true and (use status code 404 endpoint not supported).\n\n#### Additional Contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId",
+                "attendees",
+                ":exerciserId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "b7c6b10b-987c-4b76-935b-e93322a18720",
+              "name": "Class is cancelled for the Attendee successfully.\nUpdated GroupX Class Details returned.\n\n##### Contracts\nAll sections are required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b1a13bd5-05e7-4098-9440-e866692b99ba",
+              "name": "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n* cause `unbookingFailed`\n  * reason `userNotAttendee` -- if an Exerciser is not an Attendee of the Class\n  * reason `unknown` -- if removing from Class is impossible due to some business rules on Partner side (`message` should contain details)\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9283d56c-0246-4709-b1c3-ccf77292f745",
+          "name": "Add Attendee to Waitlist",
+          "request": {
+            "name": "Add Attendee to Waitlist",
+            "description": {
+              "content": "This operation books GroupX Class Waitlist for the Attendee (Exerciser).\nShould be implemented in case if .\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true. Use status code 404 if endpoint not supported.\n\n#### Additional Contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId",
+                "waitlist",
+                "attendees",
+                ":exerciserId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0164d85b-125d-4cf1-8bba-9f1c9c4d6502",
+              "name": "Class' Waitlist is booked for the Attendee successfully.\nUpdated GroupX Class Details returned.\n\n##### Contracts\nAll sections are required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "waitlist",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b8bf1d1b-8bc4-422b-8cb8-6a234f3e7752",
+              "name": "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n* cause `addToWaitlistFailed`\n  * reason `lackOfProduct` -- if operation can't be performed because of lack of Product\n  * reason `noFreeSpots` -- if the Class does not have free spots in Waitlist\n  * reason `userAlreadyInWaitlist` -- if Exerciser is in this Waitlist already\n  * reason `userAlreadyAttendee` -- if Exerciser is an Attendee of the Class already\n  * reason `userHasPenalty` -- if operation can't be performed because of user's penalty\n  * reason `overlapped` -- if operation can't be performed because class is overlapped\n  * reason `partnerRestriction` -- if operation can't be performed because of user's penalty\n  * reason `unknown` -- if adding to Class Waitlist is impossible due to some business rules on Partner side (`message` should contain details)\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "waitlist",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "8688c8c0-d13e-47f7-855b-f3b9db66894e",
+          "name": "Remove Attendee from Waitlist",
+          "request": {
+            "name": "Remove Attendee from Waitlist",
+            "description": {
+              "content": "This operation cancels GroupX Class Waitlist for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true (use status code 404 endpoint not supported).\n\n#### Additional Contracts\nN/A\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "classes",
+                ":classId",
+                "waitlist",
+                "attendees",
+                ":exerciserId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "classId",
+                  "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "46e70c08-56d9-4c5b-9fb7-2b00bd7cd36b",
+              "name": "Class' Waitlist is cancelled for the Attendee successfully.\nUpdated GroupX Class Details returned.\n\n##### Contracts\nAll sections are required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "waitlist",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"brief\": {\n    \"id\": \"string\",\n    \"name\": \"string\",\n    \"startDateTime\": \"2012-08-14T07:57:06.893Z\",\n    \"endDateTime\": \"2021-01-29T13:53:16.917Z\",\n    \"locationId\": \"string\",\n    \"free\": false,\n    \"waitlisted\": true,\n    \"childCare\": true,\n    \"reservable\": false,\n    \"instructor\": {\n      \"fullName\": \"string\",\n      \"firstName\": \"string\",\n      \"lastName\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"activity\": {\n      \"name\": \"string\"\n    },\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"details\": {\n    \"description\": \"string\",\n    \"room\": {\n      \"name\": \"string\",\n      \"description\": \"string\",\n      \"roomPhotoUrl\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"level\": {\n      \"name\": \"string\",\n      \"description\": \"string\"\n    },\n    \"pricing\": {\n      \"price\": 9997.76198922809\n    },\n    \"legalNotes\": \"string\",\n    \"customInfo\": [\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      },\n      {\n        \"key\": \"string\",\n        \"value\": \"string\"\n      }\n    ]\n  },\n  \"bookingDetails\": {\n    \"capacity\": 6767,\n    \"booked\": 4151,\n    \"waitlistCapacity\": 3532,\n    \"waitlistBooked\": 3838,\n    \"availableSpots\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  \"attendeeBookingDetails\": {\n    \"exerciserId\": \"string\",\n    \"booked\": true,\n    \"waitlistBooked\": true,\n    \"spotBooked\": \"string\",\n    \"eligibility\": {\n      \"addToClassEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": false,\n        \"userPaymentOnFile\": true\n      },\n      \"removeFromClassEligibility\": {\n        \"eligible\": false\n      },\n      \"addToWaitlistEligibility\": {\n        \"eligible\": false,\n        \"lackOfProduct\": true,\n        \"userPaymentOnFile\": false\n      },\n      \"removeFromWaitlistEligibility\": {\n        \"eligible\": false\n      },\n      \"bookSpotEligibility\": {\n        \"eligible\": true\n      },\n      \"updateBookingEligibility\": {\n        \"eligible\": true\n      }\n    },\n    \"waitlistPosition\": 4213\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32c71e0a-12ea-4c68-a4a3-f8ecb92e8ec0",
+              "name": "The following causes and reasons are supported (see general **Errors** section for more details and examples):\n* cause `removeFromWaitlistFailed`\n  * reason `userNotInWaitlist` -- if an Exerciser is not added to the Class Waitlist\n  * reason `unknown` -- if removing from Class Waitlist is impossible due to some business rules on Partner side (`message` should contain details)\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "classes",
+                    ":classId",
+                    "waitlist",
+                    "attendees",
+                    ":exerciserId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "classId",
+                      "description": "(Required) ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ae16e18f-ac09-499d-88b1-87db89dd78de",
+          "name": "Get Exerciser Class Schedule",
+          "request": {
+            "name": "Get Exerciser Class Schedule",
+            "description": {
+              "content": "This operation retrieves Attendee (Exerciser) Class schedule.\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true (use status code 404 endpoint not supported).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "exercisers",
+                ":exerciserId",
+                "schedule"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "endDateTime",
+                  "value": "<dateTime>",
+                  "description": "(Required) Defines end of the timerange to get Exerciser's schedule\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* lessThanStartDateTime => 400\n"
+                },
+                {
+                  "disabled": false,
+                  "key": "startDateTime",
+                  "value": "<dateTime>",
+                  "description": "(Required) Defines start of the timerange to get Exerciser's schedule\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* greaterThanEndDateTime => 400\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "exerciserId",
+                  "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                }
+              ]
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Locale",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-User-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Location-Group-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Chain-ID",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-Secret",
+                "value": "<string>"
+              },
+              {
+                "disabled": false,
+                "description": "see 'Additional Data HTTP Headers' for details.",
+                "key": "X-Client-ID",
+                "value": "<string>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c1cc8080-bca9-4807-b35c-c499ec3c8468",
+              "name": "Returns list of GroupX Classes where Attendee (Exerciser) is booked or waitlisted into.\n\n##### Contracts\n* All sections are required.\n* `free` flag is required.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "exercisers",
+                    ":exerciserId",
+                    "schedule"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "endDateTime",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "startDateTime",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "exerciserId",
+                      "description": "(Required) ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Locale",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-User-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Location-Group-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Chain-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-Secret",
+                    "value": "<string>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "see 'Additional Data HTTP Headers' for details.",
+                    "key": "X-Client-ID",
+                    "value": "<string>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"brief\": {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startDateTime\": \"1955-07-15T20:29:00.745Z\",\n      \"endDateTime\": \"1998-09-16T13:19:32.709Z\",\n      \"locationId\": \"string\",\n      \"free\": false,\n      \"waitlisted\": false,\n      \"childCare\": true,\n      \"reservable\": true,\n      \"instructor\": {\n        \"fullName\": \"string\",\n        \"firstName\": \"string\",\n        \"lastName\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"activity\": {\n        \"name\": \"string\"\n      },\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"details\": {\n      \"description\": \"string\",\n      \"room\": {\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"roomPhotoUrl\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"level\": {\n        \"name\": \"string\",\n        \"description\": \"string\"\n      },\n      \"pricing\": {\n        \"price\": 8676.72443542199\n      },\n      \"legalNotes\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"bookingDetails\": {\n      \"capacity\": 4586,\n      \"booked\": 6925,\n      \"waitlistCapacity\": 3390,\n      \"waitlistBooked\": 8337,\n      \"availableSpots\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    \"attendeeBookingDetails\": {\n      \"exerciserId\": \"string\",\n      \"booked\": true,\n      \"waitlistBooked\": true,\n      \"spotBooked\": \"string\",\n      \"eligibility\": {\n        \"addToClassEligibility\": {\n          \"eligible\": true,\n          \"lackOfProduct\": false,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromClassEligibility\": {\n          \"eligible\": false\n        },\n        \"addToWaitlistEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": false,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromWaitlistEligibility\": {\n          \"eligible\": true\n        },\n        \"bookSpotEligibility\": {\n          \"eligible\": false\n        },\n        \"updateBookingEligibility\": {\n          \"eligible\": false\n        }\n      },\n      \"waitlistPosition\": 4018\n    }\n  },\n  {\n    \"brief\": {\n      \"id\": \"string\",\n      \"name\": \"string\",\n      \"startDateTime\": \"2011-08-01T05:39:52.450Z\",\n      \"endDateTime\": \"1977-01-12T11:47:53.585Z\",\n      \"locationId\": \"string\",\n      \"free\": false,\n      \"waitlisted\": true,\n      \"childCare\": true,\n      \"reservable\": false,\n      \"instructor\": {\n        \"fullName\": \"string\",\n        \"firstName\": \"string\",\n        \"lastName\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"activity\": {\n        \"name\": \"string\"\n      },\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"details\": {\n      \"description\": \"string\",\n      \"room\": {\n        \"name\": \"string\",\n        \"description\": \"string\",\n        \"roomPhotoUrl\": \"string\",\n        \"customInfo\": [\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          },\n          {\n            \"key\": \"string\",\n            \"value\": \"string\"\n          }\n        ]\n      },\n      \"level\": {\n        \"name\": \"string\",\n        \"description\": \"string\"\n      },\n      \"pricing\": {\n        \"price\": 6051.9756280363745\n      },\n      \"legalNotes\": \"string\",\n      \"customInfo\": [\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        },\n        {\n          \"key\": \"string\",\n          \"value\": \"string\"\n        }\n      ]\n    },\n    \"bookingDetails\": {\n      \"capacity\": 7381,\n      \"booked\": 3397,\n      \"waitlistCapacity\": 8418,\n      \"waitlistBooked\": 6965,\n      \"availableSpots\": [\n        \"string\",\n        \"string\"\n      ]\n    },\n    \"attendeeBookingDetails\": {\n      \"exerciserId\": \"string\",\n      \"booked\": false,\n      \"waitlistBooked\": false,\n      \"spotBooked\": \"string\",\n      \"eligibility\": {\n        \"addToClassEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": true,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromClassEligibility\": {\n          \"eligible\": true\n        },\n        \"addToWaitlistEligibility\": {\n          \"eligible\": false,\n          \"lackOfProduct\": true,\n          \"userPaymentOnFile\": true\n        },\n        \"removeFromWaitlistEligibility\": {\n          \"eligible\": false\n        },\n        \"bookSpotEligibility\": {\n          \"eligible\": true\n        },\n        \"updateBookingEligibility\": {\n          \"eligible\": false\n        }\n      },\n      \"waitlistPosition\": 2507\n    }\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://example.org/%3Cpartner%3E/group-classes/v1.0",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "8575ef59-1397-4c45-8b97-a776851adc46",
+    "name": "Canonical GroupX Classes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This specification defines *Canonical API* for GroupX Classes Service, which provides operations for working with Group Exercise Classes, their schedules and attendees.\n\n## Introduction to ClubMS and Canonical APIs\n**Club Management Software (ClubMS)** is a suite of software for managing fitness clubs: billing system, members management, group calendars, payments processing, personal trainers, etc. ClubMS is also know as Membership Management Software (MMS).\n\n\nThere are a lot of different ClubMS in the world, and they all have different domain models. Generally speaking, for a given fitness location, different services might be provided by different external ClubMS.\n\n**Canonical API** hides this difference by mapping to EGYM Canonical Model. Implementation of Canonical API for a certain ClubMS service makes it compatible with EGYM Platform.\n\nSome of the contracts in this Canonical API definition depend on multiple meta options. These meta options are not reflected by API parameters directly, but define conditional API contracts. Meta option values reflect ClubMS specifics and are provided by *Implementer of Canonical API*. EGYM Platform is then configured with these option values to enable integration with the given canonized service. **For example:** Different ClubMS use different types of credentials (security schemas) for their operations: client secret, chain secret, or location secret. Galaxy will expect corresponding configuration and pass appropriate parameters depending on corresponding meta option value.\n\nThe meta options are defined by a json schema that accompanies the yaml file (they should be sent together).\n\nAll conditional contracts that depend on specific meta option values are described in this Canonical API with references like `metaOption::someOptionName`. Implementer of Canonical API might want to remove all these conditional contracts and replace them by concrete contracts based on ClubMS specific meta option values (that should be known to the Implementer of Canonical API). String \"metaOption::\" can be used for quick finding of all such conditional contracts.\n\n\n## General API Contracts\n### Date Format\nAll dates in the API are strings in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format and in **UTC time zone**:\n```\nyyyy-MM-dd'T'HH:mm:ss'Z'\n```\nValid example:\n```\n2010-08-21T22:31:20Z\n```\nInvalid examples:\n```\n2008-05-26T07:23: (missing seconds)\n2008-05-26T07:23:01.500Z (nanoseconds value is not supported)\n2008-05-26 07:23:01Z  ('T' in the middle is not specified)\n2008-05-23T07:23:01 (trailing 'Z' is missing)\n```\n\n### Additional Data HTTP Headers\nThere are several HTTP Headers that must be used to provide additional data to every canonical operation.\nThese headers presence based on *`metaOption::includeClientData`*, *`metaOption::includeChainData`*, *`metaOption::includeLocationData`*, *`metaOption::includeLocationGroupData`*, *`metaOption::includeUserData`* options. These options should be switched to `true` if any of the following applicable:\n* security access of certain level required;\n* extra configuration data is expected on some level;\n\n#### X-Client-ID\nThis header contains Partner Client ID. It is a credential to access canonical API in scope of specific Partner implementation.\n\nIt is required for every canonical operation which supports API access restriction on Partner level.\nIn this case *`metaOption::includeClientData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Client-Secret\nThis header contains Partner Client Secret. It is a credential to access canonical API in scope of specific Partner implementation.\nIt is required for every canonical operation which supports API access restriction on Partner level.\nIn this case *`metaOption::includeClientData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Chain-ID\nThis header provides ID of a Chain which we access in canonical operation.\n\nRequired for every canonical operaiton based on Chain information (security, configuration etc.)\nIn this case *`metaOption::includeChainData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Chain-Secret\nThis header provides chain-level secret correspondent to Chain ID defined in `X-Chain-ID` header.\n\nRequired if ClubMS expects access tokens or secret keys on accessing to Chain level information via API.\nIn this case *`metaOption::includeChainData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Secret can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Group-ID\nThis header provides ID of a Location Group which we access in canonical operation.\nRequired for every canonical operation based on Location Group information (security, configuration etc.)\nIn this case *`metaOption::includeLocationGroupData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Group-Secret\nThis header provides location group level secret correspondent to Location Group ID defined in `X-Location-Group-ID` header.\nRequired if ClubMS expects access tokens or secret keys on accessing to Location Group level information via API.\nIn this case *`metaOption::includeLocationGroupData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Access data can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\n Possible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-ID\nThis header provides ID of a Location which we access in canonical operation.\nRequired for every canonical operaiton based on Location information (security, configuration etc.)\nIn this case *`metaOption::includeLocationData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Secret\nThis header provides location-level secret correspondent to Location ID defined in `X-Location-ID` header.\nRequired if ClubMS expects access tokens or secret keys on accessing to Location level information via API.\nIn this case *`metaOption::includeLocationData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Access data can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\n Possible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-ID\nThis header contains User ID in Partner system. Required for every canonical operaiton which supports API access restriction on User level.\nIn this case *`metaOption::includeUserData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-Secret\nThis header contains User Secret in Partner system.\nIt is required for every canonical operation which supports API access restriction on User level.\nIn this case *`metaOption::includeUserData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-Locale\nThis header contains Locale which was choosed on users phone. Required for every canonical operaiton which supports needs localization.\nIn this case *`metaOption::includeLocalizationData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n### Errors\nConventional HTTP response codes are used to indicate the success or failure of an API request.\n\nGeneral Requirements:\n* The contracts of this section apply to every operation of Canonical APIs.\n* Furthermore, every operation specifies its own specific contracts which extend these ones.\n* Every error response has field `message`.\n* Every error response has field `cause`.\n  * There are standard causes associated with corresponding HTTP status codes (4xx, 5xx).\n  * And there might be also custom causes always defined on operation level and associated with 422 status code.\n\n\n#### 400: Bad Request\nCause is `badRequest`. This cause is used for all parameter-level validation errors. This is often due to missing a required parameter or wrong parameter format. This can be also due to violation of some contract defined in the given specification for a certain parameter.\n\nRequirements:\n* Error message can simply contain \"Bad Request\"\n* Additional field `errors` must be present, which is a map of pairs: `\"<parameterName>\": \"<reason>\"`. See example.\n* Parameter names are defined in the documentation of respective canonical operations.\n* Possible reasons are defined in the documentation of parameters of respective canonical operations.\n\nExample:\n```\n{\n  \"message\": \"Bad Request\",\n  \"cause\": \"badRequest\",\n  \"errors\": {\n    \"locationId\": \"missing\",\n    \"startDateTime\": \"greaterThanEndDateTime\",\n    \"endDateTime\": \"lessThanStartDateTime\"\n  }\n}\n```\n&nbsp;\n\n#### 401: Unauthorized Access\nCause is `unauthorizedAccess`. Bad, unexpected or expired access data (see 'Additional Data HTTP Headers': `X-Client-ID`/`X-Client-Secret`, `X-Chain-ID`/`X-Chain-Secret`, `X-Location-ID`/`X-Location-Secret`, `X-Location-Group-ID`/`X-Location-Group-Secret`, `X-User-ID`/`X-User-Secret`).\n\nRequirements:\n* Error message must clearly indicate the reason of the failure and what is expected to fix it.\n* Additional field `accessLevel` must indicate the level of access requested that caused this error (i.e. level of access backed by correspondent access headers): `client`, `chain`, or `location`.\n\nSuggested action: Fix access data and then retry.\n\nExample:\n```\n// 1st example\n{\n  \"message\": \"X-Client-Id is invalid\",\n  \"cause\": \"unauthorizedAccess\",\n  \"accessLevel\": \"client\"\n}\n// 2nd example\n{\n  \"message\": \"X-Location-Secret is invalid\",\n  \"cause\": \"unauthorizedAccess\",\n  \"accessLevel\": \"location\"\n}\n```\n&nbsp;\n\n#### 404: Entity Not Found\nCause is `entityNotFound`. Any referenced entity or resource is not found.\n\nRequirements:\n* Error message must clearly indicate the reason of the failure.\n* Additional field `parameter` must be present. Parameter indicates which parameter of the request has wrong value that was not found. This parameter is then indicated in the documentation of respective canonical operation in section \"Possible reasons of validation errors\".\n\nExample:\n```\n{\n  \"message\": \"Location 'ESD3432' is not found\",\n  \"cause\": \"entityNotFound\",\n  \"parameter\": \"locationId\"\n}\n```\n&nbsp;\n\n#### 404: Resource Not Found\nCause is `resourceNotFound`. The requested endpoint does not exist or is not supported.\n\nExample:\n```\n{\n  \"message\": \"Requested endpoint is not supported\",\n  \"cause\": \"resourceNotFound\"\n}\n```\n&nbsp;\n\n#### 405: Method Not Allowed\nUsed HTTP method is not supported for the given endpoint. For example, POST, PUT, DELETE, etc.\n&nbsp;\n\n#### 422: Custom Cause\nThe request was well-formed but could not be completed due to failed server-side validation checks, which can't be performed by client without server calls.\n\nThis error can be used only if it is specified on operation level.\nRequirements:\n* Error message must clearly indicate the reason of the failure.\n* Additional field `cause` must indicate what exactly has caused this error.\n* Additional field `reason` must indicate the reason of the failure and is logically bound to the `cause` by extending it.\n* The values for `cause` and `reason` must be strictly defined at operation level. The values that are not defined at operation level must never be used.\n\nExamples:\n```\n// 1st example\n{\n  \"message\": \"Cannot add an Exerciser id='E67' to a Class 'Stretching' Waitlist since the Exerciser is already in this Waitlist\",\n  \"cause\": \"addToWaitlistFailed\",\n  \"reason\": \"userAlreadyInWaitlist\"\n}\n// 2nd example\n{\n  \"message\": \"Cannot add an Exerciser id='E67' to a Class 'Stretching' Waitlist since the Exerciser is the Class Attendee already\",\n  \"cause\": \"addToWaitlistFailed\",\n  \"reason\": \"userAlreadyAttendee\"\n}\n// 3nd example\n{\n  \"message\": \"Class 'Yoga 24/7' canot be booked by Exerciser with id='E3471' due to lack of Product to pay for the Class\",\n  \"cause\": \"bookingFailed\",\n  \"reason\": \"lackOfProduct\"\n}\n```\n&nbsp;\n\n#### 429: Too Many Requests\nCause is `rateLimitsExceeded`. Too many requests hit the API too quickly (Rate limit exceeded).\n\nExample:\n```\n{\n  \"message\": \"Rate limit exceeded. External system response: 'Rate limit exceeded'\",\n  \"cause\": \"rateLimitsExceeded\"\n}\n```\n&nbsp;\n\n#### 500: Internal Server Error\nCause is `internalUnexpectedError`. An unexpected error occurred while processing the request. Suggested action: Use exponential backoff.\n\nDetailed reason of internal server error is usually not returned in response to the client. Detailed reason (error stack trace) must be logged in internal logging system.\n\nExample:\n```\n{\n  \"message\": \"Internal Server Error: NullPointerException\",\n  \"cause\": \"internalUnexpectedError\"\n}\n```\n&nbsp;\n\n#### 503: System Unavailable\nCause is `systemUnavailable`. The server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.\n\nExample:\n```\n{\n  \"message\": \"Server is down for maintenance\",\n  \"cause\": \"systemUnavailable\"\n}\n```\n&nbsp;\n",
+      "type": "text/plain"
+    }
+  }
+}

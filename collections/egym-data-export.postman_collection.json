@@ -1,0 +1,1855 @@
+{
+  "item": [
+    {
+      "id": "9ba94e1c-eaa4-417b-bdd1-28e0e6021a53",
+      "name": "Measurements",
+      "description": {
+        "content": "These operations are needed to retrieve measurements with corresponding metrics. Additional permissions are required to access these endpoints.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "a7759a2d-8e24-48d6-8a65-ca3d5fad5050",
+          "name": "Strength measurements",
+          "request": {
+            "name": "Strength measurements",
+            "description": {
+              "content": "Retrieve strength measurements using accountId.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                "accounts",
+                ":accountId",
+                "measurements",
+                "strength"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "toTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "9dbfcec4-e269-4a53-ad4b-aab9723cf190",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"createdAt\": \"1959-12-28T10:40:48.350Z\",\n    \"strength\": {\n      \"value\": 5293.670402131143,\n      \"createdAt\": \"1968-04-05T12:44:27.338Z\"\n    },\n    \"source\": \"string\",\n    \"bodyRegion\": \"CORE\",\n    \"machineType\": \"string\"\n  },\n  {\n    \"createdAt\": \"1966-02-04T05:23:02.932Z\",\n    \"strength\": {\n      \"value\": 4074.9521085002148,\n      \"createdAt\": \"2023-10-22T05:45:31.811Z\"\n    },\n    \"source\": \"string\",\n    \"bodyRegion\": \"UNSPECIFIED\",\n    \"machineType\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d034e2a4-6be0-41dc-b1c6-280935da23f6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5138cc4a-fc35-47b4-8a20-5d0cc4b957f2",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "007238f5-9056-499f-9bda-c6c463151de1",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "488d9ff5-017f-433a-b03e-24df2a52120e",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7bd3c839-052d-4e40-b243-bdca6e25c3cb",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "strength"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "5ecf5df0-12b5-47a0-b4d6-d1a223993c85",
+          "name": "Cardio measurements",
+          "request": {
+            "name": "Cardio measurements",
+            "description": {
+              "content": "Retrieve cardio measurements using accountId.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                "accounts",
+                ":accountId",
+                "measurements",
+                "cardio"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "toTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "30ec6837-0dfa-4caf-ab62-63d5777d4a75",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"createdAt\": \"1990-12-28T02:43:14.946Z\",\n    \"source\": \"MANUAL\",\n    \"metrics\": [\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 1858.7519441213951,\n        \"unit\": \"PERCENTS\"\n      },\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 2829.5129188200153,\n        \"unit\": \"PERCENTS\"\n      }\n    ],\n    \"equipmentType\": \"string\"\n  },\n  {\n    \"createdAt\": \"2006-01-28T12:24:43.062Z\",\n    \"source\": \"MANUAL\",\n    \"metrics\": [\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 6872.476945642105,\n        \"unit\": \"PERCENTS\"\n      },\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 4087.8862881496593,\n        \"unit\": \"PERCENTS\"\n      }\n    ],\n    \"equipmentType\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8099e3f5-57b6-4817-91b0-400f287ae614",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f4a76980-c1e7-40f0-9299-363d79b8b919",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "62b0787c-8f1d-4346-bd38-c8ac34fe97d5",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9ddb2e51-253f-492b-bb4b-44205afd3a4b",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2980211d-f51c-4501-a733-e4cbb161d596",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "cardio"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d0fb14f2-d091-4d72-83c4-9aa9244f928a",
+          "name": "Body measurements",
+          "request": {
+            "name": "Body measurements",
+            "description": {
+              "content": "Retrieve body measurements using accountId.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                "accounts",
+                ":accountId",
+                "measurements",
+                "body"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "toTimestamp",
+                  "value": "<dateTime>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ecef4349-8ac0-4a2a-a5d7-d9e48cd31297",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"createdAt\": \"1982-10-31T16:28:14.080Z\",\n    \"source\": \"MANUAL\",\n    \"metrics\": [\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 4088.3589374967455,\n        \"interpretation\": {\n          \"label\": \"NORMAL\",\n          \"region\": {\n            \"low\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"top\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"labels\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"unit\": \"PERCENTS\"\n      },\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 813.2195051699088,\n        \"interpretation\": {\n          \"label\": \"EXCELLENT\",\n          \"region\": {\n            \"low\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"top\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"labels\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"unit\": \"PERCENTS\"\n      }\n    ],\n    \"equipmentType\": \"string\"\n  },\n  {\n    \"createdAt\": \"2016-11-20T01:04:46.210Z\",\n    \"source\": \"MANUAL\",\n    \"metrics\": [\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 3673.8172478226106,\n        \"interpretation\": {\n          \"label\": \"UNSPECIFIED\",\n          \"region\": {\n            \"low\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"top\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"labels\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"unit\": \"PERCENTS\"\n      },\n      {\n        \"type\": \"BODY_FAT_PERCENTS\",\n        \"value\": 6392.8634784987635,\n        \"interpretation\": {\n          \"label\": \"UNSPECIFIED\",\n          \"region\": {\n            \"low\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"top\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            \"labels\": {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          }\n        },\n        \"unit\": \"PERCENTS\"\n      }\n    ],\n    \"equipmentType\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "978d04b5-6e9d-4565-9765-ab35c73b1d1e",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2ac7a1dc-6a66-45c9-b4d9-c0921c1526b1",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c49db118-4e25-4894-afcf-191f53e19af1",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a44a230f-cb33-4a13-9dcb-9787eccec1e9",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2eed3f04-90ac-4dbc-8d6b-d7657b0102ac",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "measurements",
+                    "body"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "cbf44ad8-5db7-4889-bcfe-cbc288c46c24",
+      "name": "Workouts",
+      "description": {
+        "content": "These operations are needed to retrieve workouts. Additional permissions are required to access these endpoints.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "657f9fc1-1b9c-42e6-bbe8-231f38d1ea24",
+          "name": "Workouts",
+          "request": {
+            "name": "Workouts",
+            "description": {
+              "content": "Retrieve workouts using accountId.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v2",
+                "accounts",
+                ":accountId",
+                "workouts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "fromTimestamp",
+                  "value": "<dateTime>"
+                },
+                {
+                  "disabled": false,
+                  "key": "toTimestamp",
+                  "value": "<dateTime>"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "accountId",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1fd575bf-28d6-42e2-b3c8-9254636c2144",
+              "name": "Ok",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"exercises\": [\n      {\n        \"id\": 9779,\n        \"activity\": {\n          \"name\": \"string\",\n          \"rangeOfMotion\": 3882.43667004468,\n          \"strengthBenchmarkMale\": 7741.335031256464,\n          \"strengthBenchmarkFemale\": 6398.709651786774,\n          \"calculationMethod\": \"SUBTRACT_SPECIFIED_WEIGHT\",\n          \"maxStrengthTestBodyRegion\": \"UPPER_BODY\"\n        },\n        \"sets\": [\n          {\n            \"setType\": \"TIME_BASED\",\n            \"numberOfReps\": 2704,\n            \"weight\": 589.7201297974375,\n            \"duration\": 7689,\n            \"distance\": 9970.930255326495,\n            \"heartRate\": 4655,\n            \"speed\": 4045.9794833732044,\n            \"incline\": 4297.161565512535,\n            \"recoveryTime\": 216\n          },\n          {\n            \"setType\": \"TIME_BASED\",\n            \"numberOfReps\": 1412,\n            \"weight\": 4321.003121025418,\n            \"duration\": 3241,\n            \"distance\": 3442.2212060758193,\n            \"heartRate\": 9297,\n            \"speed\": 5692.366191836234,\n            \"incline\": 8052.157252283358,\n            \"recoveryTime\": 4170\n          }\n        ],\n        \"completedAt\": \"1960-01-22T11:16:11.190Z\",\n        \"timezone\": \"string\",\n        \"kiloCalories\": 1185.7867457757654,\n        \"hrmData\": {\n          \"targetHeartRate\": 9859,\n          \"zones\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"summary\": {\n          \"totalDuration\": 6566,\n          \"totalDistance\": 7942.5056883129055,\n          \"verticalDistance\": 570.7213390275523,\n          \"avgPace\": 2153.4134253488146,\n          \"avgHeartRate\": 787,\n          \"maxHeartRate\": 4507,\n          \"avgSpeed\": 323.3609886995559,\n          \"avgIncline\": 8588.961973754665\n        }\n      },\n      {\n        \"id\": 7446,\n        \"activity\": {\n          \"name\": \"string\",\n          \"rangeOfMotion\": 3636.6813272702902,\n          \"strengthBenchmarkMale\": 9162.077197023678,\n          \"strengthBenchmarkFemale\": 164.16770584642748,\n          \"calculationMethod\": \"SUBTRACT_SPECIFIED_WEIGHT\",\n          \"maxStrengthTestBodyRegion\": \"WHOLE\"\n        },\n        \"sets\": [\n          {\n            \"setType\": \"TIME_BASED\",\n            \"numberOfReps\": 2035,\n            \"weight\": 8165.4838555395045,\n            \"duration\": 3948,\n            \"distance\": 4849.280693439667,\n            \"heartRate\": 1543,\n            \"speed\": 7178.598889868262,\n            \"incline\": 953.7701975492207,\n            \"recoveryTime\": 5506\n          },\n          {\n            \"setType\": \"REP_BASED\",\n            \"numberOfReps\": 8248,\n            \"weight\": 2160.0771748043844,\n            \"duration\": 6369,\n            \"distance\": 4473.0046040034595,\n            \"heartRate\": 9749,\n            \"speed\": 9263.590033748382,\n            \"incline\": 1309.1481598290366,\n            \"recoveryTime\": 867\n          }\n        ],\n        \"completedAt\": \"2013-01-10T01:27:09.769Z\",\n        \"timezone\": \"string\",\n        \"kiloCalories\": 97.77033197341024,\n        \"hrmData\": {\n          \"targetHeartRate\": 3116,\n          \"zones\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"summary\": {\n          \"totalDuration\": 6789,\n          \"totalDistance\": 9436.538937580044,\n          \"verticalDistance\": 7950.353346058882,\n          \"avgPace\": 7212.725704191465,\n          \"avgHeartRate\": 3722,\n          \"maxHeartRate\": 9971,\n          \"avgSpeed\": 7553.203784301457,\n          \"avgIncline\": 4469.734138846421\n        }\n      }\n    ],\n    \"completedAt\": \"2008-06-25T20:49:37.979Z\",\n    \"timezone\": \"string\"\n  },\n  {\n    \"exercises\": [\n      {\n        \"id\": 4256,\n        \"activity\": {\n          \"name\": \"string\",\n          \"rangeOfMotion\": 309.1069538533953,\n          \"strengthBenchmarkMale\": 3976.4920637239234,\n          \"strengthBenchmarkFemale\": 4857.054655533703,\n          \"calculationMethod\": \"ADD_SPECIFIED_WEIGHT\",\n          \"maxStrengthTestBodyRegion\": \"WHOLE\"\n        },\n        \"sets\": [\n          {\n            \"setType\": \"TIME_BASED\",\n            \"numberOfReps\": 2403,\n            \"weight\": 8516.776540973786,\n            \"duration\": 2027,\n            \"distance\": 3706.4755586880215,\n            \"heartRate\": 7897,\n            \"speed\": 5575.710656631574,\n            \"incline\": 9740.700454078331,\n            \"recoveryTime\": 2298\n          },\n          {\n            \"setType\": \"TIME_BASED\",\n            \"numberOfReps\": 1868,\n            \"weight\": 1168.449874271582,\n            \"duration\": 4060,\n            \"distance\": 5410.3047301544175,\n            \"heartRate\": 9823,\n            \"speed\": 139.7394756380421,\n            \"incline\": 3058.1121852554693,\n            \"recoveryTime\": 9877\n          }\n        ],\n        \"completedAt\": \"1952-07-07T22:05:10.489Z\",\n        \"timezone\": \"string\",\n        \"kiloCalories\": 9499.665509658747,\n        \"hrmData\": {\n          \"targetHeartRate\": 9984,\n          \"zones\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"summary\": {\n          \"totalDuration\": 843,\n          \"totalDistance\": 488.0264732734441,\n          \"verticalDistance\": 6402.700456333582,\n          \"avgPace\": 2163.4069890076603,\n          \"avgHeartRate\": 6311,\n          \"maxHeartRate\": 2621,\n          \"avgSpeed\": 2750.0204850266587,\n          \"avgIncline\": 7819.355682742694\n        }\n      },\n      {\n        \"id\": 6237,\n        \"activity\": {\n          \"name\": \"string\",\n          \"rangeOfMotion\": 5773.033299903423,\n          \"strengthBenchmarkMale\": 5205.433091757889,\n          \"strengthBenchmarkFemale\": 9075.721429653906,\n          \"calculationMethod\": \"ADD_SPECIFIED_WEIGHT\",\n          \"maxStrengthTestBodyRegion\": \"UPPER_BODY\"\n        },\n        \"sets\": [\n          {\n            \"setType\": \"REP_BASED\",\n            \"numberOfReps\": 3330,\n            \"weight\": 35.53912290661376,\n            \"duration\": 284,\n            \"distance\": 63.75582794924783,\n            \"heartRate\": 2102,\n            \"speed\": 5814.626161535244,\n            \"incline\": 4224.008957793037,\n            \"recoveryTime\": 3776\n          },\n          {\n            \"setType\": \"REP_BASED\",\n            \"numberOfReps\": 7703,\n            \"weight\": 8771.37003012164,\n            \"duration\": 5998,\n            \"distance\": 8620.45211226106,\n            \"heartRate\": 1100,\n            \"speed\": 9432.063360490962,\n            \"incline\": 9504.716549068773,\n            \"recoveryTime\": 7261\n          }\n        ],\n        \"completedAt\": \"2007-03-03T01:52:04.780Z\",\n        \"timezone\": \"string\",\n        \"kiloCalories\": 4586.380375240663,\n        \"hrmData\": {\n          \"targetHeartRate\": 5726,\n          \"zones\": [\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            },\n            {\n              \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n            }\n          ]\n        },\n        \"summary\": {\n          \"totalDuration\": 7853,\n          \"totalDistance\": 8211.039455305352,\n          \"verticalDistance\": 861.234895243228,\n          \"avgPace\": 3882.9085900482505,\n          \"avgHeartRate\": 3803,\n          \"maxHeartRate\": 67,\n          \"avgSpeed\": 9356.028941801993,\n          \"avgIncline\": 7485.393982287685\n        }\n      }\n    ],\n    \"completedAt\": \"1985-10-17T22:51:32.386Z\",\n    \"timezone\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8cfb5880-2ae2-4b50-94ee-bf8d50411fc4",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1973-08-31T06:53:16.594Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 6916,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8223d493-d42c-4ec9-8cd9-a99e2aba9b41",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1cde1e1b-b9ec-4055-8d4c-e22163d38621",
+              "name": "Forbidden",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a9731a8f-7f43-44cb-90e6-32e01877b622",
+              "name": "Not Found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "047e25cf-f834-4286-be00-a0c443dee72b",
+              "name": "Internal Server Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v2",
+                    "accounts",
+                    ":accountId",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "fromTimestamp",
+                      "value": "<dateTime>"
+                    },
+                    {
+                      "key": "toTimestamp",
+                      "value": "<dateTime>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "accountId",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Internal Server Error",
+              "code": 500,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"timestamp\": \"1991-12-16T12:14:35.684Z\",\n  \"path\": \"string\",\n  \"requestId\": \"de625cf1-1\",\n  \"status\": 1275,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    },\n    {\n      \"name\": \"age\",\n      \"message\": \"Must be greater than 10.\",\n      \"rejectedValue\": {}\n    }\n  ],\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": \"string\",\n    \"key_2\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://one-mms-service.ext-1.test.co.egym.coffee",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ee102f14-b9d2-47aa-b0fe-108a724bc6d2",
+    "name": "DATA EXPORT API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Contact Support:\n Name: MMS Connect Team\n Email: connect@egym.com",
+      "type": "text/plain"
+    }
+  }
+}

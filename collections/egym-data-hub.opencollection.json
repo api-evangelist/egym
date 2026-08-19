@@ -1,0 +1,233 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Data Hub API",
+    "version": "Pilot"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Synchronous exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Export weekly analytics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/analytics",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date in YYYY-MM-DD format."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End date in YYYY-MM-DD format."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor returned as nextCursor by the previous response."
+              }
+            ]
+          },
+          "docs": "Returns weekly analytics metrics for the gym location associated with the API key. The maximum date range is 365 days."
+        },
+        {
+          "info": {
+            "name": "Export recent Smart Strength workouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/smart-strength-workouts",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date in YYYY-MM-DD format."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End date in YYYY-MM-DD format."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor returned as nextCursor by the previous response."
+              }
+            ]
+          },
+          "docs": "Returns recent Smart Strength workout data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month."
+        },
+        {
+          "info": {
+            "name": "Export recent Smart Strength assessments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/smart-strength-assessments",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date in YYYY-MM-DD format."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End date in YYYY-MM-DD format."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor returned as nextCursor by the previous response."
+              }
+            ]
+          },
+          "docs": "Returns recent Smart Strength assessment data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month."
+        },
+        {
+          "info": {
+            "name": "Export recent flexibility measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/flexibility-measurements",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date in YYYY-MM-DD format."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End date in YYYY-MM-DD format."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor returned as nextCursor by the previous response."
+              }
+            ]
+          },
+          "docs": "Returns recent flexibility measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month."
+        },
+        {
+          "info": {
+            "name": "Export recent body measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/body-measurements",
+            "params": [
+              {
+                "name": "startDate",
+                "value": "",
+                "type": "query",
+                "description": "Start date in YYYY-MM-DD format."
+              },
+              {
+                "name": "endDate",
+                "value": "",
+                "type": "query",
+                "description": "End date in YYYY-MM-DD format."
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor returned as nextCursor by the previous response."
+              }
+            ]
+          },
+          "docs": "Returns recent body measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month."
+        },
+        {
+          "info": {
+            "name": "Export opted-out users",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/opted-out-users"
+          },
+          "docs": "Returns the members at the gym location who have not opted in to health data and consumer-to-business (C2B) sharing. These members are excluded from all event exports, so use this endpoint to identify accounts whose previously exported data must be deleted to comply with GDPR and other data-protection requirements. The endpoint takes no query parameters and is not paginated; it returns all opted-out users for the gym location in a single response."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Asynchronous exports",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create async export job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://analytics.api.egym.com/api/v1/data/async",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a background export job for a file-based event data export. Async exports can go back up to one year. Requests cannot include event data older than one year, and each export job can cover at most 365 days."
+        },
+        {
+          "info": {
+            "name": "Get async export job status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://analytics.api.egym.com/api/v1/data/async/jobs/:jobId",
+            "params": [
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the current status of an async export job. A downloadURL is returned only when the job status is DONE."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

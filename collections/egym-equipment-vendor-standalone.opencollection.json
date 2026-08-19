@@ -1,0 +1,760 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Equipment Vendor API (for standalone clients)",
+    "version": "1.2.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "User",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "User Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint returns a user"
+        },
+        {
+          "info": {
+            "name": "User Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint updates the current user. The endpoint is only enabled if there is a specific use case to update user records."
+        },
+        {
+          "info": {
+            "name": "Accept Terms and Conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users/terms-and-conditions",
+            "params": [
+              {
+                "name": "locale",
+                "value": "en_US",
+                "type": "query",
+                "description": "Defines the locale in ISO 15897 standard format."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint when invoked will save the information that the user accepted the eGym Terms and Conditions."
+        },
+        {
+          "info": {
+            "name": "Set user's avatar",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users/image",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint sets the user's avatar."
+        },
+        {
+          "info": {
+            "name": "Assign RFID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users/rfid",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint assigns one RFID to the user. If the RFID is already assigned to another user, it will be re-assigned to this user."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cardio Test",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Update Test",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/cardio/tests/:cardioTestId",
+            "params": [
+              {
+                "name": "cardioTestId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint should be invoked in order to create a new step into an ongoing cardio test"
+        },
+        {
+          "info": {
+            "name": "Postpone Reminder",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/cardio/reminders",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint should be invoked in order to postpone the reminder of a cardio test"
+        },
+        {
+          "info": {
+            "name": "Initialise Test",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/cardio/tests",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint should be invoked in order to create and initialize a cardio test for a user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Strength Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Workout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/strength/workouts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a strength workout"
+        },
+        {
+          "info": {
+            "name": "Get Training Plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/strength/training-plans",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint returns a user strength training plan"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Open Exercise Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/open-exercises/workouts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates an open exercise workout"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/oauth/token",
+            "body": {
+              "type": "form-urlencoded",
+              "data": []
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "/api/v1/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint logs in the user and returns the access token"
+        },
+        {
+          "info": {
+            "name": "well-known",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/oauth/.well-known/jwks.json"
+          },
+          "docs": "This endpoint returns a JSON Web Key (JWK) set."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Flexibility Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Flexibility Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/flexibility",
+            "params": [
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "Subset of FlexibilityMetricType values to include in the response. When omitted, all available metric types are returned."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves the latest flexibility measurement of the user"
+        },
+        {
+          "info": {
+            "name": "Create Flexibility Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/flexibility",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a Flexibility measurement for the user"
+        },
+        {
+          "info": {
+            "name": "Get Flexibility History for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/flexibility/history",
+            "params": [
+              {
+                "name": "lastId",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request."
+              },
+              {
+                "name": "measurementLimit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves flexibility measurements history for the user with pagination support"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cardio Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Cardio Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/cardio",
+            "params": [
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "Subset of CardioMetricType values to include in the response. When omitted, all available metric types are returned."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves the latest cardio measurement of the user"
+        },
+        {
+          "info": {
+            "name": "Create Cardio Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/cardio",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a cardio measurement for the user"
+        },
+        {
+          "info": {
+            "name": "Get Cardio History for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/cardio/history",
+            "params": [
+              {
+                "name": "lastId",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request."
+              },
+              {
+                "name": "measurementLimit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves cardio measurements history for the user with pagination support"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Body Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Body Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/body",
+            "params": [
+              {
+                "name": "metrics",
+                "value": "",
+                "type": "query",
+                "description": "Subset of BodyMetricType values to include in the response. When omitted, all available metric types are returned."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves the latest body measurement of the user"
+        },
+        {
+          "info": {
+            "name": "Create Body Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/body",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a body measurement for the user"
+        },
+        {
+          "info": {
+            "name": "Get Body History for a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/body/history",
+            "params": [
+              {
+                "name": "lastId",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request."
+              },
+              {
+                "name": "measurementLimit",
+                "value": "",
+                "type": "query",
+                "description": "Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves body measurements history for the user with pagination support"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Machine",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Machine heartbeat",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/machines/heartbeat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "/api/v1/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint receives machine heartbeat requests (signals)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cardio Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Workout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/cardio/workouts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a cardio workout"
+        },
+        {
+          "info": {
+            "name": "Get Training Plans",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/cardio/training-plans",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint returns a user cardio training plan"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Statistics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "User Activity Level",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/users/activity-levels",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint will return activity level summary of the user."
+        },
+        {
+          "info": {
+            "name": "User Points",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/points",
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint returns the EGYM activity points of the user."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Resource",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Terms and Conditions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/resources/terms-and-conditions",
+            "params": [
+              {
+                "name": "locale",
+                "value": "en_US",
+                "type": "query",
+                "description": "Provide the locale in ISO 15897 standard format."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the EGYM terms and conditions"
+        },
+        {
+          "info": {
+            "name": "Privacy Policy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/resources/privacy-policy",
+            "params": [
+              {
+                "name": "locale",
+                "value": "en_US",
+                "type": "query",
+                "description": "Provide the locale in ISO 15897 standard format."
+              }
+            ]
+          },
+          "docs": "This endpoint returns the EGYM privacy policy"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Partners",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/partners/info",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "/api/v1/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "This endpoint returns the partner information which is related to the given credentials, if these credentials are invalid it will return a HTTP 401 UNAUTHORIZED error code."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Image",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://partner-api.ext-1.test.co.egym.coffee/api/v1/images/:imageId",
+            "params": [
+              {
+                "name": "imageId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "imageType",
+                "value": "",
+                "type": "query",
+                "description": "Defines the type of an image."
+              },
+              {
+                "name": "imageSize",
+                "value": "",
+                "type": "query",
+                "description": "Different image sizes (the actual pixel size depends on the type of image)"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the specified image"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

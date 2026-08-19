@@ -7,33 +7,31 @@ docs:
 - https://developer.egym.com/general/ai-agent-integration
 - https://developer.egym.com/general/ai-agent-instructions
 maturity: beta
-maturity_statement: 'AI-agent support for EGYM documentation is currently in beta and under
-  active development. The MCP tools and recommended workflows may change as we improve the
-  experience.'
-
+maturity_statement: AI-agent support for EGYM documentation is currently in beta and under active development.
+  The MCP tools and recommended workflows may change as we improve the experience.
 server:
   name: egym-api-docs
   transport: http
   url: https://developer.egym.com/mcp
   kind: documentation-and-catalog
-  note: 'This is a documentation/discovery MCP server, not an execution server. Its tools
-    read EGYM''s API catalog, OpenAPI descriptions and documentation corpus — they do not
-    create members, submit measurements or fire check-ins. An agent uses it to LEARN the
-    EGYM contract, then calls the REST APIs directly.'
-
+  note: This is a documentation/discovery MCP server, not an execution server. Its tools read EGYM's API
+    catalog, OpenAPI descriptions and documentation corpus — they do not create members, submit measurements
+    or fire check-ins. An agent uses it to LEARN the EGYM contract, then calls the REST APIs directly.
 install:
   codex_cli: codex mcp add egym-api-docs --url https://developer.egym.com/mcp
-  codex_config_toml: |
-    [mcp_servers.egym-api-docs]
-    url = "https://developer.egym.com/mcp"
-    enabled = true
-  documented_at: https://developer.egym.com/general/ai-agent-integration
+  codex_config_toml: '[mcp_servers.egym-api-docs]
 
+    url = "https://developer.egym.com/mcp"
+
+    enabled = true
+
+    '
+  documented_at: https://developer.egym.com/general/ai-agent-integration
 authentication:
   anonymous_tools_list: true
-  probe_note: 'POST tools/list returned HTTP 200 with the complete tool set and full
-    inputSchema for every tool, with no credential, on 2026-08-12. Input schemas below are
-    the real published schemas, not inferred ones.'
+  probe_note: POST tools/list returned HTTP 200 with the complete tool set and full inputSchema for every
+    tool, with no credential, on 2026-08-12. Input schemas below are the real published schemas, not inferred
+    ones.
   oauth:
     metadata_document: https://developer.egym.com/.well-known/oauth-authorization-server
     status: 200
@@ -42,55 +40,75 @@ authentication:
     token_endpoint: https://developer.egym.com/_mcp/oauth2/token-portal
     registration_endpoint: https://developer.egym.com/_mcp/register
     jwks_uri: https://auth.cloud.redocly.com/.well-known/jwks.json
-    scopes_supported: [openid, profile, email, offline_access]
-    grant_types_supported: [authorization_code, refresh_token, client_credentials]
-    code_challenge_methods_supported: [S256]
+    scopes_supported:
+    - openid
+    - profile
+    - email
+    - offline_access
+    grant_types_supported:
+    - authorization_code
+    - refresh_token
+    - client_credentials
+    code_challenge_methods_supported:
+    - S256
     dynamic_client_registration: true
-    note: 'RFC 8414 authorization-server metadata is served for clients that authenticate to
-      reach non-public documentation. The issuer is the Redocly platform, which also tells you
-      the portal is built on Redocly Reunite. /.well-known/oauth-protected-resource returns 404.'
-
+    note: RFC 8414 authorization-server metadata is served for clients that authenticate to reach non-public
+      documentation. The issuer is the Redocly platform, which also tells you the portal is built on Redocly
+      Reunite. /.well-known/oauth-protected-resource returns 404.
 tool_count: 6
 tools:
 - name: list-apis
   description: Lists available APIs with their context and purpose
-  input_schema: {filter: string (API name or part of it, optional), page: number, limit: number}
-  returns: 'Name, description, version and servers[] for each API in the EGYM catalog.'
+  input_schema:
+    filter: string (API name or part of it
+    optional): null
+    page: number
+    limit: number
+  returns: Name, description, version and servers[] for each API in the EGYM catalog.
 - name: get-endpoints
   description: Get all endpoints for a specific API
-  input_schema: {name: string (required), version: string (optional)}
+  input_schema:
+    name: string (required)
+    version: string (optional)
 - name: get-endpoint-info
-  description: Get comprehensive information about specific endpoint including parameters,
-    security, and examples
-  input_schema: {name: string (required), path: string (required), method: enum GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD|TRACE (required), version: string (optional)}
+  description: Get comprehensive information about specific endpoint including parameters, security, and
+    examples
+  input_schema:
+    name: string (required)
+    path: string (required)
+    method: enum GET|POST|PUT|DELETE|PATCH|OPTIONS|HEAD|TRACE (required)
+    version: string (optional)
 - name: get-security-schemes
   description: Get the security schemes for a specific API
-  input_schema: {name: string (required), version: string (optional)}
+  input_schema:
+    name: string (required)
+    version: string (optional)
 - name: get-full-api-description
   description: Get the complete OpenAPI description
-  input_schema: {name: string (required), version: string (optional)}
+  input_schema:
+    name: string (required)
+    version: string (optional)
 - name: search
   description: Search across the documentation to fetch relevant content for a given query
-  input_schema: {query: string (required)}
+  input_schema:
+    query: string (required)
 verbatim_tools_list: mcp/egym-mcp-tools-list.json
-
 agent_instructions:
   published: true
   url: https://developer.egym.com/general/ai-agent-instructions
-  note: 'EGYM publishes a written operating procedure for agents — a recommended tool-call
-    ordering (list-apis, get-endpoints, get-endpoint-info, search, get-security-schemes,
-    get-full-api-description), an instruction to start from MMS API V2 for ambiguous requests,
-    a use-case-to-endpoint table, and an explicit "Do not invent use-case options" guardrail.
-    Very few providers in the catalog publish an agent instruction page at all.'
-
+  note: EGYM publishes a written operating procedure for agents — a recommended tool-call ordering (list-apis,
+    get-endpoints, get-endpoint-info, search, get-security-schemes, get-full-api-description), an instruction
+    to start from MMS API V2 for ambiguous requests, a use-case-to-endpoint table, and an explicit "Do
+    not invent use-case options" guardrail. Very few providers in the catalog publish an agent instruction
+    page at all.
 findings:
-- 'The MCP catalog exposes an API the HTML documentation does not: DATA EXPORT API (Alpha
-  preview, 4 operations) is returned by list-apis and its full OpenAPI is returned by
-  get-full-api-description, but it has no reference page in the portal navigation and no
-  page-data route. The MCP surface is a superset of the browsable docs.'
-- 'get-full-api-description returns the complete, unredacted OpenAPI document for every API
-  in the catalog to an unauthenticated caller, which makes the MCP server a working spec
-  distribution channel in its own right.'
+- 'The MCP catalog exposes an API the HTML documentation does not: DATA EXPORT API (Alpha preview, 4 operations)
+  is returned by list-apis and its full OpenAPI is returned by get-full-api-description, but it has no
+  reference page in the portal navigation and no page-data route. The MCP surface is a superset of the
+  browsable docs.'
+- get-full-api-description returns the complete, unredacted OpenAPI document for every API in the catalog
+  to an unauthenticated caller, which makes the MCP server a working spec distribution channel in its
+  own right.
 cross_links:
   crosswalk: mcp/egym-tool-crosswalk.yml
   llms_txt: llms/egym-llms.txt
@@ -98,6 +116,14 @@ cross_links:
 x-evidence:
   fetched: '2026-08-12'
   url: https://developer.egym.com/mcp
-  method: 'POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+  method: POST {"jsonrpc":"2.0","id":1,"method":"tools/list"}
   http_status: 200
   content_type: text/event-stream
+deployment:
+  mode: remote
+  endpoint: https://developer.egym.com/mcp
+  verified: probed
+  probe: live
+  tools: 6
+  checked: '2026-08-12'
+  source: catalog MCP census

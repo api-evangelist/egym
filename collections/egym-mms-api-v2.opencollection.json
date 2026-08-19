@@ -1,0 +1,1010 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MMS API V2",
+    "version": "2.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve webhook entry by id",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve webhook entry by id"
+        },
+        {
+          "info": {
+            "name": "Update webhook entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates webhook url or/and secret by given webhook id"
+        },
+        {
+          "info": {
+            "name": "Delete webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Deletes webhook url"
+        },
+        {
+          "info": {
+            "name": "Retrieve existing webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks"
+          },
+          "docs": "Returns a list of webhooks of the related gym."
+        },
+        {
+          "info": {
+            "name": "Create webhook url",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates webhook url entry"
+        },
+        {
+          "info": {
+            "name": "Trigger webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/webhooks/:id/trigger",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Trigger webhook with type TEST"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Trainer Task",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve task details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/tasks/:taskId",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This endpoint returns the details of a specific trainer task."
+        },
+        {
+          "info": {
+            "name": "Update a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/tasks/:taskId",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint updates trainer task in a gym."
+        },
+        {
+          "info": {
+            "name": "Retrieve all tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/tasks",
+            "params": [
+              {
+                "name": "modifiedSince",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "This endpoint returns a list of trainer tasks that are available in the gym. Can be filtered by modified date time."
+        },
+        {
+          "info": {
+            "name": "Create a task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/tasks",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint create trainer task in a gym. The trainer task is active until it is completed."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Member Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an account using accountId."
+        },
+        {
+          "info": {
+            "name": "Update an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an account using accountId."
+        },
+        {
+          "info": {
+            "name": "Partially update an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partially update an account using accountId. Only non-null fields in the request will be updated. This is optimized for small, incremental changes."
+        },
+        {
+          "info": {
+            "name": "Delete an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "eraseMemberData",
+                "value": "",
+                "type": "query",
+                "description": "If set to true it removes all member data that belongs to a gym (personal data, contract data, rfid, product bookings). If set to false it deletes only membershipId and contract data."
+              }
+            ]
+          },
+          "docs": "Delete an account using accountId.\neraseMemberData parameter is optional and defaults to false. If set to true it removes all member data that belongs to a gym (personal data, contract data, rfid, product bookings).\nIf set to false it deletes only membershipId and contract data.\n"
+        },
+        {
+          "info": {
+            "name": "Upload account image",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/images",
+            "headers": [
+              {
+                "name": "Content-Length",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "This endpoint allows to upload a profile picture to the specified user using accountId (Supported formats: JPG, JPEG, PNG. Max file size: 16MB)"
+        },
+        {
+          "info": {
+            "name": "Delete account image",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/images",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This endpoint allows to delete a profile picture of the specified user using accountId"
+        },
+        {
+          "info": {
+            "name": "List member accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts",
+            "params": [
+              {
+                "name": "currentGymOnly",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "2022-09-22T14:19:26.303Z",
+                "type": "query"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "2022-09-22T14:19:26.303Z",
+                "type": "query"
+              },
+              {
+                "name": "offset",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Request all member accounts with paginated response. Result is always ordered by update timestamp (DESC). By default only accounts of the current gym are returned, otherwise set `currentGymOnly` to false. "
+        },
+        {
+          "info": {
+            "name": "Create an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create an account in the EGYM System."
+        },
+        {
+          "info": {
+            "name": "Retrieve an account by NFC",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/nfc/:nfc",
+            "params": [
+              {
+                "name": "nfc",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "nfcFormat",
+                "value": "",
+                "type": "query",
+                "description": "**Deprecated**: Use `passTypeId` or `collectorId` instead."
+              },
+              {
+                "name": "collectorId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "passTypeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve an account using NFC."
+        },
+        {
+          "info": {
+            "name": "Retrieve an account by membership ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/membership/:membershipId",
+            "params": [
+              {
+                "name": "membershipId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an account using membershipId."
+        },
+        {
+          "info": {
+            "name": "Retrieve an account by email",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/email/:email",
+            "params": [
+              {
+                "name": "email",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an account using email."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Member RFIDs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve user RFIDs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/rfids",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "allSources",
+                "value": "",
+                "type": "query",
+                "description": "Allows to receive user RFIDs that were assigned not only by MMS but also by other sources."
+              }
+            ]
+          },
+          "docs": "Returns a list of RFIDs of the user."
+        },
+        {
+          "info": {
+            "name": "Add RFID",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/rfids",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Add RFID to specified user."
+        },
+        {
+          "info": {
+            "name": "Update RFIDs of a user",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/rfids",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Note: If this field is sent we will replace the RFID list of this user with the info sent (for an empty list, we will delete all RFID connections of this user). The operation does not affect RFIDs assigned from other sources like EGYM machines, Fitness Hub etc."
+        },
+        {
+          "info": {
+            "name": "Retrieve an account by RFID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/rfid/:rfid",
+            "params": [
+              {
+                "name": "rfid",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "tagFormat",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve an account using RFID."
+        },
+        {
+          "info": {
+            "name": "Remove RFID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/rfids/:rfid",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "rfid",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "tagFormat",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Delete specified RFID from user"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Products booking",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve user activated products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/products",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns a list of products that are activated for the specified user and gym and are active now or in the future."
+        },
+        {
+          "info": {
+            "name": "Activate a product or update product booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/products",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint activates or updates a product for a user in a gym. The product is active starting from the specified start date to the end date in Timezone of the club."
+        },
+        {
+          "info": {
+            "name": "Retrieve gym products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/products"
+          },
+          "docs": "Returns a list of products that are available in the gym and can be activated for a user."
+        },
+        {
+          "info": {
+            "name": "Product details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/products/:productId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Returns the details of a specific product."
+        },
+        {
+          "info": {
+            "name": "Deactivate a product",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/products/:productId",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This endpoint deactivates a product for a user in a gym."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Member Account NFC",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve a member account NFC token",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/nfc",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "collectorId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "passTypeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve a member account NFC token"
+        },
+        {
+          "info": {
+            "name": "Assign an NFC token to a member account",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/nfc",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Assign an NFC token to a member account"
+        },
+        {
+          "info": {
+            "name": "Delete a member account NFC token",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/nfc",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "collectorId",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "passTypeId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Delete a member account NFC token"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Migrating members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Migrate an account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/migrate",
+            "params": [
+              {
+                "name": "legacyUserId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Migrate membership from V1 API using old EGYM user id (if already migrated then just returns membership)."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Member Account Roles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve an account roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/roles",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve an account roles in the current gym for given accountId"
+        },
+        {
+          "info": {
+            "name": "Set an account roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/roles",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an account roles using accountId."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Push notifications",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Sent notification using accountId",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/notifications",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simple fire and forget operation to sent notification"
+        },
+        {
+          "info": {
+            "name": "Sent notification using membershipId",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/membership/:membershipId/notifications",
+            "params": [
+              {
+                "name": "membershipId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simple fire and forget operation to sent notification"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Gym Visit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Member Gym Check Out",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/checkouts",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint informs the EGYM system that the member has left the gym."
+        },
+        {
+          "info": {
+            "name": "Member Gym Check In",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/checkins",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint informs the EGYM system that the member has entered the gym."
+        },
+        {
+          "info": {
+            "name": "Member Admission",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/:accountId/admissions",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "This endpoint is currently used only for members with membership type “CORPORATE_FITNESS”. It verifies if the specified member can have access to the desired gym. The MMS should use the response status to allow or block the member from entering the gym. As a side-effect this access is logged in the EGYM Corporate Fitness system if the admission was granted."
+        },
+        {
+          "info": {
+            "name": "List Corporate Fitness member accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/api/v2/accounts/corporate-fitness",
+            "params": [
+              {
+                "name": "endDateFrom",
+                "value": "2022-09-22",
+                "type": "query"
+              },
+              {
+                "name": "endDateTo",
+                "value": "2022-09-23",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Request Corporate Fitness member accounts for the current gym whose corporate membership cancellation date falls into specified date range. The type of membership is always `CORPORATE_FITNESS`, both `endDateFrom` and `endDateTo` parameters are mandatory and apply to `corporateFitness.endTimestamp`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

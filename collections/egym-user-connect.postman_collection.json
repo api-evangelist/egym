@@ -1,0 +1,787 @@
+{
+  "item": [
+    {
+      "id": "91ea75d1-455e-4e67-9b27-c97d018dd119",
+      "name": "1. Cardio Measurements",
+      "description": {
+        "content": "API for submitting cardio measurements",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5437f95f-f989-4d12-8485-8f3e359bb7f4",
+          "name": "Submit VO2max",
+          "request": {
+            "name": "Submit VO2max",
+            "description": {
+              "content": "Submit VO2max Measurement",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "measurements",
+                "v1.0",
+                "cardio",
+                "vo2max"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"<dateTime>\",\n      \"vo2Max\": \"<double>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "f539d462-f936-409b-b6de-95abb1d4df59",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "vo2max"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"2023-07-06T02:58:23.638Z\",\n      \"vo2Max\": 45.980850485374326\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ec13feb0-68e6-4372-8b58-25841e2bc5a3",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "vo2max"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"2023-07-06T02:58:23.638Z\",\n      \"vo2Max\": 45.980850485374326\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7492,\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4b80d919-1b15-4fe1-b4e0-b810d68ec021",
+          "name": "Submit Resting Heart Rate",
+          "request": {
+            "name": "Submit Resting Heart Rate",
+            "description": {
+              "content": "Submit Resting Heart Rate Measurement",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "measurements",
+                "v1.0",
+                "cardio",
+                "resting-heart-rate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"measurements\": [\n    {\n      \"bpm\": \"<integer>\",\n      \"createdAt\": \"<dateTime>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "270c5873-c909-4734-a1eb-de739ee2ca9e",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "resting-heart-rate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"bpm\": 179,\n      \"createdAt\": \"1947-06-26T23:58:10.830Z\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "be428801-7ca3-4cf5-9e46-3dc288e19676",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "resting-heart-rate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"bpm\": 179,\n      \"createdAt\": \"1947-06-26T23:58:10.830Z\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7492,\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "71229b50-53fe-4c04-a919-a97dce754601",
+          "name": "Submit Blood Pressure",
+          "request": {
+            "name": "Submit Blood Pressure",
+            "description": {
+              "content": "Submit Blood Pressure Measurement",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "measurements",
+                "v1.0",
+                "cardio",
+                "blood-pressure"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"<dateTime>\",\n      \"diastolic\": \"<integer>\",\n      \"systolic\": \"<integer>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e9b74861-5b88-4424-91be-82b69ce8ebb3",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "blood-pressure"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"2011-02-22T06:19:58.544Z\",\n      \"diastolic\": 145,\n      \"systolic\": 180\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "53aa126b-fd74-4655-b798-b9599c450964",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "measurements",
+                    "v1.0",
+                    "cardio",
+                    "blood-pressure"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"measurements\": [\n    {\n      \"createdAt\": \"2011-02-22T06:19:58.544Z\",\n      \"diastolic\": 145,\n      \"systolic\": 180\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7492,\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "2f75f9b4-46f8-4e8f-b6e0-80abbef95ef1",
+      "name": "2. Workouts",
+      "description": {
+        "content": "API for submitting workouts",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cf1de0b5-b99a-43d7-be47-caa88934fc48",
+          "name": "Submit Workout",
+          "request": {
+            "name": "Submit Workout",
+            "description": {
+              "content": "Submit a completed workout on behalf of a member",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workouts",
+                "v1",
+                "workouts"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "measurementSystem",
+                  "value": "<string>",
+                  "description": "(Required) "
+                },
+                {
+                  "disabled": false,
+                  "key": "gymLocationId",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": \"<long>\",\n      \"sets\": [\n        {\n          \"setType\": \"<string>\",\n          \"numberOfReps\": \"<integer>\",\n          \"weight\": \"<double>\",\n          \"duration\": \"<long>\",\n          \"distance\": \"<double>\",\n          \"heartRate\": \"<integer>\",\n          \"speed\": \"<double>\",\n          \"incline\": \"<double>\",\n          \"recoveryTime\": \"<long>\",\n          \"trainingMethod\": \"<string>\"\n        }\n      ],\n      \"completedAt\": \"<dateTime>\",\n      \"timezone\": \"<string>\",\n      \"templateGroupId\": \"<long>\",\n      \"templateId\": \"<long>\",\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"<string>\",\n          \"numberOfReps\": \"<integer>\",\n          \"weight\": \"<double>\",\n          \"duration\": \"<long>\",\n          \"distance\": \"<double>\",\n          \"heartRate\": \"<integer>\",\n          \"speed\": \"<double>\",\n          \"incline\": \"<double>\",\n          \"recoveryTime\": \"<long>\",\n          \"trainingMethod\": \"<string>\"\n        },\n        {\n          \"setType\": \"<string>\",\n          \"numberOfReps\": \"<integer>\",\n          \"weight\": \"<double>\",\n          \"duration\": \"<long>\",\n          \"distance\": \"<double>\",\n          \"heartRate\": \"<integer>\",\n          \"speed\": \"<double>\",\n          \"incline\": \"<double>\",\n          \"recoveryTime\": \"<long>\",\n          \"trainingMethod\": \"<string>\"\n        }\n      ]\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "062c11ed-ebcf-4882-91d2-aa31d177155f",
+              "name": "Workout submitted successfully",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workouts",
+                    "v1",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "measurementSystem",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "gymLocationId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": 8976,\n      \"sets\": [\n        {\n          \"setType\": \"TIME_BASED\",\n          \"numberOfReps\": 3891,\n          \"weight\": 8082.981412659036,\n          \"duration\": 3616,\n          \"distance\": 5606.878750168277,\n          \"heartRate\": 4631,\n          \"speed\": 8575.268813017956,\n          \"incline\": 9887.645231578297,\n          \"recoveryTime\": 2179,\n          \"trainingMethod\": \"MEASUREMENT_DYNAMIC\"\n        }\n      ],\n      \"completedAt\": \"2003-12-05T18:42:05.512Z\",\n      \"timezone\": \"string\",\n      \"templateGroupId\": 9437,\n      \"templateId\": 6706,\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 8097,\n          \"weight\": 3531.442260045262,\n          \"duration\": 5717,\n          \"distance\": 7053.281399711521,\n          \"heartRate\": 6902,\n          \"speed\": 4560.316100941454,\n          \"incline\": 3409.2346983344723,\n          \"recoveryTime\": 1418,\n          \"trainingMethod\": \"MEASUREMENT\"\n        },\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 9723,\n          \"weight\": 4000.320063704681,\n          \"duration\": 8437,\n          \"distance\": 9623.764344747324,\n          \"heartRate\": 5479,\n          \"speed\": 8374.286345889019,\n          \"incline\": 7791.826018775984,\n          \"recoveryTime\": 2803,\n          \"trainingMethod\": \"ISOKINETIC\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"exercises\": [\n    {\n      \"id\": 1222,\n      \"activityId\": 5491,\n      \"label\": \"string\"\n    },\n    {\n      \"id\": 3104,\n      \"activityId\": 9413,\n      \"label\": \"string\"\n    }\n  ],\n  \"completedAt\": \"1971-10-27T12:35:58.745Z\",\n  \"timezone\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8450953a-c034-4858-b918-dcbbd0a75284",
+              "name": "Bad Request — validation failure",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workouts",
+                    "v1",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "measurementSystem",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "gymLocationId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": 8976,\n      \"sets\": [\n        {\n          \"setType\": \"TIME_BASED\",\n          \"numberOfReps\": 3891,\n          \"weight\": 8082.981412659036,\n          \"duration\": 3616,\n          \"distance\": 5606.878750168277,\n          \"heartRate\": 4631,\n          \"speed\": 8575.268813017956,\n          \"incline\": 9887.645231578297,\n          \"recoveryTime\": 2179,\n          \"trainingMethod\": \"MEASUREMENT_DYNAMIC\"\n        }\n      ],\n      \"completedAt\": \"2003-12-05T18:42:05.512Z\",\n      \"timezone\": \"string\",\n      \"templateGroupId\": 9437,\n      \"templateId\": 6706,\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 8097,\n          \"weight\": 3531.442260045262,\n          \"duration\": 5717,\n          \"distance\": 7053.281399711521,\n          \"heartRate\": 6902,\n          \"speed\": 4560.316100941454,\n          \"incline\": 3409.2346983344723,\n          \"recoveryTime\": 1418,\n          \"trainingMethod\": \"MEASUREMENT\"\n        },\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 9723,\n          \"weight\": 4000.320063704681,\n          \"duration\": 8437,\n          \"distance\": 9623.764344747324,\n          \"heartRate\": 5479,\n          \"speed\": 8374.286345889019,\n          \"incline\": 7791.826018775984,\n          \"recoveryTime\": 2803,\n          \"trainingMethod\": \"ISOKINETIC\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"code\": 7492,\n  \"error\": \"string\",\n  \"message\": \"string\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    },\n    {\n      \"name\": \"string\",\n      \"message\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e94b8b63-ac20-4561-b86c-60efaeb75973",
+              "name": "Unauthorized — missing or invalid JWT",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workouts",
+                    "v1",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "measurementSystem",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "gymLocationId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": 8976,\n      \"sets\": [\n        {\n          \"setType\": \"TIME_BASED\",\n          \"numberOfReps\": 3891,\n          \"weight\": 8082.981412659036,\n          \"duration\": 3616,\n          \"distance\": 5606.878750168277,\n          \"heartRate\": 4631,\n          \"speed\": 8575.268813017956,\n          \"incline\": 9887.645231578297,\n          \"recoveryTime\": 2179,\n          \"trainingMethod\": \"MEASUREMENT_DYNAMIC\"\n        }\n      ],\n      \"completedAt\": \"2003-12-05T18:42:05.512Z\",\n      \"timezone\": \"string\",\n      \"templateGroupId\": 9437,\n      \"templateId\": 6706,\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 8097,\n          \"weight\": 3531.442260045262,\n          \"duration\": 5717,\n          \"distance\": 7053.281399711521,\n          \"heartRate\": 6902,\n          \"speed\": 4560.316100941454,\n          \"incline\": 3409.2346983344723,\n          \"recoveryTime\": 1418,\n          \"trainingMethod\": \"MEASUREMENT\"\n        },\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 9723,\n          \"weight\": 4000.320063704681,\n          \"duration\": 8437,\n          \"distance\": 9623.764344747324,\n          \"heartRate\": 5479,\n          \"speed\": 8374.286345889019,\n          \"incline\": 7791.826018775984,\n          \"recoveryTime\": 2803,\n          \"trainingMethod\": \"ISOKINETIC\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"exercises\": [\n    {\n      \"id\": 1222,\n      \"activityId\": 5491,\n      \"label\": \"string\"\n    },\n    {\n      \"id\": 3104,\n      \"activityId\": 9413,\n      \"label\": \"string\"\n    }\n  ],\n  \"completedAt\": \"1971-10-27T12:35:58.745Z\",\n  \"timezone\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7db7a57b-89e6-41c5-b51d-03fdd33fb8f6",
+              "name": "Bad Gateway — server-workout downstream error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workouts",
+                    "v1",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "measurementSystem",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "gymLocationId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": 8976,\n      \"sets\": [\n        {\n          \"setType\": \"TIME_BASED\",\n          \"numberOfReps\": 3891,\n          \"weight\": 8082.981412659036,\n          \"duration\": 3616,\n          \"distance\": 5606.878750168277,\n          \"heartRate\": 4631,\n          \"speed\": 8575.268813017956,\n          \"incline\": 9887.645231578297,\n          \"recoveryTime\": 2179,\n          \"trainingMethod\": \"MEASUREMENT_DYNAMIC\"\n        }\n      ],\n      \"completedAt\": \"2003-12-05T18:42:05.512Z\",\n      \"timezone\": \"string\",\n      \"templateGroupId\": 9437,\n      \"templateId\": 6706,\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 8097,\n          \"weight\": 3531.442260045262,\n          \"duration\": 5717,\n          \"distance\": 7053.281399711521,\n          \"heartRate\": 6902,\n          \"speed\": 4560.316100941454,\n          \"incline\": 3409.2346983344723,\n          \"recoveryTime\": 1418,\n          \"trainingMethod\": \"MEASUREMENT\"\n        },\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 9723,\n          \"weight\": 4000.320063704681,\n          \"duration\": 8437,\n          \"distance\": 9623.764344747324,\n          \"heartRate\": 5479,\n          \"speed\": 8374.286345889019,\n          \"incline\": 7791.826018775984,\n          \"recoveryTime\": 2803,\n          \"trainingMethod\": \"ISOKINETIC\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Gateway",
+              "code": 502,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"exercises\": [\n    {\n      \"id\": 1222,\n      \"activityId\": 5491,\n      \"label\": \"string\"\n    },\n    {\n      \"id\": 3104,\n      \"activityId\": 9413,\n      \"label\": \"string\"\n    }\n  ],\n  \"completedAt\": \"1971-10-27T12:35:58.745Z\",\n  \"timezone\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d29d0aa5-bdf3-43a6-ab17-6f38d3540a0f",
+              "name": "Service Unavailable — server-workout circuit breaker open",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workouts",
+                    "v1",
+                    "workouts"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "measurementSystem",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "gymLocationId",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"exercises\": [\n    {\n      \"activityId\": 8976,\n      \"sets\": [\n        {\n          \"setType\": \"TIME_BASED\",\n          \"numberOfReps\": 3891,\n          \"weight\": 8082.981412659036,\n          \"duration\": 3616,\n          \"distance\": 5606.878750168277,\n          \"heartRate\": 4631,\n          \"speed\": 8575.268813017956,\n          \"incline\": 9887.645231578297,\n          \"recoveryTime\": 2179,\n          \"trainingMethod\": \"MEASUREMENT_DYNAMIC\"\n        }\n      ],\n      \"completedAt\": \"2003-12-05T18:42:05.512Z\",\n      \"timezone\": \"string\",\n      \"templateGroupId\": 9437,\n      \"templateId\": 6706,\n      \"originallyDisplayedSets\": [\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 8097,\n          \"weight\": 3531.442260045262,\n          \"duration\": 5717,\n          \"distance\": 7053.281399711521,\n          \"heartRate\": 6902,\n          \"speed\": 4560.316100941454,\n          \"incline\": 3409.2346983344723,\n          \"recoveryTime\": 1418,\n          \"trainingMethod\": \"MEASUREMENT\"\n        },\n        {\n          \"setType\": \"REP_BASED\",\n          \"numberOfReps\": 9723,\n          \"weight\": 4000.320063704681,\n          \"duration\": 8437,\n          \"distance\": 9623.764344747324,\n          \"heartRate\": 5479,\n          \"speed\": 8374.286345889019,\n          \"incline\": 7791.826018775984,\n          \"recoveryTime\": 2803,\n          \"trainingMethod\": \"ISOKINETIC\"\n        }\n      ]\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"exercises\": [\n    {\n      \"id\": 1222,\n      \"activityId\": 5491,\n      \"label\": \"string\"\n    },\n    {\n      \"id\": 3104,\n      \"activityId\": 9413,\n      \"label\": \"string\"\n    }\n  ],\n  \"completedAt\": \"1971-10-27T12:35:58.745Z\",\n  \"timezone\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api",
+      "key": "baseUrl"
+    }
+  ],
+  "info": {
+    "_postman_id": "fce56203-bdcb-4eec-b604-342d8ddd25b3",
+    "name": "OpenAPI definition",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "",
+      "type": "text/plain"
+    }
+  }
+}

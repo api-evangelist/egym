@@ -1,0 +1,393 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "MMS API v1",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "X-ACCESS-TOKEN",
+      "value": "{{X-ACCESS-TOKEN}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "gym",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/gym/product",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the EGYM gym"
+              }
+            ]
+          },
+          "docs": "Returns a list of products that are available in the gym and can be activated for a user."
+        },
+        {
+          "info": {
+            "name": "Product details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/gym/product/:productId",
+            "params": [
+              {
+                "name": "productId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the product"
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the EGYM gym"
+              }
+            ]
+          },
+          "docs": "Returns the details of a specific product"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "user",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Publish",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/publish",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Publish information about a gym member to the EGYM system. The method updates or creates a dataset for the regarding user."
+        },
+        {
+          "info": {
+            "name": "Member details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/profile",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the member"
+              },
+              {
+                "name": "rfid",
+                "value": "",
+                "type": "query",
+                "description": "The RFID of the member"
+              },
+              {
+                "name": "email",
+                "value": "",
+                "type": "query",
+                "description": "The E-Mail address of the member"
+              },
+              {
+                "name": "membershipId",
+                "value": "",
+                "type": "query",
+                "description": "The membership id of the member."
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym."
+              }
+            ]
+          },
+          "docs": "Get information about a specific EGYM member"
+        },
+        {
+          "info": {
+            "name": "Activated products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/product",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "The EGYM user id. Must be given unless membershipId is used."
+              },
+              {
+                "name": "membershipId",
+                "value": "",
+                "type": "query",
+                "description": "The membership id of the user."
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the EGYM gym."
+              }
+            ]
+          },
+          "docs": "Returns a list of products that are activated for the specified user and gym and are active now or in the future."
+        },
+        {
+          "info": {
+            "name": "Update product",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/product",
+            "params": [
+              {
+                "name": "userId",
+                "value": "",
+                "type": "query",
+                "description": "The EGYM user id. Must be given unless membershipId is used."
+              },
+              {
+                "name": "membershipId",
+                "value": "",
+                "type": "query",
+                "description": "The membership id of the user."
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the EGYM gym."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Activates or updates a product for a user in a gym.\nA product can be activated for a specified user and gym.\nThe product is active starting from the specified start date to the end date.\nIn case the product is already active for the user, the start and end date are updated to the transmitted dates.\n"
+        },
+        {
+          "info": {
+            "name": "Check in",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/checkin",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Do a checkin for a member."
+        },
+        {
+          "info": {
+            "name": "Check out",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/user/checkout",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Do a checkout for a member."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "alive",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Alive",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/alive",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ]
+          },
+          "docs": "Notification that the API client is active.\nThis method notifies EGYM that the API client is running. Any received POST method resets a timestamp when data was last received. This method allows to send regular pings and therefore refreshes the timestamp.\nGym Owners are shown a connectivity status on the EGYM website that is changed to inactive if no request is received by any method for 24h - therefore best practice would be to send this request at least once per day.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "task",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Tasks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/task",
+            "params": [
+              {
+                "name": "modified-since",
+                "value": "",
+                "type": "query",
+                "description": "An optional modified since flag, in ISO-8601 date and time format. If not present, only uncompleted tasks will be returned."
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ]
+          },
+          "docs": "A list of not yet completed tasks."
+        },
+        {
+          "info": {
+            "name": "Create task",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/task",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new task."
+        },
+        {
+          "info": {
+            "name": "Task details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/task/:taskId",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the task"
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ]
+          },
+          "docs": "Retrieves a task"
+        },
+        {
+          "info": {
+            "name": "Update task",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://mms.api.ed.ts.egym.coffee/v1/task/:taskId",
+            "params": [
+              {
+                "name": "taskId",
+                "value": "",
+                "type": "path",
+                "description": "The id of the task"
+              },
+              {
+                "name": "gymId",
+                "value": "",
+                "type": "query",
+                "description": "The id of the gym"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing task; Mark a task as \"completed\""
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

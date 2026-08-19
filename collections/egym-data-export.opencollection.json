@@ -1,0 +1,146 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "DATA EXPORT API",
+    "version": "Alpha preview"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Workouts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://one-mms-service.ext-1.test.co.egym.coffee/api/v2/accounts/:accountId/workouts",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve workouts using accountId."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Measurements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Strength measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://one-mms-service.ext-1.test.co.egym.coffee/api/v2/accounts/:accountId/measurements/strength",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve strength measurements using accountId."
+        },
+        {
+          "info": {
+            "name": "Cardio measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://one-mms-service.ext-1.test.co.egym.coffee/api/v2/accounts/:accountId/measurements/cardio",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve cardio measurements using accountId."
+        },
+        {
+          "info": {
+            "name": "Body measurements",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://one-mms-service.ext-1.test.co.egym.coffee/api/v2/accounts/:accountId/measurements/body",
+            "params": [
+              {
+                "name": "accountId",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "fromTimestamp",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "toTimestamp",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Retrieve body measurements using accountId."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

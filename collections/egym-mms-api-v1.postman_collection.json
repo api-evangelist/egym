@@ -1,0 +1,2322 @@
+{
+  "item": [
+    {
+      "id": "46842e21-4a7b-41cc-af49-d408abf24676",
+      "name": "gym",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "f9849641-baea-41c9-977e-581448557594",
+          "name": "Products",
+          "request": {
+            "name": "Products",
+            "description": {
+              "content": "Returns a list of products that are available in the gym and can be activated for a user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gym",
+                "product"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the EGYM gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0121a29b-4c2c-4879-85fe-1fabd30592f4",
+              "name": "An array of EGYM products",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gym",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"productId\": 1407,\n    \"productTitle\": \"PREMIUM SELECT\",\n    \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\"\n  },\n  {\n    \"productId\": 9588,\n    \"productTitle\": \"PREMIUM SELECT\",\n    \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "73a3bcaa-a466-4271-abd4-b568f376f781",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gym",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0998d520-03fe-4c91-95c5-cb284ffcf691",
+          "name": "Product details",
+          "request": {
+            "name": "Product details",
+            "description": {
+              "content": "Returns the details of a specific product",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "gym",
+                "product",
+                ":productId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the EGYM gym"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "productId",
+                  "description": "(Required) The id of the product"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "ef898e89-8572-4ddd-b503-04d500352148",
+              "name": "A JSON product object",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gym",
+                    "product",
+                    ":productId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "productId",
+                      "description": "(Required) The id of the product"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"productId\": 6354,\n  \"productTitle\": \"PREMIUM SELECT\",\n  \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ca9f18de-405d-4b1d-90a2-4938a05b7914",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "gym",
+                    "product",
+                    ":productId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "productId",
+                      "description": "(Required) The id of the product"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "4cfc8a9e-64a9-4646-803d-aabcb5d7b498",
+      "name": "user",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c7a43639-ced1-416c-9284-0d59bbe23051",
+          "name": "Publish",
+          "request": {
+            "name": "Publish",
+            "description": {
+              "content": "Publish information about a gym member to the EGYM system. The method updates or creates a dataset for the regarding user.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "publish"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"membershipId\": \"<string>\",\n  \"eMail\": \"<string>\",\n  \"firstName\": \"<string>\",\n  \"lastName\": \"<string>\",\n  \"dateOfBirth\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"gender\": \"<string>\",\n  \"endOfContract\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"rfidList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phone\": \"<string>\",\n  \"street\": \"<string>\",\n  \"streetNumber\": \"<string>\",\n  \"zipCode\": \"<string>\",\n  \"city\": \"<string>\",\n  \"country\": \"<string>\",\n  \"userId\": \"<long>\",\n  \"agreementNumber\": \"<string>\",\n  \"membershipStatus\": \"<string>\",\n  \"membershipSubType\": \"<string>\",\n  \"activeStatus\": \"<boolean>\",\n  \"referringMemberId\": \"<string>\",\n  \"imageData\": \"<string>\",\n  \"userMotiveList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trainingFrequency\": \"<integer>\",\n  \"trainingDuration\": \"<integer>\",\n  \"startOfContract\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"state\": \"<string>\",\n  \"barcode\": \"<string>\",\n  \"height\": \"<double>\",\n  \"dayGuest\": \"<boolean>\",\n  \"prospect\": \"<boolean>\",\n  \"trainer\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0b6673cb-d0bd-49ea-a695-0ba5519fc273",
+              "name": "The member's userId",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "publish"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"membershipId\": \"membership_id\",\n  \"eMail\": \"example@egym.com\",\n  \"firstName\": \"Heinz\",\n  \"lastName\": \"Müller\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"gender\": \"MALE\",\n  \"endOfContract\": \"2070-01-01\",\n  \"rfidList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phone\": \"<string>\",\n  \"street\": \"Pranner street\",\n  \"streetNumber\": \"2\",\n  \"zipCode\": \"80333\",\n  \"city\": \"München\",\n  \"country\": \"DE\",\n  \"userId\": 123,\n  \"agreementNumber\": \"agreement_number\",\n  \"membershipStatus\": \"BASIC\",\n  \"membershipSubType\": \"membership_sub_type\",\n  \"activeStatus\": \"<boolean>\",\n  \"referringMemberId\": \"referring_number_id\",\n  \"imageData\": \"N/A\",\n  \"userMotiveList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trainingFrequency\": 3,\n  \"trainingDuration\": 90,\n  \"startOfContract\": \"2018-01-01\",\n  \"state\": \"Bavaria\",\n  \"barcode\": \"123456789-10\",\n  \"height\": \"<double>\",\n  \"dayGuest\": true,\n  \"prospect\": true,\n  \"trainer\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"userId\": \"id12\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10055151-92aa-460b-a201-afb27d27ba8a",
+              "name": "Request Entity Too Large.\nOverall request size is limited to 16 MB.\nIt is usually caused by passing extensive data in the field `imageData`.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "publish"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"membershipId\": \"membership_id\",\n  \"eMail\": \"example@egym.com\",\n  \"firstName\": \"Heinz\",\n  \"lastName\": \"Müller\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"gender\": \"MALE\",\n  \"endOfContract\": \"2070-01-01\",\n  \"rfidList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phone\": \"<string>\",\n  \"street\": \"Pranner street\",\n  \"streetNumber\": \"2\",\n  \"zipCode\": \"80333\",\n  \"city\": \"München\",\n  \"country\": \"DE\",\n  \"userId\": 123,\n  \"agreementNumber\": \"agreement_number\",\n  \"membershipStatus\": \"BASIC\",\n  \"membershipSubType\": \"membership_sub_type\",\n  \"activeStatus\": \"<boolean>\",\n  \"referringMemberId\": \"referring_number_id\",\n  \"imageData\": \"N/A\",\n  \"userMotiveList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trainingFrequency\": 3,\n  \"trainingDuration\": 90,\n  \"startOfContract\": \"2018-01-01\",\n  \"state\": \"Bavaria\",\n  \"barcode\": \"123456789-10\",\n  \"height\": \"<double>\",\n  \"dayGuest\": true,\n  \"prospect\": true,\n  \"trainer\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Request Entity Too Large",
+              "code": 413,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "846ae34e-77d1-477d-bda2-a601b51b43e8",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "publish"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"membershipId\": \"membership_id\",\n  \"eMail\": \"example@egym.com\",\n  \"firstName\": \"Heinz\",\n  \"lastName\": \"Müller\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"gender\": \"MALE\",\n  \"endOfContract\": \"2070-01-01\",\n  \"rfidList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phone\": \"<string>\",\n  \"street\": \"Pranner street\",\n  \"streetNumber\": \"2\",\n  \"zipCode\": \"80333\",\n  \"city\": \"München\",\n  \"country\": \"DE\",\n  \"userId\": 123,\n  \"agreementNumber\": \"agreement_number\",\n  \"membershipStatus\": \"BASIC\",\n  \"membershipSubType\": \"membership_sub_type\",\n  \"activeStatus\": \"<boolean>\",\n  \"referringMemberId\": \"referring_number_id\",\n  \"imageData\": \"N/A\",\n  \"userMotiveList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trainingFrequency\": 3,\n  \"trainingDuration\": 90,\n  \"startOfContract\": \"2018-01-01\",\n  \"state\": \"Bavaria\",\n  \"barcode\": \"123456789-10\",\n  \"height\": \"<double>\",\n  \"dayGuest\": true,\n  \"prospect\": true,\n  \"trainer\": true\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ebf15017-098e-447c-b6a6-a5c828c0879d",
+          "name": "Member details",
+          "request": {
+            "name": "Member details",
+            "description": {
+              "content": "Get information about a specific EGYM member",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "profile"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "userId",
+                  "value": "<long>",
+                  "description": "The id of the member"
+                },
+                {
+                  "disabled": false,
+                  "key": "rfid",
+                  "value": "<string>",
+                  "description": "The RFID of the member"
+                },
+                {
+                  "disabled": false,
+                  "key": "email",
+                  "value": "<string>",
+                  "description": "The E-Mail address of the member"
+                },
+                {
+                  "disabled": false,
+                  "key": "membershipId",
+                  "value": "<string>",
+                  "description": "The membership id of the member."
+                },
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<long>",
+                  "description": "(Required) The id of the gym."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "db3ed740-f9bf-4443-a95d-b3f336c05562",
+              "name": "The member information.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "123"
+                    },
+                    {
+                      "key": "rfid",
+                      "value": "0xAA"
+                    },
+                    {
+                      "key": "email",
+                      "value": "example@egym.com"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "123"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"membershipId\": \"membership_id\",\n  \"eMail\": \"example@egym.com\",\n  \"firstName\": \"Heinz\",\n  \"lastName\": \"Müller\",\n  \"dateOfBirth\": \"1970-01-01\",\n  \"gender\": \"MALE\",\n  \"endOfContract\": \"2070-01-01\",\n  \"rfidList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"phone\": \"<string>\",\n  \"street\": \"Pranner street\",\n  \"streetNumber\": \"2\",\n  \"zipCode\": \"80333\",\n  \"city\": \"München\",\n  \"country\": \"DE\",\n  \"userId\": 123,\n  \"agreementNumber\": \"agreement_number\",\n  \"membershipStatus\": \"BASIC\",\n  \"membershipSubType\": \"membership_sub_type\",\n  \"activeStatus\": \"<boolean>\",\n  \"referringMemberId\": \"referring_number_id\",\n  \"imageData\": \"N/A\",\n  \"userMotiveList\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"trainingFrequency\": 3,\n  \"trainingDuration\": 90,\n  \"startOfContract\": \"2018-01-01\",\n  \"state\": \"Bavaria\",\n  \"barcode\": \"123456789-10\",\n  \"height\": \"<double>\",\n  \"dayGuest\": true,\n  \"prospect\": true,\n  \"trainer\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ad8dcba7-4f67-49d8-813d-ca42d8881f6a",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "profile"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "123"
+                    },
+                    {
+                      "key": "rfid",
+                      "value": "0xAA"
+                    },
+                    {
+                      "key": "email",
+                      "value": "example@egym.com"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "123"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "66fd7d46-6149-4188-b8f9-bca119314658",
+          "name": "Activated products",
+          "request": {
+            "name": "Activated products",
+            "description": {
+              "content": "Returns a list of products that are activated for the specified user and gym and are active now or in the future.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "product"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "userId",
+                  "value": "<string>",
+                  "description": "(Required) The EGYM user id. Must be given unless membershipId is used."
+                },
+                {
+                  "disabled": false,
+                  "key": "membershipId",
+                  "value": "<string>",
+                  "description": "The membership id of the user."
+                },
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the EGYM gym."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "94babd53-959a-4990-963b-97ec5ca9a9ec",
+              "name": "An array of active or future products for the user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "-qwn9fgz5sa3i"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"productId\": 8479,\n    \"productTitle\": \"PREMIUM SELECT\",\n    \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\",\n    \"start\": \"2018-09-11\",\n    \"end\": \"2018-10-11\"\n  },\n  {\n    \"productId\": 7901,\n    \"productTitle\": \"PREMIUM SELECT\",\n    \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\",\n    \"start\": \"2018-09-11\",\n    \"end\": \"2018-10-11\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e3c30e4d-245a-4f7a-a42e-c73d776c3b34",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "-qwn9fgz5sa3i"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "15441c82-0b13-4ab5-a25e-c0c4ad06b0d5",
+          "name": "Update product",
+          "request": {
+            "name": "Update product",
+            "description": {
+              "content": "Activates or updates a product for a user in a gym.\nA product can be activated for a specified user and gym.\nThe product is active starting from the specified start date to the end date.\nIn case the product is already active for the user, the start and end date are updated to the transmitted dates.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "product"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "userId",
+                  "value": "<string>",
+                  "description": "(Required) The EGYM user id. Must be given unless membershipId is used."
+                },
+                {
+                  "disabled": false,
+                  "key": "membershipId",
+                  "value": "<string>",
+                  "description": "The membership id of the user."
+                },
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the EGYM gym."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"<integer>\",\n  \"start\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"end\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7b7a1961-2398-4995-97a8-81183861f36b",
+              "name": "The product is activated for the user.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "-qwn9fgz5sa3i"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productId\": \"<integer>\",\n  \"start\": \"2018-09-11\",\n  \"end\": \"2018-10-11\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"productId\": \"<integer>\",\n  \"productTitle\": \"PREMIUM SELECT\",\n  \"productDescription\": \"Enables Premium training features for the users on all EGYM machines.\",\n  \"start\": \"2018-09-11\",\n  \"end\": \"2018-10-11\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "81f0f282-349d-4ddc-afd6-a166c343bc1b",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "product"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "userId",
+                      "value": "-qwn9fgz5sa3i"
+                    },
+                    {
+                      "key": "membershipId",
+                      "value": "23ljlsJKLD"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"productId\": \"<integer>\",\n  \"start\": \"2018-09-11\",\n  \"end\": \"2018-10-11\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d01ab05b-b5f1-4955-a3b5-66a394c7040e",
+          "name": "Check in",
+          "request": {
+            "name": "Check in",
+            "description": {
+              "content": "Do a checkin for a member.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "checkin"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<string>\",\n  \"rfidId\": \"<string>\",\n  \"membershipId\": \"<string>\",\n  \"eMail\": \"<string>\",\n  \"userPresenceTimestamp\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a2ecf682-e209-47ac-8336-a219b0c3145f",
+              "name": "No content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "checkin"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"-qwn9fgz5sa3i\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "a2401945-5804-421a-a2ca-ed822a3ba322",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "checkin"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"-qwn9fgz5sa3i\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "690f321b-34fa-411c-8cd1-31a977eb691d",
+          "name": "Check out",
+          "request": {
+            "name": "Check out",
+            "description": {
+              "content": "Do a checkout for a member.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "user",
+                "checkout"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"<string>\",\n  \"rfidId\": \"<string>\",\n  \"membershipId\": \"<string>\",\n  \"eMail\": \"<string>\",\n  \"userPresenceTimestamp\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ac69bbe1-4ca9-44d9-8e1b-69fda2e2e344",
+              "name": "No content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "checkout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"-qwn9fgz5sa3i\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2e3dbab2-f327-4b40-80a1-51bf10a88faa",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "user",
+                    "checkout"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"userId\": \"-qwn9fgz5sa3i\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "10a5e0b8-5a70-4004-8d10-ff4163e64c13",
+      "name": "alive",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "952b47c3-67b5-4da0-9996-70d595415416",
+          "name": "Alive",
+          "request": {
+            "name": "Alive",
+            "description": {
+              "content": "Notification that the API client is active.\nThis method notifies EGYM that the API client is running. Any received POST method resets a timestamp when data was last received. This method allows to send regular pings and therefore refreshes the timestamp.\nGym Owners are shown a connectivity status on the EGYM website that is changed to inactive if no request is received by any method for 24h - therefore best practice would be to send this request at least once per day.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "alive"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e6e25edd-4235-4cbd-bf6b-401b20e9f7f8",
+              "name": "No content",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "d871161e-82d5-4bba-b2e1-b977af89a728",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "alive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    },
+    {
+      "id": "6152775d-f554-4272-9f91-2cf96c3bbde8",
+      "name": "task",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "0528ca24-34bf-4b1e-b313-8b03b0d302c8",
+          "name": "Tasks",
+          "request": {
+            "name": "Tasks",
+            "description": {
+              "content": "A list of not yet completed tasks.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "modified-since",
+                  "value": "<date in format \"YYYY-MM-DD\"\n>",
+                  "description": "An optional modified since flag, in ISO-8601 date and time format. If not present, only uncompleted tasks will be returned."
+                },
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "6f6ec1f6-73cf-44fd-921a-180e1317e2cd",
+              "name": "The new task ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "modified-since",
+                      "value": "2018-09-11"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"taskId\": 123,\n    \"taskName\": \"task1\",\n    \"taskType\": \"GENERAL\",\n    \"dueDate\": \"2018-01-01\",\n    \"completed\": true,\n    \"author\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"target\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"completer\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"timestamp\": 1479310474987\n  },\n  {\n    \"taskId\": 123,\n    \"taskName\": \"task1\",\n    \"taskType\": \"GENERAL\",\n    \"dueDate\": \"2018-01-01\",\n    \"completed\": true,\n    \"author\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"target\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"completer\": {\n      \"userId\": 123,\n      \"membershipId\": \"membership_id\"\n    },\n    \"timestamp\": 1479310474987\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cea46198-6e75-479f-a061-69da6bbc5178",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "modified-since",
+                      "value": "2018-09-11"
+                    },
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "66eb40e0-e639-4f2d-b36b-cd962df0e090",
+          "name": "Create task",
+          "request": {
+            "name": "Create task",
+            "description": {
+              "content": "Creates a new task.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taskId\": \"<long>\",\n  \"taskName\": \"<string>\",\n  \"taskType\": \"<string>\",\n  \"dueDate\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"completed\": \"<boolean>\",\n  \"author\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"target\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"completer\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"timestamp\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8ff1b36d-fe28-447c-b8e4-1ef826e0b262",
+              "name": "The new task ID",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"taskId\": 123\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea806ba2-1c69-46ec-9118-747a21a5fdbb",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "c18ac56e-5612-4549-9306-55b93d38def3",
+          "name": "Update task",
+          "request": {
+            "name": "Update task",
+            "description": {
+              "content": "Updates an existing task; Mark a task as \"completed\"",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task",
+                ":taskId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "taskId",
+                  "description": "(Required) The id of the task"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taskId\": \"<long>\",\n  \"taskName\": \"<string>\",\n  \"taskType\": \"<string>\",\n  \"dueDate\": \"<date in format \\\"YYYY-MM-DD\\\"\\n>\",\n  \"completed\": \"<boolean>\",\n  \"author\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"target\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"completer\": {\n    \"userId\": \"<long>\",\n    \"membershipId\": \"<string>\"\n  },\n  \"timestamp\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "c1c79f1c-d180-4925-8011-835d134e45f8",
+              "name": "The updated task data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":taskId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "taskId",
+                      "description": "(Required) The id of the task"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7ab928a2-cff2-431a-9c21-3bff6f07a5bd",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":taskId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "taskId",
+                      "description": "(Required) The id of the task"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "802380b2-5255-40d8-aa32-87c9281302bf",
+          "name": "Task details",
+          "request": {
+            "name": "Task details",
+            "description": {
+              "content": "Retrieves a task",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "task",
+                ":taskId"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "gymId",
+                  "value": "<number>",
+                  "description": "(Required) The id of the gym"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<long>",
+                  "key": "taskId",
+                  "description": "(Required) The id of the task"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "08fe74ea-13f7-4a1e-b6f1-62dd904dba52",
+              "name": "The task data",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":taskId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "taskId",
+                      "description": "(Required) The id of the task"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"taskId\": 123,\n  \"taskName\": \"task1\",\n  \"taskType\": \"GENERAL\",\n  \"dueDate\": \"2018-01-01\",\n  \"completed\": true,\n  \"author\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"target\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"completer\": {\n    \"userId\": 123,\n    \"membershipId\": \"membership_id\"\n  },\n  \"timestamp\": 1479310474987\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a407dc6-a380-48db-9694-716b49595549",
+              "name": "Client Error",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "task",
+                    ":taskId"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "gymId",
+                      "value": "234"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<long>",
+                      "key": "taskId",
+                      "description": "(Required) The id of the task"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "X-ACCESS-TOKEN",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": 401,\n  \"errorText\": \"The provided user name or password is incorrect.\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://mms.api.ed.ts.egym.coffee/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-ACCESS-TOKEN"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "460852e4-afcb-4d48-ac7a-a1c3f1671e9a",
+    "name": "MMS API v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "This API enables gym management software to connect to the EGYM system and transmit important pieces of information from the data sphere of the gym to the EGYM system. The \"data privacy concept\" section in the overview document explains more about the overall logic of data access. This API baiscally operates in \"data processing\" mode from a gyms' data privacy perspective, i.e. member data can be transmitted without prior individual consent of a user.\n\n# Use-case Overview\n\nThis API provided by EGYM covers three different use-cases:\n\n  - **User Profile\" related operations (\"**user** path\") like creating and updating member records\n  - **Trainer Task** related Operations\n  - **Product/Experience** related operations (\"**gym**\" path)\n\n## User Profile (/user)\n\nThis is the most important and most basic form of integration. The \"publish\" method allows for a combined create/update of whole member records and should be called whenever there is a new member created inside the MMS or meterial details of that record are changed. It also contains the methods to signal a \"check-in\" and \"check-out\" event.\n\n## Trainer Tasks (/task)\n\nThe Trainer Task API allows to interact with the tasks that are created and worked through on the trainer app. It provides CRUD functionalities for those tasks.\n\n## Product (/gym)\n\nThis API enables gym management software to create and update EGYM products for users on behalf of the gym.\n\n - It provides methods to retrieve all products that are available in a gym.\n - These products can be activated for users in the gym.\n - The active and future products for a user in a gym can be retrieved.\n\n___\n\n## Test environment\n\nWe provide a test environment for integration testing of the API which is particularly helpful during development. Before entering productive mode, we will jointly test all functionalities to ensure that data is correctly sent, received and interpreted.\n\nThe endpoint for test environment is: **https://mms.api.egym.com/gymapi/v1**\n\nMaking requests via this ui is not allowed but one can generate an example curl request by clicking \"Try it out\", filling in some parameters and clicking \"Execute\".\nNote the upper- and lower cases and use attribute exactly as indicated.\nPlease note that due to technical reasons the environment may temporarily not be available.\n___\n\n## Production environment\n\nThe endpoint for production environment is: **https://mms.api.egym.com/api/v2**\n___\n\n## Note on identifiers\n\nEGYM uses the fields userId, membershipId, and eMail to identify members.\nSince EGYM can accept data from multiple source (EGYM compatible fitness equipment, EGYM apps, and third parties), it is important to use these identifiers correctly.\n\nuserId is the identifier assigned to this member by the EGYM server. When publishing data of a member for the first time, the client omits this field since the userId is unknown to the client.\nThe server replies with a valid userId for this member that needs to be stored. On subsequent requests, the client must include the userId received previously.\n\nmembershipId is a String identifier used by the gym. This must be unambiguously assigned to this person and must never be reused for other members. membershipIds must be unique within all gyms that share member data (i.e. within the gym chain).\n**The membershipId is not a contractId.**\n\nAny publish request must include a valid email address. For members who have previously used the EGYM ecosystem, e.g. our fitness machines, this must be identical to the email address used as EGYM account.\nIt is important to include the correct email address with the first request sent for this member since the first API request will merge this user with pre-existing data for this person.\n___\n\n## Note on optional fields\n\nAll fields noted as 'required' or 'optional' must be supported by the client software and included in the request if this data is available.\nFields with the remark '(optional)' should be supported within the constraints of the client application, if possible.\n\nIf the value of an optional field is not known, the client must omit the the field in the request.\nThe EGYM server will then assume that last known value (which may have been retrieved by other channels) is still valid.\nPlease never sent an empty String (\"\") or empty list ([]) when the actual value is unkown.\n\n**Example imageData:**\nThe imageData field has due to its nature a larger size than other fields.\nThus, it make sense to include this field only if this is the first publish request for this user or if the image has changed. Please do not include an unchanged image in subsequent requests.\nHowever, if the first requests failed for any reason (e.g. internet unavailable or HTTP status > 299), then the client must include the image when retrying.\n\n**Example rfidList:**\nSending rfidList: [] will overwrite the list of RFIDs for this member with the emtpy list. That is, this user will not be able to use EGYM equipment.\nOn the other hand, if rfidList is missing from the request, the list of RFIDs is unchanged.\n\n**Example dateOfBirth:**\nIf the member's birthday is not known, it is OK to omit the field. However sending \"dateOfBirth\":\"\" (empty String) is invalid.\n___\n\n## Encoding\n\nAll endpoints use the JSON data type for request and response bodies and UTF-8 character encoding. In your HTTP request, please declare the Content-Type for your JSON body: \"Content-type: application/json\"\n___\n\n## Error handling\n\nRequests which cannot be processed will return a special JSON object with \"error\" and optionally \"error text\" fields.\nAuthentication problems, for example, return the following JSON:  {\"error\":401, \"errorText\":\"The provided user name or password is incorrect.\"}\n\n**Error codes**\n\n**Informational**\n- 200 OK - successful request\n- 204 No Content - successful request with empty response body\n\n**Client Error**\n- 400 Bad Request - The email is invalid. (Email field does not match the expected format of valid email addresses)\n- 401 Unauthorized - The provided login credentials are wrong. (The combination of accessToken and gymID are wrong.)\n- 403 Forbidden - Blacklisted user (Email address is blacklisted)\n- 404 Not Found - User not found. (GET request with userId for user that does not exist)\n- 404 Not Found - Email address not found. (GET request with userId for user with email address that does not exist)\n- 404 Not Found - Could not find any user with RFID = 0x.... (GET request with RFID for user that does not exist)\n- 405 Method Not Allowed - Method Not Allowed (Using GET without required data to be presented via POST)\n- 409 Conflict - Conflict in the request (Request could not be processed because of conflict.)\n- 415 Unsupported Media Type - Unsupported Media Type (Unsupported Media Type; add \"Content-type: application/json\" to the header of your request)\n\n404 error codes can indicate that user was deleted on EGYM server (e.g. he deleted his own account via the website).\n\n**Server Error**\n- 500 Internal Server Error - Internal Server Error (A bug in the server. If this occurs in productions it is probably caused by unexpected behavior of the client, i.e. there is also a bug in the client.)\n___\n\n## Authentication\n\nAuthentication is validated via an access token that is generated by EGYM for each gym location. EGYM requires a unique email for each member. EGYM uses the email address or other keys such as RFID-Id to initially match existing users in our data base.\nServer authentication of a request requires 2 additional parameters:\n- gymId: the gym location ID, as assigned by EGYM – gym chains will receive one gymId for each location\n- accesstoken: access token, provided by EGYM – each gym has a unique token\n\nExample: https://mms.api.egym.com/gymapi/v1/user/publish?gymId=123\n\n`X-ACCESS-TOKEN: ABCDE`\n\nTo test, use the Authorize-Button on the right to insert the token as a query parameter to every request.\n\n\nContact Support:\n Name: EGYM - Connect Team",
+      "type": "text/plain"
+    }
+  }
+}

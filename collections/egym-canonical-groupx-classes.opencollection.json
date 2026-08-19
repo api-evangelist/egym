@@ -1,0 +1,618 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Canonical GroupX Classes API",
+    "version": "1.0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "L2",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Search Classes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes",
+            "headers": [
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "locationId",
+                "value": "",
+                "type": "query",
+                "description": "ClubMS Location ID, which indicates Location to search Classes in. This ID is returned by Canonical Locations API or provided manually to EGYM admins.\n\n##### Possible reasons of validation errors:\n* missing => 400\n* notFound => 404\n"
+              },
+              {
+                "name": "endDateTime",
+                "value": "",
+                "type": "query",
+                "description": "Defines end of the timerange for Class search\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* lessThanStartDateTime => 400\n"
+              },
+              {
+                "name": "startDateTime",
+                "value": "",
+                "type": "query",
+                "description": "Defines start of the timerange for Class search\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* greaterThanEndDateTime => 400\n"
+              }
+            ]
+          },
+          "docs": "This operation searches GroupX Classes by date range.\n\n#### Additional contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Get Class Details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "query",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notSupported => 400\n* notFound => 404\n"
+              }
+            ]
+          },
+          "docs": "This operation returns all detailed information about GroupX Class.\n\n#### Additional Contracts\n 1. Parameter `exerciserId` is supported only if *`metaOption::bookingEnabled`* = true. If booking is disabled, then 400 status code must be returned when `exerciserId` is specified.\n 2. If *`metaOption::bookingEnabled`* = true, parameter `exerciserId` is optional. If it is specified, then `GroupXClassAttendeeBookingDetails` is provided in response. If `exerciserId` is not specified, then response has "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "L3",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Add Attendee to Class",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId/attendees/:exerciserId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "spot",
+                "value": "",
+                "type": "query",
+                "description": "Spot identifier (e.g. spot number).\n\n##### Possible reasons of validation errors:\n* noFreeSpots => 422\n"
+              }
+            ]
+          },
+          "docs": "This operation books GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* = true (use status code 404 endpoint not supported).\n#### Additional Contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Update class booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId/attendees/:exerciserId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "spot",
+                "value": "",
+                "type": "query",
+                "description": "Spot identifier (e.g. spot number).\n\n##### Possible reasons of validation errors:\n* noFreeSpots => 422\n"
+              }
+            ]
+          },
+          "docs": "This operation changes booking details of GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::spotBookingEnabled`* = true (use status code 404 endpoint not supported).\n#### Additional Contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Remove Attendee from Class",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId/attendees/:exerciserId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              }
+            ]
+          },
+          "docs": "This operation cancels GroupX Class for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true and (use status code 404 endpoint not supported).\n\n#### Additional Contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Add Attendee to Waitlist",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId/waitlist/attendees/:exerciserId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              }
+            ]
+          },
+          "docs": "This operation books GroupX Class Waitlist for the Attendee (Exerciser).\nShould be implemented in case if .\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true. Use status code 404 if endpoint not supported.\n\n#### Additional Contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Remove Attendee from Waitlist",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/classes/:classId/waitlist/attendees/:exerciserId",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "classId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Class Unique ID\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              }
+            ]
+          },
+          "docs": "This operation cancels GroupX Class Waitlist for the Attendee (Exerciser).\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true (use status code 404 endpoint not supported).\n\n#### Additional Contracts\nN/A\n"
+        },
+        {
+          "info": {
+            "name": "Get Exerciser Class Schedule",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://example.org/%3Cpartner%3E/group-classes/v1.0/exercisers/:exerciserId/schedule",
+            "headers": [
+              {
+                "name": "X-User-Locale",
+                "value": ""
+              },
+              {
+                "name": "X-User-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-User-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Location-Group-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Chain-ID",
+                "value": ""
+              },
+              {
+                "name": "X-Client-Secret",
+                "value": ""
+              },
+              {
+                "name": "X-Client-ID",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "exerciserId",
+                "value": "",
+                "type": "path",
+                "description": "ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.\n\n##### Possible reasons of validation errors:\n* notFound => 404\n"
+              },
+              {
+                "name": "endDateTime",
+                "value": "",
+                "type": "query",
+                "description": "Defines end of the timerange to get Exerciser's schedule\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* lessThanStartDateTime => 400\n"
+              },
+              {
+                "name": "startDateTime",
+                "value": "",
+                "type": "query",
+                "description": "Defines start of the timerange to get Exerciser's schedule\n\n##### Possible reasons of validation errors:\n* missing => 400\n* wrongFormat => 400\n* greaterThanEndDateTime => 400\n"
+              }
+            ]
+          },
+          "docs": "This operation retrieves Attendee (Exerciser) Class schedule.\n\n**NOTE:** This operation is available only if *`metaOption::bookingEnabled`* is true (use status code 404 endpoint not supported).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

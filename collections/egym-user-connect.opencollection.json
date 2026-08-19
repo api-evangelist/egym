@@ -1,0 +1,98 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenAPI definition",
+    "version": "v0"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "2. Workouts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit Workout",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api/workouts/v1/workouts",
+            "params": [
+              {
+                "name": "measurementSystem",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "gymLocationId",
+                "value": "",
+                "type": "query"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a completed workout on behalf of a member"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "1. Cardio Measurements",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Submit VO2max",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api/measurements/v1.0/cardio/vo2max",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit VO2max Measurement"
+        },
+        {
+          "info": {
+            "name": "Submit Resting Heart Rate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api/measurements/v1.0/cardio/resting-heart-rate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit Resting Heart Rate Measurement"
+        },
+        {
+          "info": {
+            "name": "Submit Blood Pressure",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api/measurements/v1.0/cardio/blood-pressure",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit Blood Pressure Measurement"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

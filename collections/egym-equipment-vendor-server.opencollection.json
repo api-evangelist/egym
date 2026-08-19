@@ -1,0 +1,162 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Equipment Vendor API (for server-to-server cases)",
+    "version": "1.1.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "OAuth",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Login",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/oauth/token",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "x-api-key",
+              "value": "{{x-api-key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "This endpoint logs in the user and returns the access token"
+        },
+        {
+          "info": {
+            "name": "well-known",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/oauth/.well-known/jwks.json"
+          },
+          "docs": "This endpoint returns a JSON Web Key (JWK) set."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "User Details",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get user details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/gyms/:gymId/users",
+            "params": [
+              {
+                "name": "gymId",
+                "value": "130",
+                "type": "path",
+                "description": "The EGYM Gym Location ID."
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint retrieves user details in the defined gym location"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Body Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Body Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/body",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a body measurement for the user. See the Body Measurements document for the list of available measurements that can be transferred to EGYM cloud."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Cardio Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Cardio Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/cardio",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a cardio measurement for the user. See the Cardio Measurements document for the list of available measurements that can be transferred to EGYM cloud."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Flexibility Measurement",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create Flexibility Measurement",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://b2b-partner-api.ext-1.test.co.egym.coffee/api/v1/measurements/flexibility",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "bearer",
+              "token": "{{bearerToken}}"
+            }
+          },
+          "docs": "This endpoint creates a flexibility measurement for the user. See the Flexibility Measurements document for the list of available measurements that can be transferred to EGYM cloud."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
