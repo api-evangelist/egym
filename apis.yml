@@ -16,7 +16,7 @@ url: https://raw.githubusercontent.com/api-evangelist/egym/refs/heads/main/apis.
 image: https://developer.egym.com/assets/egym-logo.60dd444402b44525ca41f7a89573481ea8fffc6f40134e177d7b3a7f13d6e6b2.9c1bb791.svg
 x-type: company
 x-source: harvest:secondary-market
-specificationVersion: '0.20'
+specificationVersion: '0.23'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
