@@ -28,6 +28,21 @@ tags:
 - Connected Equipment
 - Gym Management
 - Member Management
+- Check-in
+- Measurements
+- Workouts
+- Analytics
+- Webhook
+- Germany
+tags_raw:
+- Company
+- Fitness
+- Health
+- Wellness
+- Corporate Wellness
+- Connected Equipment
+- Gym Management
+- Member Management
 - Check-In
 - Measurements
 - Workouts
@@ -46,6 +61,12 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Member Management
+  - Gym Management
+  - Check-in
+  - Webhook
+  - Corporate Wellness
+  tags_raw:
   - Member Management
   - Gym Management
   - Check-In
@@ -219,6 +240,10 @@ apis:
   humanURL: https://developer.egym.com/mms-blueprints/canonical-classes
   baseURL: https://developer.egym.com/mms-blueprints/canonical-classes
   tags:
+  - Class Booking
+  - Blueprints
+  - Gym Management
+  tags_raw:
   - Class Booking
   - Blueprint
   - Gym Management
