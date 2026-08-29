@@ -13,6 +13,18 @@ description: 'EGYM is a Munich-headquartered fitness and health technology compa
   publishes an official documentation MCP server, an llms.txt, a written AI-agent instruction
   page, a dated change log, published rate limits and a documented webhook event catalog.'
 url: https://raw.githubusercontent.com/api-evangelist/egym/refs/heads/main/apis.yml
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://developer.egym.com/assets/egym-logo.60dd444402b44525ca41f7a89573481ea8fffc6f40134e177d7b3a7f13d6e6b2.9c1bb791.svg
 x-type: company
 x-source: harvest:secondary-market
