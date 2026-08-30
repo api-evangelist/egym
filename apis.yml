@@ -40,7 +40,7 @@ tags:
 - Connected Equipment
 - Gym Management
 - Member Management
-- Check-in
+- Check-In
 - Measurements
 - Workouts
 - Analytics
@@ -208,6 +208,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Alive
+  tags_raw:
   - alive
   properties:
   - type: OpenAPI
@@ -1129,6 +1131,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
@@ -1323,6 +1327,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Push Notifications
+  tags_raw:
   - Push notifications
   properties:
   - type: OpenAPI
@@ -1563,6 +1569,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Task
+  tags_raw:
   - task
   properties:
   - type: OpenAPI
@@ -1755,6 +1763,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
