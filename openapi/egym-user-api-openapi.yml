@@ -1,0 +1,1213 @@
+openapi: 3.2.0
+info:
+  title: Egym User API
+  version: '1.0'
+  description: 'Operations tagged User across 2 of this provider''s published API definitions: egym-equipment-vendor-standalone-openapi.yml, egym-mms-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+- url: https://mms.api.ed.ts.egym.coffee/v1
+  description: Test
+- url: https://mms.api.egym.com/v1
+  description: Prod
+tags:
+- name: User
+paths:
+  /api/v1/users:
+    get:
+      tags:
+      - User
+      summary: User Details
+      description: This endpoint returns a user
+      operationId: getUser
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EquipmentUserDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    put:
+      tags:
+      - User
+      summary: User Details
+      description: This endpoint updates the current user. The endpoint is only enabled if there is a specific use case to update user records.
+      operationId: updateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+  /api/v1/users/terms-and-conditions:
+    put:
+      tags:
+      - User
+      summary: Accept Terms and Conditions
+      description: This endpoint when invoked will save the information that the user accepted the eGym Terms and Conditions.
+      operationId: acceptTermsAndConditions
+      parameters:
+      - name: locale
+        in: query
+        description: Defines the locale in ISO 15897 standard format.
+        required: true
+        schema:
+          type: string
+        example: en_US
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+  /api/v1/users/image:
+    put:
+      tags:
+      - User
+      summary: Set user's avatar
+      description: This endpoint sets the user's avatar.
+      operationId: uploadUserImage
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+              required:
+              - file
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+  /api/v1/users/rfid:
+    post:
+      tags:
+      - User
+      summary: Assign RFID
+      description: This endpoint assigns one RFID to the user. If the RFID is already assigned to another user, it will be re-assigned to this user.
+      operationId: assignRfid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RfidDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+  /user/publish:
+    post:
+      summary: Publish
+      description: Publish information about a gym member to the EGYM system. The method updates or creates a dataset for the regarding user.
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: gymId
+        description: The id of the gym
+        schema:
+          type: number
+          example: 234
+        required: true
+      requestBody:
+        description: Information about the member
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemberInformationDTO'
+      responses:
+        '200':
+          description: The member's userId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIdDTO'
+        '413':
+          description: 'Request Entity Too Large.
+
+            Overall request size is limited to 16 MB.
+
+            It is usually caused by passing extensive data in the field `imageData`.'
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    servers:
+    - url: https://mms.api.ed.ts.egym.coffee/v1
+      description: Test
+    - url: https://mms.api.egym.com/v1
+      description: Prod
+  /user/profile:
+    get:
+      summary: Member details
+      description: Get information about a specific EGYM member
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: userId
+        description: The id of the member
+        schema:
+          type: integer
+          format: int64
+          example: 123
+      - in: query
+        name: rfid
+        description: The RFID of the member
+        schema:
+          type: string
+          example: '0xAA'
+      - in: query
+        name: email
+        description: The E-Mail address of the member
+        schema:
+          type: string
+          example: example@egym.com
+      - in: query
+        name: membershipId
+        description: The membership id of the member.
+        schema:
+          type: string
+          example: 23ljlsJKLD
+      - in: query
+        name: gymId
+        description: The id of the gym.
+        schema:
+          type: integer
+          format: int64
+          example: 123
+        required: true
+      responses:
+        '200':
+          description: The member information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberInformationDTO'
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    servers:
+    - url: https://mms.api.ed.ts.egym.coffee/v1
+      description: Test
+    - url: https://mms.api.egym.com/v1
+      description: Prod
+  /user/product:
+    get:
+      summary: Activated products
+      description: Returns a list of products that are activated for the specified user and gym and are active now or in the future.
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: userId
+        description: The EGYM user id. Must be given unless membershipId is used.
+        schema:
+          type: string
+          example: -qwn9fgz5sa3i
+        required: true
+      - in: query
+        name: membershipId
+        description: The membership id of the user.
+        schema:
+          type: string
+          example: 23ljlsJKLD
+        required: false
+      - in: query
+        name: gymId
+        description: The id of the EGYM gym.
+        schema:
+          type: number
+          example: 234
+        required: true
+      responses:
+        '200':
+          description: An array of active or future products for the user.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductInstanceDto'
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    put:
+      summary: Update product
+      description: 'Activates or updates a product for a user in a gym.
+
+        A product can be activated for a specified user and gym.
+
+        The product is active starting from the specified start date to the end date.
+
+        In case the product is already active for the user, the start and end date are updated to the transmitted dates.
+
+        '
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: userId
+        description: The EGYM user id. Must be given unless membershipId is used.
+        schema:
+          type: string
+          example: -qwn9fgz5sa3i
+        required: true
+      - in: query
+        name: membershipId
+        description: The membership id of the user.
+        schema:
+          type: string
+          example: 23ljlsJKLD
+        required: false
+      - in: query
+        name: gymId
+        description: The id of the EGYM gym.
+        schema:
+          type: number
+          example: 234
+        required: true
+      requestBody:
+        description: A product with start and end dates to be activated for the user in the given gym.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInstanceDto'
+      responses:
+        '200':
+          description: The product is activated for the user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInstanceDto'
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    servers:
+    - url: https://mms.api.ed.ts.egym.coffee/v1
+      description: Test
+    - url: https://mms.api.egym.com/v1
+      description: Prod
+  /user/checkin:
+    post:
+      summary: Check in
+      description: Do a checkin for a member.
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: gymId
+        description: The id of the gym
+        schema:
+          type: number
+          example: 234
+        required: true
+      requestBody:
+        description: Information about the member
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInformationDTO'
+      responses:
+        '204':
+          description: No content
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    servers:
+    - url: https://mms.api.ed.ts.egym.coffee/v1
+      description: Test
+    - url: https://mms.api.egym.com/v1
+      description: Prod
+  /user/checkout:
+    post:
+      summary: Check out
+      description: Do a checkout for a member.
+      tags:
+      - User
+      parameters:
+      - in: query
+        name: gymId
+        description: The id of the gym
+        schema:
+          type: number
+          example: 234
+        required: true
+      requestBody:
+        description: Information about the member
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInformationDTO'
+      responses:
+        '204':
+          description: No content
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+      security:
+      - accesstoken: []
+    servers:
+    - url: https://mms.api.ed.ts.egym.coffee/v1
+      description: Test
+    - url: https://mms.api.egym.com/v1
+      description: Prod
+components:
+  schemas:
+    ImageReferenceDTO:
+      type: object
+      properties:
+        imageType:
+          type: string
+          enum:
+          - EXERCISE
+          - EQUIPMENT
+          - AVATAR
+          - COVER
+          - GYM_BANNER
+          - GYM_PROFILE
+          - GYM_HEADER
+          - GYM
+          - CHART
+          - BLOG
+          - PARTNER
+          - MOBILESPLASH
+          - SIGNATURE
+          - CARDIOSCAN
+          - MUSCLES
+          - SHARED
+        imageId:
+          type: string
+    EquipmentUserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User is not linked to EGYM account.
+          example: -1c2yqo37vn9m
+        bmaUserId:
+          type: string
+          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6. Only available during xID authentication
+          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        image:
+          $ref: '#/components/schemas/ImageReferenceDTO'
+          description: The user profile image.
+        email:
+          type: string
+          description: The email address of the user. Not available by default. Only available if needed for use case.
+        gender:
+          type: string
+          description: The gender of the user.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        dateOfBirth:
+          type: string
+          format: date
+          description: The date of birth in ISO 8601 format (yyyy-MM-dd).
+        optIns:
+          type: object
+          additionalProperties:
+            type: boolean
+          description: List of opt-ins.
+        height:
+          type: number
+          format: double
+          description: The body height of the user in centimeters.
+          example: 180
+        weight:
+          type: number
+          format: double
+          description: The body weight of the user in kilograms.
+          example: 75
+        locale:
+          type: string
+          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
+          example: en_US
+        unitSystem:
+          type: string
+          description: The user Unit System.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+        trainingGoal:
+          type: string
+          deprecated: true
+          description: The user training goal.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+        trainingProgram:
+          type: string
+          description: The Smart Cardio training program.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+          - IMMUNITY
+        trainingPlanPreferences:
+          $ref: '#/components/schemas/TrainingPlanPreferencesDTO'
+          description: Training Preferences of the User. Deprecates trainingGoal and trainingProgram.
+        onboardingChecklist:
+          $ref: '#/components/schemas/OnboardingChecklistDTO'
+          description: Genius Onboarding Checklist of the User. Denotes the onboarding progress statuses for the user.
+        termsAndConditionsAccepted:
+          type: boolean
+          description: Informs if the terms and conditions of EGYM have been accepted.
+        cardioTestInfo:
+          $ref: '#/components/schemas/CardioTestUserInfoDTO'
+          description: The cardio test user information. It is enabled only for Smart Cardio.
+      required:
+      - firstName
+    RfidDTO:
+      type: object
+      properties:
+        rfidFormat:
+          type: string
+          description: The RFID format.
+          enum:
+          - HITAG1
+          - HITAG2
+          - EM4001
+          - EM4002
+          - EM4100
+          - EM4102
+          - EM4022
+          - MIFARE
+          - LEGIC
+          - NFC_EGYM_APPLE
+          - NFC_EGYM_GOOGLE
+          - NFC_EXTERNAL_APPLE
+          - NFC_EXTERNAL_GOOGLE
+        rfid:
+          type: string
+          description: The RFID.
+          minLength: 1
+      required:
+      - rfid
+      - rfidFormat
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    TrainingMuscleGroupPreferenceDTO:
+      type: object
+      properties:
+        muscleGroup:
+          type: string
+          description: Denotes which muscle group is targeted in this preference setting
+          enum:
+          - NECK_AND_SHOULDERS
+          - ARMS
+          - CHEST
+          - UPPER_BACK
+          - ABDOMINAL
+          - LOWER_BACK
+          - HIP
+          - BUTTOCK
+          - THIGHS
+          - CALVES
+        muscleGroupIntent:
+          type: string
+          description: Denotes the intention with the targeted muscle group. Currently can be Focus or Exclude
+          enum:
+          - FOCUS
+          - EXCLUDE
+    Status:
+      type: object
+      properties:
+        state:
+          type: string
+          description: Denotes whether the onboarding checklist item is complete, incomplete or expired
+          enum:
+          - UNSPECIFIED
+          - INCOMPLETE
+          - COMPLETE
+          - EXPIRED
+        expiresAt:
+          type: string
+          format: date-time
+          description: Date of expiration for this checklist item
+    TrainingPlanPreferencesDTO:
+      type: object
+      properties:
+        trainingGoalType:
+          type: string
+          description: Goal type overrides the trainingGoal and trainingProgram
+          enum:
+          - WEIGHT_LOSS
+          - MUSCLE_BUILDING
+          - GENERAL_FITNESS
+          - BODY_TONING
+          - REHA_FIT
+          - ATHLETIC
+        trainingExperience:
+          type: string
+          description: Denotes the user experience level from beginner to very advanced
+          enum:
+          - BEGINNER
+          - BEGINNER_INTERMEDIATE
+          - INTERMEDIATE
+          - INTERMEDIATE_ADVANCED
+          - ADVANCED
+          - VERY_ADVANCED
+        daysPerWeek:
+          type: integer
+          format: int32
+          description: User's preference for number of training days in a week
+          maximum: 7
+          minimum: 1
+        trainingMuscleGroupPreferences:
+          type: array
+          description: Denotes the user's muscle targeting preferences
+          items:
+            $ref: '#/components/schemas/TrainingMuscleGroupPreferenceDTO'
+        workoutDurationInMinutes:
+          type: integer
+          format: int32
+          description: User's preferred duration for a training session
+          minimum: 5
+    OnboardingChecklistDTO:
+      type: object
+      properties:
+        preferences:
+          $ref: '#/components/schemas/Status'
+          description: Status of training preferences selection genius onboarding checklist item
+        strengthTest:
+          $ref: '#/components/schemas/Status'
+          description: Status of strength test genius onboarding checklist item
+        bodyMeasurement:
+          $ref: '#/components/schemas/Status'
+          description: Status of body measurement genius onboarding checklist item
+        machineSettingsMeasurements:
+          $ref: '#/components/schemas/Status'
+          description: Genius Onboarding checklist item status that checks if the user has machine settings generated by Fitness Hub
+    CardioTestUserInfoDTO:
+      type: object
+      properties:
+        reminder:
+          type: integer
+          format: int64
+          description: The date of the next cardio-test.
+          example: 1553074207520
+        instructions:
+          type: array
+          description: The instructions to the next step.
+          items:
+            type: string
+            enum:
+            - CONTINUE
+            - FINISH
+            - REQUEST_TRAINING_GOAL
+            - REQUEST_TRAINING_PROGRAM
+            - REQUEST_HEIGHT
+            - REQUEST_WEIGHT
+            - REQUEST_GENDER
+            - REQUEST_DATE_OF_BIRTH
+            - TERMS_AND_CONDITIONS
+            - SUGGEST_CARDIO_TEST
+            - FIRST_CARDIO_TEST
+            - TEST_SKIPPED
+          uniqueItems: true
+    UpdateUserDTO:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        dateOfBirth:
+          type: string
+          format: date
+          description: The user's date of birth in ISO 8601 format (yyyy-MM-dd).
+        gender:
+          type: string
+          description: The user's gender.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        optIns:
+          type: object
+          additionalProperties:
+            type: boolean
+          description: The list of opt-ins to be enabled/disabled.
+        locale:
+          type: string
+          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
+          example: en_US
+        unitSystem:
+          type: string
+          description: The user's preferred unit system.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+          example: METRIC
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+    MemberInformationDTO:
+      type: object
+      description: This model provides information about a member.
+      required:
+      - membershipId
+      - eMail
+      - firstName
+      - lastName
+      - dateOfBirth
+      - gender
+      - endOfContract
+      - rfidList
+      - phone
+      - street
+      - streetNumber
+      - zipCode
+      - city
+      - country
+      properties:
+        userId:
+          type: integer
+          format: int64
+          description: Unique ID that identifies the EGYM user in the EGYM system. Please include the userId that you have received as a response to the previous requests for this user.
+          example: 123
+        membershipId:
+          type: string
+          description: 'Member ID of the gym software (must be unique for exactly one member in the gym (chain));
+
+            The membershipId must be unique for exactly one member in the gym. The membershipId should never changes, i.e. you cannot use a contract id or similar, which would change when the contract is renewed, changed or a new contract is signed.
+
+            '
+          example: membership_id
+        agreementNumber:
+          type: string
+          description: The agreement number is the number of the membership between the member and the gym chain.
+          example: agreement_number
+        membershipStatus:
+          type: string
+          description: Type of the member's membership to determine available features, can be BASIC/PREMIUM/PROSPECT
+          example: BASIC
+        membershipSubType:
+          type: string
+          description: Extension of membershipStatus for further customization for this user. One membershipStatus can have multiple membershipSubType.
+          example: membership_sub_type
+        activeStatus:
+          type: boolean
+          description: Status of the member's membership.
+          example: 'true'
+        referringMemberId:
+          type: string
+          description: MembershipId of the member who referred this member.
+          example: referring_number_id
+        eMail:
+          type: string
+          description: 'The EGYM interface requires that each member has a unique email address.
+
+
+            Before implementing the API in a gym, the software provider needs to run a search for email addresses that are used multiple times for different gym members (think fake addresses or family members). Obvious fake addresses (e.g. test@test.com) should be deleted. A list of email addresses used multiple times shall be given to the gym to enter unique addresses.
+
+
+            Any umlaut in email addresses is not accepted and will be answered by an error message.
+
+
+            A warning must be shown in the software if a member is created without a valid email address - validity check needs to cover typos (such as name@provider. / nameqprovider.com / etc)
+
+
+            Two members can never share an email address and no member can be submitted without an email address.
+
+            The software vendor must ensure that if two members share an email address, both will not be transmitted to EGYM. A warning should be shown to gym staff if a member is created with the same email address of an existing user until the problem is resolved.
+
+            '
+          example: example@egym.com
+        firstName:
+          type: string
+          description: First Name of the member
+          example: Heinz
+        lastName:
+          type: string
+          description: Last Name of the member
+          example: Müller
+        dateOfBirth:
+          type: string
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          description: Birthday of the member as date in format YYYY-MM-DD
+          example: '1970-01-01'
+        gender:
+          type: string
+          description: Gender of the member
+          enum:
+          - MALE
+          - FEMALE
+          example: MALE
+        imageData:
+          type: string
+          description: "BASE64 encoded image (JPEG or PNG): Photo of the member. Does not need to be sent with every request but can be transmitted after changes. \nPlease note that the overall request size is limited to 16 MB, so please make sure your images (after base64 encoding) are small enough to fit into the request,\notherwise, we'll throw a 413 and reject the whole request\n"
+          example: N/A
+        userMotiveList:
+          type: array
+          items:
+            type: string
+            enum:
+            - GENERAL_FITNESS
+            - HEALTH
+            - SHAPE
+            - SOCIAL
+            - RELAX
+            - ACTIVATION
+          description: 'Motivation list of the member. Possible Strings: GENERAL_FITNESS, HEALTH, SHAPE, SOCIAL, RELAX, ACTIVATION'
+          example: '["HEALTH", "SHAPE"]
+
+            '
+        trainingFrequency:
+          type: integer
+          format: int32
+          description: Number of training sessions the member wants to conduct per week
+          example: 3
+        trainingDuration:
+          type: integer
+          format: int32
+          description: Time (in minutes) a training session should take for the member
+          example: 90
+        endOfContract:
+          type: string
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          description: 'Date when the member''s contract ends. For gyms with automatic contract renewal, send the date when the contract would run out, if cancelled. Update the field when the contract was renewed.
+
+
+            Please update the field when the customer renews their contract (manually and automatically renewals).
+
+            '
+          example: '2070-01-01'
+        startOfContract:
+          type: string
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          description: Date when the member joined the gym
+          example: '2018-01-01'
+        rfidList:
+          type: array
+          items:
+            type: string
+          description: 'List of strings representing long numbers OR hex strings (with leading "0x").
+
+
+            This field is used for synchronizing all RFIDs of a user with EGYM.
+
+
+            Note: If this field is sent we will replace the RFID list of this user with the info sent (for an empty list, we will delete all RFID connections of this user).
+
+            Please ensure that only RFID information is sent in this field but no other medium like magnetic stripe card numbers or bar codes.
+
+            '
+          example: '["0xAA", "0xBB"]
+
+            '
+        phone:
+          type: string
+          description: 'telephone number of the member
+
+
+            There is just one field for the phone number in the EGYM Trainer App, so implement the way that first the mobile phone number is sent, and if that field is empty, the land line phone number.
+
+            If that field is empty, do not send the phone field at all.
+
+            '
+        street:
+          type: string
+          description: Street name in member's address
+          example: Pranner street
+        streetNumber:
+          type: string
+          description: Street number in member's address
+          example: '2'
+        zipCode:
+          type: string
+          description: Zip Code in member's address
+          example: '80333'
+        city:
+          type: string
+          description: City in member's address
+          example: München
+        state:
+          type: string
+          description: State in member's address
+          example: Bavaria
+        country:
+          type: string
+          description: Country of the member's address in ISO 3166-1 alpha-2
+          example: DE
+        barcode:
+          type: string
+          description: Member's barcode to checkin in the gym. Can be visualised on the Branded Member App and used for lookup to verify membership
+          example: 123456789-10
+        height:
+          type: number
+          format: double
+          description: Height of the member in centimeters
+          example: '168.30'
+        dayGuest:
+          type: boolean
+          description: Indicates that the member is not a permanent member
+          example: true
+        prospect:
+          type: boolean
+          description: Indicates that the member is a prospective member, who has not yet signed up for the gym membership
+          example: true
+        trainer:
+          type: boolean
+          description: 'If true, grants trainer account permissions to this user and this gym.
+
+
+            If false, revokes trainer permissions.
+
+
+            If omitted or null, permissions are not changed.
+
+
+            Please omit this field, unless you explicitly want to set or remove trainer rights.
+
+            '
+          example: true
+      example:
+        eMail: example@egym.com
+        firstName: Hans
+        lastName: Mustermann
+        dateOfBirth: '1990-11-20'
+        endOfContract: '2016-12-31'
+        gender: MALE
+        rfidList:
+        - '0x04AABBCCDDEEFF'
+    ErrorDto:
+      type: object
+      description: This model provides information about an API error.
+      properties:
+        error:
+          type: integer
+          format: int32
+          description: The error code.
+          example: 401
+        errorText:
+          type: string
+          description: The error message.
+          example: The provided user name or password is incorrect.
+    ProductInstanceDto:
+      type: object
+      description: This model provides information about an active product for a user in the gym.
+      properties:
+        productId:
+          type: integer
+          format: int32
+          description: The id of the product.
+          example: '1337'
+        productTitle:
+          type: string
+          description: The title of the product.
+          example: PREMIUM SELECT
+          readOnly: true
+        productDescription:
+          type: string
+          description: The description of the product.
+          example: Enables Premium training features for the users on all EGYM machines.
+          readOnly: true
+        start:
+          type: string
+          description: The date from which the specified product is active and can be used by the user.
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          example: '2018-09-11'
+        end:
+          type: string
+          description: The date to which the specified product is active and can be used by the user.
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          example: '2018-10-11'
+    UserInformationDTO:
+      type: object
+      description: This model provides information about a member.
+      required:
+      - userId
+      properties:
+        userId:
+          type: string
+          description: Unique ID that identifies the EGYM user in the EGYM system
+          example: -qwn9fgz5sa3i
+        rfidId:
+          type: string
+          description: ID that identifies the RFID Chip (either a long number OR a hex string with '0x' as leading characters)
+          example: '0xAA'
+        membershipId:
+          type: string
+          description: Member ID of the gym software
+          example: membership_id
+        eMail:
+          type: string
+          description: Email address of the member
+          example: example@egym.com
+        userPresenceTimestamp:
+          type: number
+          description: Timestamp in milliseconds since epoch for a checkin / checkout event that happened in the past
+          example: 1606228021
+      example:
+        userId: -qwn9fgz5sa3i
+    UserIdDTO:
+      type: object
+      description: This model provides string representation of a userId.
+      properties:
+        userId:
+          type: string
+          description: The id of the member.
+          example: id12
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/oauth/token
+          scopes: {}
+    accesstoken:
+      type: apiKey
+      in: header
+      name: X-ACCESS-TOKEN
+      description: The token that will allow access the EGYM gym api for a specific gym.
+      x-example: 77266b05a7ba4ba2aa3360b86711002d
+x-refined-from:
+- egym-equipment-vendor-standalone-openapi.yml
+- egym-mms-api-v1-openapi.yml

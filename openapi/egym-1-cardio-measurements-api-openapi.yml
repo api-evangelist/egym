@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: OpenAPI definition 1. Cardio Measurements API
+  version: v0
+  description: API for submitting cardio measurements
+servers:
+- url: https://user-connect-api.cgn-3.test.co.egym.coffee/user-connect-api
+  description: Test cgn-3
+- url: https://user-connect.api.egym.com/user-connect-api
+  description: Prod
+- url: http://localhost:8080/user-connect-api
+  description: Local
+tags:
+- name: 1. Cardio Measurements
+  description: API for submitting cardio measurements
+paths:
+  /measurements/v1.0/cardio/vo2max:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit VO2max
+      description: Submit VO2max Measurement
+      operationId: submitVo2MaxMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitVo2MaxRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+  /measurements/v1.0/cardio/resting-heart-rate:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit Resting Heart Rate
+      description: Submit Resting Heart Rate Measurement
+      operationId: submitRestingHeartRateMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitRestingHeartRateRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+  /measurements/v1.0/cardio/blood-pressure:
+    post:
+      tags:
+      - 1. Cardio Measurements
+      summary: Submit Blood Pressure
+      description: Submit Blood Pressure Measurement
+      operationId: submitBloodPressureMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmitBloodPressureRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorDto'
+components:
+  schemas:
+    SubmitVo2MaxDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        vo2Max:
+          type: number
+          format: double
+          description: VO2 Max value
+          maximum: 100
+          minimum: 0
+      required:
+      - createdAt
+      - vo2Max
+    SubmitVo2MaxRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitVo2MaxDto'
+          minItems: 1
+      required:
+      - measurements
+    SubmitBloodPressureDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        systolic:
+          type: integer
+          format: int32
+          description: Systolic pressure value
+          maximum: 250
+          minimum: 30
+        diastolic:
+          type: integer
+          format: int32
+          description: Diastolic pressure value
+          maximum: 250
+          minimum: 30
+      required:
+      - createdAt
+      - diastolic
+      - systolic
+    FieldErrorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+    SubmitRestingHeartRateDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        bpm:
+          type: integer
+          format: int32
+          description: Beats per minute value
+          maximum: 230
+          minimum: 30
+      required:
+      - bpm
+      - createdAt
+    SubmitBloodPressureRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitBloodPressureDto'
+          minItems: 1
+      required:
+      - measurements
+    SubmitRestingHeartRateRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitRestingHeartRateDto'
+          minItems: 1
+      required:
+      - measurements
+    ValidationErrorDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        error:
+          type: string
+        message:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldErrorDto'

@@ -1,0 +1,1069 @@
+openapi: 3.2.0
+info:
+  title: Egym Body Measurement API
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  termsOfService: https://egym.com/us/terms/
+  version: '1.0'
+  description: 'Operations tagged Body Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+  description: Generated server url
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+tags:
+- name: Body Measurement
+paths:
+  /api/v1/measurements/body:
+    post:
+      tags:
+      - Body Measurement
+      summary: Create Body Measurement
+      description: This endpoint creates a body measurement for the user. See the Body Measurements document for the list of available measurements that can be transferred to EGYM cloud.
+      operationId: createBodyMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+      security:
+      - user: []
+    get:
+      tags:
+      - Body Measurement
+      summary: Get Body Measurement
+      description: This endpoint retrieves the latest body measurement of the user
+      operationId: getUserBodyMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of BodyMetricType values to include in the response. When omitted, all available metric types are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - BMI
+            - WEIGHT_KG
+            - HEIGHT_CM
+            - BODY_FAT_PERCENTS
+            - WAIST_TO_HIP_RATIO
+            - HIP_CM
+            - WAIST_CM
+            - BODY_MUSCLE_PERCENTS
+            - BODY_FAT_MASS_KG
+            - SKELETAL_MUSCLE_MASS_KG
+            - SKELETAL_MUSCLE_MASS_PERCENTS
+            - FAT_FREE_MASS_KG
+            - FAT_FREE_MASS_PERCENTS
+            - SOFT_LEAN_MASS_KG
+            - BODY_MINERALS_KG
+            - BODY_PROTEIN_KG
+            - INTRA_CELLULAR_WATER_LITER
+            - EXTRA_CELLULAR_WATER_LITER
+            - EXTRA_CELLULAR_WATER_LOW_LITER
+            - EXTRA_CELLULAR_WATER_MID_LITER
+            - EXTRA_CELLULAR_WATER_TOP_LITER
+            - ECW_TBW_PERCENT
+            - ECW_TBW_PERCENT_LOW
+            - ECW_TBW_PERCENT_MID
+            - ECW_TBW_PERCENT_TOP
+            - BODY_PHASE_ANGLE
+            - BODY_PHASE_ANGLE_MIN
+            - BODY_PHASE_ANGLE_LOW
+            - BODY_PHASE_ANGLE_MID
+            - BODY_PHASE_ANGLE_TOP
+            - BODY_PHASE_ANGLE_MAX
+            - FAT_MASS_INDEX
+            - FAT_FREE_MASS_INDEX
+            - VISCERAL_FAT_AREA_CM2
+            - VISCERAL_ADIPOSE_TISSUE_KG
+            - VISCERAL_ADIPOSE_TISSUE_KG_MIN
+            - VISCERAL_ADIPOSE_TISSUE_KG_LOW
+            - VISCERAL_ADIPOSE_TISSUE_KG_MID
+            - VISCERAL_ADIPOSE_TISSUE_KG_TOP
+            - VISCERAL_ADIPOSE_TISSUE_KG_MAX
+            - TOTAL_ENERGY_EXPENDITURE
+            - RESTING_ENERGY_EXPENDITURE
+            - RESTING_ENERGY_EXPENDITURE_NORM
+            - RESTING_ENERGY_EXPENDITURE_RATING
+            - RESTING_ENERGY_EXPENDITURE_RATING_MIN
+            - RESTING_ENERGY_EXPENDITURE_RATING_LOW
+            - RESTING_ENERGY_EXPENDITURE_RATING_MID
+            - RESTING_ENERGY_EXPENDITURE_RATING_TOP
+            - RESTING_ENERGY_EXPENDITURE_RATING_MAX
+            - RECOMMENDED_RESTING_ENERGY_EXPENDITURE
+            - SEGMENTAL_LEAN_RIGHT_ARM_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_KG
+            - SEGMENTAL_LEAN_TRUNK_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_KG
+            - SEGMENTAL_FAT_LEFT_ARM_KG
+            - SEGMENTAL_FAT_TRUNK_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_KG
+            - SEGMENTAL_FAT_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_LEFT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_TRUNK_KG
+            - SEGMENTAL_MUSCLE_TRUNK_LOW_KG
+            - SEGMENTAL_MUSCLE_TRUNK_TOP_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_LEFT_LEG_TOP_KG
+            - BODY_WEIGHT_MIN_KG
+            - BODY_WEIGHT_LOW_KG
+            - BODY_WEIGHT_MID_KG
+            - BODY_WEIGHT_TOP_KG
+            - BODY_WEIGHT_MAX_KG
+            - BODY_FAT_MASS_LOW_KG
+            - BODY_FAT_MASS_MID_KG
+            - BODY_FAT_MASS_TOP_KG
+            - SKELETAL_MUSCLE_MASS_MIN_KG
+            - SKELETAL_MUSCLE_MASS_LOW_KG
+            - SKELETAL_MUSCLE_MASS_MID_KG
+            - SKELETAL_MUSCLE_MASS_TOP_KG
+            - SKELETAL_MUSCLE_MASS_MAX_KG
+            - SOFT_LEAN_MASS_LOW_KG
+            - SOFT_LEAN_MASS_MID_KG
+            - SOFT_LEAN_MASS_TOP_KG
+            - VISCERAL_ADIPOSE_TISSUE_LOW_LITER
+            - VISCERAL_ADIPOSE_TISSUE_MID_LITER
+            - VISCERAL_ADIPOSE_TISSUE_TOP_LITER
+            - BODY_WATER_PERCENTS
+            - BODY_WATER_LITER
+            - BODY_WATER_MIN_LITER
+            - BODY_WATER_LOW_LITER
+            - BODY_WATER_MID_LITER
+            - BODY_WATER_TOP_LITER
+            - BODY_WATER_MAX_LITER
+            - INTRA_CELLULAR_WATER_PERCENT
+            - INTRA_CELLULAR_WATER_LOW_KG
+            - INTRA_CELLULAR_WATER_MID_KG
+            - INTRA_CELLULAR_WATER_TOP_KG
+            - FAT_MASS_INDEX_LOW
+            - FAT_MASS_INDEX_MID
+            - FAT_MASS_INDEX_TOP
+            - SEGMENTAL_LEAN_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_MID_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_LOW_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_MID_KG
+            - SEGMENTAL_LEAN_LEFT_ARM_TOP_KG
+            - SEGMENTAL_LEAN_TRUNK_LOW_KG
+            - SEGMENTAL_LEAN_TRUNK_MID_KG
+            - SEGMENTAL_LEAN_TRUNK_TOP_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_MID_KG
+            - SEGMENTAL_LEAN_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_LOW_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_MID_KG
+            - SEGMENTAL_LEAN_LEFT_LEG_TOP_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_MID_KG
+            - SEGMENTAL_FAT_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_FAT_LEFT_ARM_LOW_KG
+            - SEGMENTAL_FAT_LEFT_ARM_MID_KG
+            - SEGMENTAL_FAT_LEFT_ARM_TOP_KG
+            - SEGMENTAL_FAT_TRUNK_LOW_KG
+            - SEGMENTAL_FAT_TRUNK_MID_KG
+            - SEGMENTAL_FAT_TRUNK_TOP_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_LOW_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_MID_KG
+            - SEGMENTAL_FAT_RIGHT_LEG_TOP_KG
+            - SEGMENTAL_FAT_LEFT_LEG_LOW_KG
+            - SEGMENTAL_FAT_LEFT_LEG_MID_KG
+            - SEGMENTAL_FAT_LEFT_LEG_TOP_KG
+            - SEGMENTAL_ANKLE_RIGHT_TO_KNEE_RIGHT_CM
+            - SEGMENTAL_ANKLE_LEFT_TO_KNEE_LEFT_CM
+            - SEGMENTAL_KNEE_RIGHT_TO_HIP_RIGHT_CM
+            - SEGMENTAL_HIP_RIGHT_TO_PELVIS_CM
+            - SEGMENTAL_FOOT_LEFT_TO_ANKLE_LEFT_CM
+            - SEGMENTAL_KNEE_LEFT_TO_HIP_LEFT_CM
+            - SEGMENTAL_HIP_LEFT_TO_PELVIS_CM
+            - SEGMENTAL_PELVIS_TO_SPINE_NAVAL_CM
+            - SEGMENTAL_SPINE_NAVAL_TO_SPINE_CHEST_CM
+            - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_RIGHT_CM
+            - SEGMENTAL_CLAVICLE_RIGHT_TO_SHOULDER_RIGHT_CM
+            - SEGMENTAL_SHOULDER_RIGHT_TO_ELBOW_RIGHT_CM
+            - SEGMENTAL_ELBOW_RIGHT_TO_WRIST_RIGHT_CM
+            - SEGMENTAL_WRIST_RIGHT_TO_HAND_RIGHT_CM
+            - SEGMENTAL_HAND_RIGHT_TO_HAND_TIP_RIGHT_CM
+            - SEGMENTAL_WRIST_RIGHT_TO_THUMB_RIGHT_CM
+            - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_LEFT_CM
+            - SEGMENTAL_CLAVICLE_LEFT_TO_SHOULDER_LEFT_CM
+            - SEGMENTAL_SHOULDER_LEFT_TO_ELBOW_LEFT_CM
+            - SEGMENTAL_ELBOW_LEFT_TO_WRIST_LEFT_CM
+            - SEGMENTAL_WRIST_LEFT_TO_HAND_LEFT_CM
+            - SEGMENTAL_HAND_LEFT_TO_HAND_TIP_LEFT_CM
+            - SEGMENTAL_WRIST_LEFT_TO_THUMB_LEFT_CM
+            - SEGMENTAL_SPINE_CHEST_TO_NECK_CM
+            - SEGMENTAL_NECK_TO_HEAD_CM
+            - SEGMENTAL_HEAD_TO_NOSE_CM
+            - BODY_FAT_PERCENTS_MIN
+            - BODY_FAT_PERCENTS_LOW
+            - BODY_FAT_PERCENTS_MID
+            - BODY_FAT_PERCENTS_TOP
+            - BODY_FAT_PERCENTS_MAX
+            - BODY_PROTEIN_LOW_KG
+            - BODY_PROTEIN_TOP_KG
+            - BODY_MINERALS_LOW_KG
+            - BODY_MINERALS_TOP_KG
+            - FAT_FREE_MASS_LOW_KG
+            - FAT_FREE_MASS_TOP_KG
+            - SEGMENTAL_LEAN_RIGHT_ARM_PERCENT
+            - SEGMENTAL_LEAN_LEFT_ARM_PERCENT
+            - SEGMENTAL_LEAN_TRUNK_PERCENT
+            - SEGMENTAL_LEAN_RIGHT_LEG_PERCENT
+            - SEGMENTAL_LEAN_LEFT_LEG_PERCENT
+            - BODY_WATER_RIGHT_ARM_LITER
+            - BODY_WATER_RIGHT_ARM_LOW_LITER
+            - BODY_WATER_RIGHT_ARM_TOP_LITER
+            - BODY_WATER_LEFT_ARM_LITER
+            - BODY_WATER_LEFT_ARM_LOW_LITER
+            - BODY_WATER_LEFT_ARM_TOP_LITER
+            - BODY_WATER_TRUNK_LITER
+            - BODY_WATER_TRUNK_LOW_LITER
+            - BODY_WATER_TRUNK_TOP_LITER
+            - BODY_WATER_RIGHT_LEG_LITER
+            - BODY_WATER_RIGHT_LEG_LOW_LITER
+            - BODY_WATER_RIGHT_LEG_TOP_LITER
+            - BODY_WATER_LEFT_LEG_LITER
+            - BODY_WATER_LEFT_LEG_LOW_LITER
+            - BODY_WATER_LEFT_LEG_TOP_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+            - INTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+            - INTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+            - INTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+            - INTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+            - EXTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+            - EXTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+            - EXTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+            - ECW_TBW_RIGHT_ARM_PERCENT
+            - ECW_TBW_LEFT_ARM_PERCENT
+            - ECW_TBW_TRUNK_PERCENT
+            - ECW_TBW_RIGHT_LEG_PERCENT
+            - ECW_TBW_LEFT_LEG_PERCENT
+            - SEGMENTAL_FAT_RIGHT_ARM_PERCENT
+            - SEGMENTAL_FAT_LEFT_ARM_PERCENT
+            - SEGMENTAL_FAT_TRUNK_PERCENT
+            - SEGMENTAL_FAT_RIGHT_LEG_PERCENT
+            - SEGMENTAL_FAT_LEFT_LEG_PERCENT
+            - VISCERAL_FAT_LEVEL_CM2
+            - OBESITY_DEGREE
+            - BODY_CELL_MASS_KG
+            - ARMS_CM
+            - MUSCLES_ARMS_CM
+            - RIGHT_CALF_CM
+            - LEFT_CALF_CM
+            - GLUTES_CM
+            - BONE_MINERAL_CONTENT
+            - TBW_FFM
+            - NECK_CM
+            - CHEST_CM
+            - ABDOMEN_CM
+            - RIGHT_ARM_CM
+            - LEFT_ARM_CM
+            - RIGHT_THIGH_CM
+            - LEFT_THIGH_CM
+            - THIGHS_CM
+            - SKELETAL_MUSCLE_INDEX_KG_M2
+            - BUST_CM
+            - HIPS_CM
+            - BODY_BONES_KG
+            - EXTRA_CELLULAR_WATER_PERCENT
+            - EXTRA_CELLULAR_WATER_LOW_PERCENT
+            - EXTRA_CELLULAR_WATER_TOP_PERCENT
+            - SEGMENTAL_FAT_PERCENT_RIGHT_LEG_SCORE
+            - SEGMENTAL_FAT_PERCENT_LEFT_LEG_SCORE
+            - SEGMENTAL_FAT_PERCENT_RIGHT_ARM_SCORE
+            - SEGMENTAL_FAT_PERCENT_LEFT_ARM_SCORE
+            - SEGMENTAL_FAT_PERCENT_TRUNK_SCORE
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_SCORE
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_SCORE
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_SCORE
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_SCORE
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_SCORE
+            - VISCERAL_FAT_RATING
+            - VISCERAL_FAT_RATING_LOW
+            - VISCERAL_FAT_RATING_TOP
+            - LEG_MUSCLE_SCORE
+            - SEGMENTAL_PHASE_ANGLE_RIGHT_LEG_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_LEFT_LEG_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_RIGHT_ARM_ANGLE
+            - SEGMENTAL_PHASE_ANGLE_LEFT_ARM_ANGLE
+            - SKELETAL_MUSCLE_MASS_INDEX_SCORE
+            - PARTNER_SCORE
+            - BODY_FAT_MASS_MAX_KG
+            - BODY_FAT_MASS_MIN_KG
+            - BASAL_METABOLIC_RATE_KJ
+            - EXTRA_CELL_MASS_KG
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MIN
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_LOW
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MID
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_TOP
+            - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MAX
+            - UPPER_RIGHT_ARM_CM
+            - UPPER_LEFT_ARM_CM
+            - LOWER_RIGHT_ARM_CM
+            - LOWER_LEFT_ARM_CM
+            - UPPER_RIGHT_LEG_CM
+            - UPPER_LEFT_LEG_CM
+            - LOWER_RIGHT_LEG_CM
+            - LOWER_LEFT_LEG_CM
+            - PARTNER_METABOLIC_BIO_AGE
+            - BIO_WELLNESS_INDEX
+            - SUBCUTANEOUS_FAT_MASS_KG
+            - SUBCUTANEOUS_FAT_MASS_PERCENT
+            - BMI_LOW_KG
+            - BMI_TOP_KG
+            - SKELETAL_MUSCLE_MASS_LOW_PERCENTS
+            - SKELETAL_MUSCLE_MASS_TOP_PERCENTS
+            - FAT_FREE_MASS_LOW_PERCENTS
+            - FAT_FREE_MASS_TOP_PERCENTS
+            - VISCERAL_FAT_AREA_LOW_CM2
+            - VISCERAL_FAT_AREA_TOP_CM2
+            - WAIST_TO_HIP_RATIO_MIN
+            - WAIST_TO_HIP_RATIO_MAX
+            - BODY_WATER_LOW_PERCENTS
+            - BODY_WATER_TOP_PERCENTS
+            - BASAL_METABOLIC_RATE_LOW_KJ
+            - BASAL_METABOLIC_RATE_TOP_KJ
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_LOW_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_TOP_LEG_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_TOP_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_LOW_KG
+            - SEGMENTAL_MUSCLE_MASS_TRUNK_TOP_KG
+            - VISCERAL_FAT_LOW_RATING
+            - VISCERAL_FAT_TOP_RATING
+            - SEGMENTAL_PHASE_ANGLE_TRUNK_KG
+            - FAT_FREE_MASS_INDEX_Z_SCORE
+            - SKELETAL_MUSCLE_MASS_Z_SCORE
+            - FAT_MASS_INDEX_Z_SCORE
+            - FAT_FREE_MASS_INDEX_MIN
+            - FAT_FREE_MASS_INDEX_LOW
+            - FAT_FREE_MASS_INDEX_MID
+            - FAT_FREE_MASS_INDEX_TOP
+            - FAT_FREE_MASS_INDEX_MAX
+            - SKELETAL_MUSCLE_INDEX_MIN
+            - SKELETAL_MUSCLE_INDEX_LOW
+            - SKELETAL_MUSCLE_INDEX_MID
+            - SKELETAL_MUSCLE_INDEX_TOP
+            - SKELETAL_MUSCLE_INDEX_MAX
+            - APPENDICULAR_SKELETAL_MUSCLE_MASS_KG
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_KG_M2
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_LOW
+            - APPENDICULAR_SKELETAL_MUSCLE_INDEX_MID
+            - BODY_FAT_SCORE
+            - BODY_MUSCLE_SCORE
+            - OBESITY_DEGREE_PERCENT
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestBodyMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+      description: Generated server url
+  /api/v1/measurements/body/history:
+    get:
+      tags:
+      - Body Measurement
+      summary: Get Body History for a user
+      description: This endpoint retrieves body measurements history for the user with pagination support
+      operationId: getUserBodyHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BodyMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+components:
+  schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+    MeasurementDTO:
+      required:
+      - data
+      - gymId
+      - machineName
+      - timestamp
+      - uniqueMeasurementId
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time.
+          format: int64
+          example: 1553074207520
+        machineName:
+          type: string
+          description: The machine name of the equipment that generates the measurement. Machine name needs to be registered at EGYM.
+          example: device123
+        gymId:
+          type: integer
+          description: The EGYM Gym Location ID.
+          format: int64
+          example: 130
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          example: f5c15c853c1e46de
+        data:
+          type: object
+          additionalProperties:
+            type: number
+            description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+          description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    BodyMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of body metrics for this measurement
+          items:
+            $ref: '#/components/schemas/BodyMetricDTO'
+    BodyMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the body metric
+          enum:
+          - BMI
+          - WEIGHT_KG
+          - HEIGHT_CM
+          - BODY_FAT_PERCENTS
+          - WAIST_TO_HIP_RATIO
+          - HIP_CM
+          - WAIST_CM
+          - BODY_MUSCLE_PERCENTS
+          - BODY_FAT_MASS_KG
+          - SKELETAL_MUSCLE_MASS_KG
+          - SKELETAL_MUSCLE_MASS_PERCENTS
+          - FAT_FREE_MASS_KG
+          - FAT_FREE_MASS_PERCENTS
+          - SOFT_LEAN_MASS_KG
+          - BODY_MINERALS_KG
+          - BODY_PROTEIN_KG
+          - INTRA_CELLULAR_WATER_LITER
+          - EXTRA_CELLULAR_WATER_LITER
+          - EXTRA_CELLULAR_WATER_LOW_LITER
+          - EXTRA_CELLULAR_WATER_MID_LITER
+          - EXTRA_CELLULAR_WATER_TOP_LITER
+          - ECW_TBW_PERCENT
+          - ECW_TBW_PERCENT_LOW
+          - ECW_TBW_PERCENT_MID
+          - ECW_TBW_PERCENT_TOP
+          - BODY_PHASE_ANGLE
+          - BODY_PHASE_ANGLE_MIN
+          - BODY_PHASE_ANGLE_LOW
+          - BODY_PHASE_ANGLE_MID
+          - BODY_PHASE_ANGLE_TOP
+          - BODY_PHASE_ANGLE_MAX
+          - FAT_MASS_INDEX
+          - FAT_FREE_MASS_INDEX
+          - VISCERAL_FAT_AREA_CM2
+          - VISCERAL_ADIPOSE_TISSUE_KG
+          - VISCERAL_ADIPOSE_TISSUE_KG_MIN
+          - VISCERAL_ADIPOSE_TISSUE_KG_LOW
+          - VISCERAL_ADIPOSE_TISSUE_KG_MID
+          - VISCERAL_ADIPOSE_TISSUE_KG_TOP
+          - VISCERAL_ADIPOSE_TISSUE_KG_MAX
+          - TOTAL_ENERGY_EXPENDITURE
+          - RESTING_ENERGY_EXPENDITURE
+          - RESTING_ENERGY_EXPENDITURE_NORM
+          - RESTING_ENERGY_EXPENDITURE_RATING
+          - RESTING_ENERGY_EXPENDITURE_RATING_MIN
+          - RESTING_ENERGY_EXPENDITURE_RATING_LOW
+          - RESTING_ENERGY_EXPENDITURE_RATING_MID
+          - RESTING_ENERGY_EXPENDITURE_RATING_TOP
+          - RESTING_ENERGY_EXPENDITURE_RATING_MAX
+          - RECOMMENDED_RESTING_ENERGY_EXPENDITURE
+          - SEGMENTAL_LEAN_RIGHT_ARM_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_KG
+          - SEGMENTAL_LEAN_TRUNK_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_KG
+          - SEGMENTAL_FAT_LEFT_ARM_KG
+          - SEGMENTAL_FAT_TRUNK_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_KG
+          - SEGMENTAL_FAT_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_LEFT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_TRUNK_KG
+          - SEGMENTAL_MUSCLE_TRUNK_LOW_KG
+          - SEGMENTAL_MUSCLE_TRUNK_TOP_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_LEFT_LEG_TOP_KG
+          - BODY_WEIGHT_MIN_KG
+          - BODY_WEIGHT_LOW_KG
+          - BODY_WEIGHT_MID_KG
+          - BODY_WEIGHT_TOP_KG
+          - BODY_WEIGHT_MAX_KG
+          - BODY_FAT_MASS_LOW_KG
+          - BODY_FAT_MASS_MID_KG
+          - BODY_FAT_MASS_TOP_KG
+          - SKELETAL_MUSCLE_MASS_MIN_KG
+          - SKELETAL_MUSCLE_MASS_LOW_KG
+          - SKELETAL_MUSCLE_MASS_MID_KG
+          - SKELETAL_MUSCLE_MASS_TOP_KG
+          - SKELETAL_MUSCLE_MASS_MAX_KG
+          - SOFT_LEAN_MASS_LOW_KG
+          - SOFT_LEAN_MASS_MID_KG
+          - SOFT_LEAN_MASS_TOP_KG
+          - VISCERAL_ADIPOSE_TISSUE_LOW_LITER
+          - VISCERAL_ADIPOSE_TISSUE_MID_LITER
+          - VISCERAL_ADIPOSE_TISSUE_TOP_LITER
+          - BODY_WATER_PERCENTS
+          - BODY_WATER_LITER
+          - BODY_WATER_MIN_LITER
+          - BODY_WATER_LOW_LITER
+          - BODY_WATER_MID_LITER
+          - BODY_WATER_TOP_LITER
+          - BODY_WATER_MAX_LITER
+          - INTRA_CELLULAR_WATER_PERCENT
+          - INTRA_CELLULAR_WATER_LOW_KG
+          - INTRA_CELLULAR_WATER_MID_KG
+          - INTRA_CELLULAR_WATER_TOP_KG
+          - FAT_MASS_INDEX_LOW
+          - FAT_MASS_INDEX_MID
+          - FAT_MASS_INDEX_TOP
+          - SEGMENTAL_LEAN_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_MID_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_LOW_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_MID_KG
+          - SEGMENTAL_LEAN_LEFT_ARM_TOP_KG
+          - SEGMENTAL_LEAN_TRUNK_LOW_KG
+          - SEGMENTAL_LEAN_TRUNK_MID_KG
+          - SEGMENTAL_LEAN_TRUNK_TOP_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_MID_KG
+          - SEGMENTAL_LEAN_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_LOW_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_MID_KG
+          - SEGMENTAL_LEAN_LEFT_LEG_TOP_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_MID_KG
+          - SEGMENTAL_FAT_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_FAT_LEFT_ARM_LOW_KG
+          - SEGMENTAL_FAT_LEFT_ARM_MID_KG
+          - SEGMENTAL_FAT_LEFT_ARM_TOP_KG
+          - SEGMENTAL_FAT_TRUNK_LOW_KG
+          - SEGMENTAL_FAT_TRUNK_MID_KG
+          - SEGMENTAL_FAT_TRUNK_TOP_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_LOW_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_MID_KG
+          - SEGMENTAL_FAT_RIGHT_LEG_TOP_KG
+          - SEGMENTAL_FAT_LEFT_LEG_LOW_KG
+          - SEGMENTAL_FAT_LEFT_LEG_MID_KG
+          - SEGMENTAL_FAT_LEFT_LEG_TOP_KG
+          - SEGMENTAL_ANKLE_RIGHT_TO_KNEE_RIGHT_CM
+          - SEGMENTAL_ANKLE_LEFT_TO_KNEE_LEFT_CM
+          - SEGMENTAL_KNEE_RIGHT_TO_HIP_RIGHT_CM
+          - SEGMENTAL_HIP_RIGHT_TO_PELVIS_CM
+          - SEGMENTAL_FOOT_LEFT_TO_ANKLE_LEFT_CM
+          - SEGMENTAL_KNEE_LEFT_TO_HIP_LEFT_CM
+          - SEGMENTAL_HIP_LEFT_TO_PELVIS_CM
+          - SEGMENTAL_PELVIS_TO_SPINE_NAVAL_CM
+          - SEGMENTAL_SPINE_NAVAL_TO_SPINE_CHEST_CM
+          - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_RIGHT_CM
+          - SEGMENTAL_CLAVICLE_RIGHT_TO_SHOULDER_RIGHT_CM
+          - SEGMENTAL_SHOULDER_RIGHT_TO_ELBOW_RIGHT_CM
+          - SEGMENTAL_ELBOW_RIGHT_TO_WRIST_RIGHT_CM
+          - SEGMENTAL_WRIST_RIGHT_TO_HAND_RIGHT_CM
+          - SEGMENTAL_HAND_RIGHT_TO_HAND_TIP_RIGHT_CM
+          - SEGMENTAL_WRIST_RIGHT_TO_THUMB_RIGHT_CM
+          - SEGMENTAL_SPINE_CHEST_TO_CLAVICLE_LEFT_CM
+          - SEGMENTAL_CLAVICLE_LEFT_TO_SHOULDER_LEFT_CM
+          - SEGMENTAL_SHOULDER_LEFT_TO_ELBOW_LEFT_CM
+          - SEGMENTAL_ELBOW_LEFT_TO_WRIST_LEFT_CM
+          - SEGMENTAL_WRIST_LEFT_TO_HAND_LEFT_CM
+          - SEGMENTAL_HAND_LEFT_TO_HAND_TIP_LEFT_CM
+          - SEGMENTAL_WRIST_LEFT_TO_THUMB_LEFT_CM
+          - SEGMENTAL_SPINE_CHEST_TO_NECK_CM
+          - SEGMENTAL_NECK_TO_HEAD_CM
+          - SEGMENTAL_HEAD_TO_NOSE_CM
+          - BODY_FAT_PERCENTS_MIN
+          - BODY_FAT_PERCENTS_LOW
+          - BODY_FAT_PERCENTS_MID
+          - BODY_FAT_PERCENTS_TOP
+          - BODY_FAT_PERCENTS_MAX
+          - BODY_PROTEIN_LOW_KG
+          - BODY_PROTEIN_TOP_KG
+          - BODY_MINERALS_LOW_KG
+          - BODY_MINERALS_TOP_KG
+          - FAT_FREE_MASS_LOW_KG
+          - FAT_FREE_MASS_TOP_KG
+          - SEGMENTAL_LEAN_RIGHT_ARM_PERCENT
+          - SEGMENTAL_LEAN_LEFT_ARM_PERCENT
+          - SEGMENTAL_LEAN_TRUNK_PERCENT
+          - SEGMENTAL_LEAN_RIGHT_LEG_PERCENT
+          - SEGMENTAL_LEAN_LEFT_LEG_PERCENT
+          - BODY_WATER_RIGHT_ARM_LITER
+          - BODY_WATER_RIGHT_ARM_LOW_LITER
+          - BODY_WATER_RIGHT_ARM_TOP_LITER
+          - BODY_WATER_LEFT_ARM_LITER
+          - BODY_WATER_LEFT_ARM_LOW_LITER
+          - BODY_WATER_LEFT_ARM_TOP_LITER
+          - BODY_WATER_TRUNK_LITER
+          - BODY_WATER_TRUNK_LOW_LITER
+          - BODY_WATER_TRUNK_TOP_LITER
+          - BODY_WATER_RIGHT_LEG_LITER
+          - BODY_WATER_RIGHT_LEG_LOW_LITER
+          - BODY_WATER_RIGHT_LEG_TOP_LITER
+          - BODY_WATER_LEFT_LEG_LITER
+          - BODY_WATER_LEFT_LEG_LOW_LITER
+          - BODY_WATER_LEFT_LEG_TOP_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+          - INTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+          - INTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+          - INTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+          - INTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_LOW_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_ARM_TOP_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_LOW_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_ARM_TOP_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_LOW_LITER
+          - EXTRA_CELLULAR_WATER_TRUNK_TOP_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_LOW_LITER
+          - EXTRA_CELLULAR_WATER_RIGHT_LEG_TOP_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_LOW_LITER
+          - EXTRA_CELLULAR_WATER_LEFT_LEG_TOP_LITER
+          - ECW_TBW_RIGHT_ARM_PERCENT
+          - ECW_TBW_LEFT_ARM_PERCENT
+          - ECW_TBW_TRUNK_PERCENT
+          - ECW_TBW_RIGHT_LEG_PERCENT
+          - ECW_TBW_LEFT_LEG_PERCENT
+          - SEGMENTAL_FAT_RIGHT_ARM_PERCENT
+          - SEGMENTAL_FAT_LEFT_ARM_PERCENT
+          - SEGMENTAL_FAT_TRUNK_PERCENT
+          - SEGMENTAL_FAT_RIGHT_LEG_PERCENT
+          - SEGMENTAL_FAT_LEFT_LEG_PERCENT
+          - VISCERAL_FAT_LEVEL_CM2
+          - OBESITY_DEGREE
+          - BODY_CELL_MASS_KG
+          - ARMS_CM
+          - MUSCLES_ARMS_CM
+          - RIGHT_CALF_CM
+          - LEFT_CALF_CM
+          - GLUTES_CM
+          - BONE_MINERAL_CONTENT
+          - TBW_FFM
+          - NECK_CM
+          - CHEST_CM
+          - ABDOMEN_CM
+          - RIGHT_ARM_CM
+          - LEFT_ARM_CM
+          - RIGHT_THIGH_CM
+          - LEFT_THIGH_CM
+          - THIGHS_CM
+          - SKELETAL_MUSCLE_INDEX_KG_M2
+          - BUST_CM
+          - HIPS_CM
+          - BODY_BONES_KG
+          - EXTRA_CELLULAR_WATER_PERCENT
+          - EXTRA_CELLULAR_WATER_LOW_PERCENT
+          - EXTRA_CELLULAR_WATER_TOP_PERCENT
+          - SEGMENTAL_FAT_PERCENT_RIGHT_LEG_SCORE
+          - SEGMENTAL_FAT_PERCENT_LEFT_LEG_SCORE
+          - SEGMENTAL_FAT_PERCENT_RIGHT_ARM_SCORE
+          - SEGMENTAL_FAT_PERCENT_LEFT_ARM_SCORE
+          - SEGMENTAL_FAT_PERCENT_TRUNK_SCORE
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LEG_SCORE
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_SCORE
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_SCORE
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_SCORE
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_SCORE
+          - VISCERAL_FAT_RATING
+          - VISCERAL_FAT_RATING_LOW
+          - VISCERAL_FAT_RATING_TOP
+          - LEG_MUSCLE_SCORE
+          - SEGMENTAL_PHASE_ANGLE_RIGHT_LEG_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_LEFT_LEG_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_RIGHT_ARM_ANGLE
+          - SEGMENTAL_PHASE_ANGLE_LEFT_ARM_ANGLE
+          - SKELETAL_MUSCLE_MASS_INDEX_SCORE
+          - PARTNER_SCORE
+          - BODY_FAT_MASS_MAX_KG
+          - BODY_FAT_MASS_MIN_KG
+          - BASAL_METABOLIC_RATE_KJ
+          - EXTRA_CELL_MASS_KG
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MIN
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_LOW
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MID
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_TOP
+          - EXTRA_CELL_MASS_BODY_CELL_MASS_RATIO_MAX
+          - UPPER_RIGHT_ARM_CM
+          - UPPER_LEFT_ARM_CM
+          - LOWER_RIGHT_ARM_CM
+          - LOWER_LEFT_ARM_CM
+          - UPPER_RIGHT_LEG_CM
+          - UPPER_LEFT_LEG_CM
+          - LOWER_RIGHT_LEG_CM
+          - LOWER_LEFT_LEG_CM
+          - PARTNER_METABOLIC_BIO_AGE
+          - BIO_WELLNESS_INDEX
+          - SUBCUTANEOUS_FAT_MASS_KG
+          - SUBCUTANEOUS_FAT_MASS_PERCENT
+          - BMI_LOW_KG
+          - BMI_TOP_KG
+          - SKELETAL_MUSCLE_MASS_LOW_PERCENTS
+          - SKELETAL_MUSCLE_MASS_TOP_PERCENTS
+          - FAT_FREE_MASS_LOW_PERCENTS
+          - FAT_FREE_MASS_TOP_PERCENTS
+          - VISCERAL_FAT_AREA_LOW_CM2
+          - VISCERAL_FAT_AREA_TOP_CM2
+          - WAIST_TO_HIP_RATIO_MIN
+          - WAIST_TO_HIP_RATIO_MAX
+          - BODY_WATER_LOW_PERCENTS
+          - BODY_WATER_TOP_PERCENTS
+          - BASAL_METABOLIC_RATE_LOW_KJ
+          - BASAL_METABOLIC_RATE_TOP_KJ
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_LOW_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_TOP_LEG_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_LEG_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_RIGHT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_LEFT_ARM_TOP_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_LOW_KG
+          - SEGMENTAL_MUSCLE_MASS_TRUNK_TOP_KG
+          - VISCERAL_FAT_LOW_RATING
+          - VISCERAL_FAT_TOP_RATING
+          - SEGMENTAL_PHASE_ANGLE_TRUNK_KG
+          - FAT_FREE_MASS_INDEX_Z_SCORE
+          - SKELETAL_MUSCLE_MASS_Z_SCORE
+          - FAT_MASS_INDEX_Z_SCORE
+          - FAT_FREE_MASS_INDEX_MIN
+          - FAT_FREE_MASS_INDEX_LOW
+          - FAT_FREE_MASS_INDEX_MID
+          - FAT_FREE_MASS_INDEX_TOP
+          - FAT_FREE_MASS_INDEX_MAX
+          - SKELETAL_MUSCLE_INDEX_MIN
+          - SKELETAL_MUSCLE_INDEX_LOW
+          - SKELETAL_MUSCLE_INDEX_MID
+          - SKELETAL_MUSCLE_INDEX_TOP
+          - SKELETAL_MUSCLE_INDEX_MAX
+          - APPENDICULAR_SKELETAL_MUSCLE_MASS_KG
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_KG_M2
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_LOW
+          - APPENDICULAR_SKELETAL_MUSCLE_INDEX_MID
+          - BODY_FAT_SCORE
+          - BODY_MUSCLE_SCORE
+          - OBESITY_DEGREE_PERCENT
+          example: WEIGHT_KG
+        value:
+          type: number
+          description: The value of the metric
+          example: '75.5'
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    LatestBodyMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            BMI: 22.5
+            WEIGHT_KG: 75
+            HEIGHT_CM: 180
+            BODY_FAT_PERCENTS: 18.3
+            WAIST_CM: 82
+    MeasurementDTO_2:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: apiKey
+      name: x-api-key
+      in: header
+x-refined-from:
+- egym-equipment-vendor-server-openapi.yml
+- egym-equipment-vendor-standalone-openapi.yml

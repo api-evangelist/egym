@@ -1,0 +1,386 @@
+openapi: 3.2.0
+info:
+  title: MMS API V2 Trainer Task API
+  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
+
+
+    **Key Features:**
+
+    - Member account and membership management
+
+    - RFID assignment and management
+
+    - Real-time gym visit tracking (check-in/check-out)
+
+    - EGYM product booking (Smart Strength, EGYM+)
+
+    - Trainer task creation and tracking
+
+    - Webhook subscriptions for event notifications
+
+    - Push notifications to EGYM mobile apps
+
+    - Member migration from V1 API'
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: MMS Connect Team
+    url: https://egym.com/
+    email: connect@egym.com
+  version: 2.0.0
+servers:
+- url: https://mms.api.ed.ts.egym.coffee
+  description: Test
+- url: https://mms.api.egym.com
+  description: Prod
+security:
+- mms: []
+tags:
+- name: Trainer Task
+  description: These operations are needed to create and update trainer tasks.
+paths:
+  /api/v2/tasks/{taskId}:
+    get:
+      tags:
+      - Trainer Task
+      summary: Retrieve task details
+      description: This endpoint returns the details of a specific trainer task.
+      operationId: getTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Trainer Task
+      summary: Update a task
+      description: This endpoint updates trainer task in a gym.
+      operationId: updateTask
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/tasks:
+    get:
+      tags:
+      - Trainer Task
+      summary: Retrieve all tasks
+      description: This endpoint returns a list of trainer tasks that are available in the gym. Can be filtered by modified date time.
+      operationId: getTasks
+      parameters:
+      - name: modifiedSince
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    post:
+      tags:
+      - Trainer Task
+      summary: Create a task
+      description: This endpoint create trainer task in a gym. The trainer task is active until it is completed.
+      operationId: createTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskDTO'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+components:
+  schemas:
+    TaskDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the task
+          readOnly: true
+        name:
+          type: string
+          description: Task name
+          minLength: 1
+        type:
+          type: string
+          description: Task type
+          enum:
+          - GENERAL
+          - ANAMNESIS
+          - COORDINATION_FITNESS_TEST
+          - HEALTH_FITNESS_TEST
+          - PWC_FITNESS_TEST
+          - MAX_FORCE_FITNESS_TEST
+          - MOBILITY_SCREEN_FITNESS_TEST
+          - BLOOD_PRESSURE_FITNESS_TEST
+          - POLAR_FITNESS_TEST
+          - INBODY_FITNESS_TEST
+          - JAWON_FITNESS_TEST
+        dueDate:
+          type: string
+          format: date
+          description: 'Task completion deadline date. format: yyyy-MM-dd'
+        authorId:
+          type: string
+          description: The author of the task. EGYM account ID
+          minLength: 1
+        targetId:
+          type: string
+          description: The account of task related to. EGYM account ID
+          minLength: 1
+        completerId:
+          type: string
+          description: The account who solved the task. EGYM account ID
+        completed:
+          type: boolean
+          description: If this task has been completed in the gym this will be true, false otherwise.
+      required:
+      - authorId
+      - dueDate
+      - name
+      - targetId
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
+  securitySchemes:
+    mms:
+      type: apiKey
+      description: Authentication is validated via an API key that is generated by EGYM for each gym location. This API key will not be identical with the access token used in the EGYM Gym API v1
+      name: x-api-key
+      in: header
+x-tagGroups:
+- name: Member Account Management
+  tags:
+  - Member Account
+  - Member Account Roles
+  - Member RFIDs
+  - Products booking
+- name: NFC management (Beta version)
+  tags:
+  - Member Account NFC
+- name: Member Migration
+  tags:
+  - Migrating members
+- name: Gym Visit Management
+  tags:
+  - Gym Visit
+- name: Trainer Task Management
+  tags:
+  - Trainer Task
+- name: Integration
+  tags:
+  - Webhooks
+  - Push notifications

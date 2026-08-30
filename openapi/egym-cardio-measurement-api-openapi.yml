@@ -1,0 +1,535 @@
+openapi: 3.2.0
+info:
+  title: Egym Cardio Measurement API
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  termsOfService: https://egym.com/us/terms/
+  version: '1.0'
+  description: 'Operations tagged Cardio Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+  description: Generated server url
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+tags:
+- name: Cardio Measurement
+paths:
+  /api/v1/measurements/cardio:
+    post:
+      tags:
+      - Cardio Measurement
+      summary: Create Cardio Measurement
+      description: This endpoint creates a cardio measurement for the user. See the Cardio Measurements document for the list of available measurements that can be transferred to EGYM cloud.
+      operationId: createCardioMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+      security:
+      - user: []
+    get:
+      tags:
+      - Cardio Measurement
+      summary: Get Cardio Measurement
+      description: This endpoint retrieves the latest cardio measurement of the user
+      operationId: getUserCardioMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of CardioMetricType values to include in the response. When omitted, all available metric types are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - RESTING_HEART_RATE
+            - VO2MAX
+            - SYSTOLIC_PRESSURE
+            - DIASTOLIC_PRESSURE
+            - MAX_WATTS
+            - TRAINING_SUITABILITY
+            - CARDIO_STRESS_INDEX
+            - CARDIO_FIT_LEVEL
+            - HEART_RATE_ZONE_RECOVERY_LOW
+            - HEART_RATE_ZONE_RECOVERY_TOP
+            - HEART_RATE_ZONE_BASICI_LOW
+            - HEART_RATE_ZONE_BASICI_TOP
+            - HEART_RATE_ZONE_BASICII_LOW
+            - HEART_RATE_ZONE_BASICII_TOP
+            - HEART_RATE_ZONE_THRESHOLD_LOW
+            - HEART_RATE_ZONE_THRESHOLD_TOP
+            - HEART_RATE_ZONE_HIGH_INTENSIVE_LOW
+            - HEART_RATE_ZONE_HIGH_INTENSIVE_TOP
+            - PERFORMANCE_FIT_LEVEL
+            - ABSOLUTE_VO2_MAX
+            - PERFORMANCE_ZONE_RECOVERY_LOW
+            - PERFORMANCE_ZONE_RECOVERY_TOP
+            - PERFORMANCE_ZONE_BASICI_LOW
+            - PERFORMANCE_ZONE_BASICI_TOP
+            - PERFORMANCE_ZONE_BASICII_LOW
+            - PERFORMANCE_ZONE_BASICII_TOP
+            - PERFORMANCE_ZONE_THRESHOLD_LOW
+            - PERFORMANCE_ZONE_THRESHOLD_TOP
+            - PERFORMANCE_ZONE_HIGH_INTENSIVE_LOW
+            - PERFORMANCE_ZONE_HIGH_INTENSIVE_TOP
+            - FATTY_ACID_METABOLISM_PERCENTS
+            - CARBONHYDRATE_METABOLISM_PERCENTS
+            - CARBONHYDRATE_METABOLISM_RATING
+            - O2_UPTAKE_PERCENTS
+            - CO2_EMISSION_PERCENTS
+            - O2_UPTAKE_RATING
+            - CARDIO_FIT_LEVEL_MIN
+            - CARDIO_FIT_LEVEL_LOW
+            - CARDIO_FIT_LEVEL_MID
+            - CARDIO_FIT_LEVEL_TOP
+            - CARDIO_FIT_LEVEL_MAX
+            - CARDIO_STRESS_INDEX_MIN
+            - CARDIO_STRESS_INDEX_LOW
+            - CARDIO_STRESS_INDEX_MID
+            - CARDIO_STRESS_INDEX_TOP
+            - CARDIO_STRESS_INDEX_MAX
+            - WORKOUT_READINESS
+            - RESTING_HEART_RATE_MIN
+            - RESTING_HEART_RATE_LOW
+            - RESTING_HEART_RATE_MID
+            - RESTING_HEART_RATE_TOP
+            - RESTING_HEART_RATE_MAX
+            - BLOOD_OXYGEN_LEVEL_SPO2
+            - BLOOD_OXYGEN_LEVEL_SPO2_MIN
+            - BLOOD_OXYGEN_LEVEL_SPO2_LOW
+            - BLOOD_OXYGEN_LEVEL_SPO2_MID
+            - BLOOD_OXYGEN_LEVEL_SPO2_TOP
+            - BLOOD_OXYGEN_LEVEL_SPO2_MAX
+            - PARTNER_CARDIO_BIOAGE
+            - PARTNER_CARDIO_BIOAGE_MIN
+            - PARTNER_CARDIO_BIOAGE_LOW
+            - PARTNER_CARDIO_BIOAGE_MID
+            - PARTNER_CARDIO_BIOAGE_TOP
+            - PARTNER_CARDIO_BIOAGE_MAX
+            - O2_UPTAKE_PERCENTS_MIN
+            - O2_UPTAKE_PERCENTS_LOW
+            - O2_UPTAKE_PERCENTS_MID
+            - O2_UPTAKE_PERCENTS_TOP
+            - O2_UPTAKE_PERCENTS_MAX
+            - PARTNER_FITNESS_LEVEL
+            - ESTIMATED_FUNCTIONAL_THRESHOLD_POWER_WATT
+            - FUNCTIONAL_THRESHOLD_POWER_WATT
+            - ESTIMATED_MAX_HEART_RATE_BPM
+            - MAX_HEART_RATE_BPM
+            - HEART_RATE_BPM
+            - PULSE_BPM
+            - MEAN_ARTERY_PRESSURE_MMHG
+            - PULSE_PRESSURE_BPM
+            - RATE_PRESSURE_PRODUCT
+            - INDIVIDUAL_ANAEROBIC_THRESHOLD
+            - HEART_RATE_RECOVERY_RATING
+            - METABOLIC_FLEXIBILITY_RATING
+            - STRESS_LEVEL_METABOLISM_RATING
+            - VENTILATORY_THRESHOLD_1
+            - VENTILATORY_THRESHOLD_2
+            - EXERCISE_INTENSITY_AT_MAXIMUM_FAT_OXIDATION
+            - PEAK_POWER_WATTS
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestCardioMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+      description: Generated server url
+  /api/v1/measurements/cardio/history:
+    get:
+      tags:
+      - Cardio Measurement
+      summary: Get Cardio History for a user
+      description: This endpoint retrieves cardio measurements history for the user with pagination support
+      operationId: getUserCardioHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardioMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+components:
+  schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+    MeasurementDTO:
+      required:
+      - data
+      - gymId
+      - machineName
+      - timestamp
+      - uniqueMeasurementId
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time.
+          format: int64
+          example: 1553074207520
+        machineName:
+          type: string
+          description: The machine name of the equipment that generates the measurement. Machine name needs to be registered at EGYM.
+          example: device123
+        gymId:
+          type: integer
+          description: The EGYM Gym Location ID.
+          format: int64
+          example: 130
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          example: f5c15c853c1e46de
+        data:
+          type: object
+          additionalProperties:
+            type: number
+            description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+          description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    CardioMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of cardio metrics for this measurement
+          items:
+            $ref: '#/components/schemas/CardioMetricDTO'
+    CardioMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the cardio metric
+          enum:
+          - RESTING_HEART_RATE
+          - VO2MAX
+          - SYSTOLIC_PRESSURE
+          - DIASTOLIC_PRESSURE
+          - MAX_WATTS
+          - TRAINING_SUITABILITY
+          - CARDIO_STRESS_INDEX
+          - CARDIO_FIT_LEVEL
+          - HEART_RATE_ZONE_RECOVERY_LOW
+          - HEART_RATE_ZONE_RECOVERY_TOP
+          - HEART_RATE_ZONE_BASICI_LOW
+          - HEART_RATE_ZONE_BASICI_TOP
+          - HEART_RATE_ZONE_BASICII_LOW
+          - HEART_RATE_ZONE_BASICII_TOP
+          - HEART_RATE_ZONE_THRESHOLD_LOW
+          - HEART_RATE_ZONE_THRESHOLD_TOP
+          - HEART_RATE_ZONE_HIGH_INTENSIVE_LOW
+          - HEART_RATE_ZONE_HIGH_INTENSIVE_TOP
+          - PERFORMANCE_FIT_LEVEL
+          - ABSOLUTE_VO2_MAX
+          - PERFORMANCE_ZONE_RECOVERY_LOW
+          - PERFORMANCE_ZONE_RECOVERY_TOP
+          - PERFORMANCE_ZONE_BASICI_LOW
+          - PERFORMANCE_ZONE_BASICI_TOP
+          - PERFORMANCE_ZONE_BASICII_LOW
+          - PERFORMANCE_ZONE_BASICII_TOP
+          - PERFORMANCE_ZONE_THRESHOLD_LOW
+          - PERFORMANCE_ZONE_THRESHOLD_TOP
+          - PERFORMANCE_ZONE_HIGH_INTENSIVE_LOW
+          - PERFORMANCE_ZONE_HIGH_INTENSIVE_TOP
+          - FATTY_ACID_METABOLISM_PERCENTS
+          - CARBONHYDRATE_METABOLISM_PERCENTS
+          - CARBONHYDRATE_METABOLISM_RATING
+          - O2_UPTAKE_PERCENTS
+          - CO2_EMISSION_PERCENTS
+          - O2_UPTAKE_RATING
+          - CARDIO_FIT_LEVEL_MIN
+          - CARDIO_FIT_LEVEL_LOW
+          - CARDIO_FIT_LEVEL_MID
+          - CARDIO_FIT_LEVEL_TOP
+          - CARDIO_FIT_LEVEL_MAX
+          - CARDIO_STRESS_INDEX_MIN
+          - CARDIO_STRESS_INDEX_LOW
+          - CARDIO_STRESS_INDEX_MID
+          - CARDIO_STRESS_INDEX_TOP
+          - CARDIO_STRESS_INDEX_MAX
+          - WORKOUT_READINESS
+          - RESTING_HEART_RATE_MIN
+          - RESTING_HEART_RATE_LOW
+          - RESTING_HEART_RATE_MID
+          - RESTING_HEART_RATE_TOP
+          - RESTING_HEART_RATE_MAX
+          - BLOOD_OXYGEN_LEVEL_SPO2
+          - BLOOD_OXYGEN_LEVEL_SPO2_MIN
+          - BLOOD_OXYGEN_LEVEL_SPO2_LOW
+          - BLOOD_OXYGEN_LEVEL_SPO2_MID
+          - BLOOD_OXYGEN_LEVEL_SPO2_TOP
+          - BLOOD_OXYGEN_LEVEL_SPO2_MAX
+          - PARTNER_CARDIO_BIOAGE
+          - PARTNER_CARDIO_BIOAGE_MIN
+          - PARTNER_CARDIO_BIOAGE_LOW
+          - PARTNER_CARDIO_BIOAGE_MID
+          - PARTNER_CARDIO_BIOAGE_TOP
+          - PARTNER_CARDIO_BIOAGE_MAX
+          - O2_UPTAKE_PERCENTS_MIN
+          - O2_UPTAKE_PERCENTS_LOW
+          - O2_UPTAKE_PERCENTS_MID
+          - O2_UPTAKE_PERCENTS_TOP
+          - O2_UPTAKE_PERCENTS_MAX
+          - PARTNER_FITNESS_LEVEL
+          - ESTIMATED_FUNCTIONAL_THRESHOLD_POWER_WATT
+          - FUNCTIONAL_THRESHOLD_POWER_WATT
+          - ESTIMATED_MAX_HEART_RATE_BPM
+          - MAX_HEART_RATE_BPM
+          - HEART_RATE_BPM
+          - PULSE_BPM
+          - MEAN_ARTERY_PRESSURE_MMHG
+          - PULSE_PRESSURE_BPM
+          - RATE_PRESSURE_PRODUCT
+          - INDIVIDUAL_ANAEROBIC_THRESHOLD
+          - HEART_RATE_RECOVERY_RATING
+          - METABOLIC_FLEXIBILITY_RATING
+          - STRESS_LEVEL_METABOLISM_RATING
+          - VENTILATORY_THRESHOLD_1
+          - VENTILATORY_THRESHOLD_2
+          - EXERCISE_INTENSITY_AT_MAXIMUM_FAT_OXIDATION
+          - PEAK_POWER_WATTS
+          example: HEART_RATE
+        value:
+          type: number
+          description: The value of the metric
+          example: '120.5'
+    LatestCardioMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of cardio metric types to their latest recorded numeric values. Keys are CardioMetricType enum string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            RESTING_HEART_RATE: 62
+            VO2MAX: 48.5
+            SYSTOLIC_PRESSURE: 120
+            DIASTOLIC_PRESSURE: 80
+            MAX_WATTS: 310
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    MeasurementDTO_2:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: apiKey
+      name: x-api-key
+      in: header
+x-refined-from:
+- egym-equipment-vendor-server-openapi.yml
+- egym-equipment-vendor-standalone-openapi.yml

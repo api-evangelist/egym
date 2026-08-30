@@ -1,0 +1,391 @@
+openapi: 3.2.0
+info:
+  title: MMS API V2 Products booking API
+  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
+
+
+    **Key Features:**
+
+    - Member account and membership management
+
+    - RFID assignment and management
+
+    - Real-time gym visit tracking (check-in/check-out)
+
+    - EGYM product booking (Smart Strength, EGYM+)
+
+    - Trainer task creation and tracking
+
+    - Webhook subscriptions for event notifications
+
+    - Push notifications to EGYM mobile apps
+
+    - Member migration from V1 API'
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: MMS Connect Team
+    url: https://egym.com/
+    email: connect@egym.com
+  version: 2.0.0
+servers:
+- url: https://mms.api.ed.ts.egym.coffee
+  description: Test
+- url: https://mms.api.egym.com
+  description: Prod
+security:
+- mms: []
+tags:
+- name: Products booking
+  description: Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine Admission) and EGYM+
+paths:
+  /api/v2/accounts/{accountId}/products:
+    get:
+      tags:
+      - Products booking
+      summary: Retrieve user activated products
+      description: Returns a list of products that are activated for the specified user and gym and are active now or in the future.
+      operationId: userProducts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+    put:
+      tags:
+      - Products booking
+      summary: Activate a product or update product booking
+      description: This endpoint activates or updates a product for a user in a gym. The product is active starting from the specified start date to the end date in Timezone of the club.
+      operationId: productBooking
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProductDTO'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProductDTO'
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/products:
+    get:
+      tags:
+      - Products booking
+      summary: Retrieve gym products
+      description: Returns a list of products that are available in the gym and can be activated for a user.
+      operationId: listGymProducts
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/products/{productId}:
+    get:
+      tags:
+      - Products booking
+      summary: Product details
+      description: Returns the details of a specific product.
+      operationId: productDetails
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /api/v2/accounts/{accountId}/products/{productId}:
+    delete:
+      tags:
+      - Products booking
+      summary: Deactivate a product
+      description: This endpoint deactivates a product for a user in a gym.
+      operationId: deactivateUserProduct
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: productId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+components:
+  schemas:
+    ProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The ID of the product.
+          readOnly: true
+        title:
+          type: string
+          description: Product title.
+          readOnly: true
+        description:
+          type: string
+          description: Product description.
+          readOnly: true
+        scope:
+          type: string
+          description: The scope of the bookable package.
+          enum:
+          - LOCATION
+          - CHAIN
+          - BRAND
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
+    UserProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The ID of the product.
+          minLength: 1
+        startDate:
+          type: string
+          format: date
+          description: 'The date from which the specified product is active and can be used by the user. It must be today’s or future date in Timezone of the club. format: yyyy-MM-dd'
+        endDate:
+          type: string
+          format: date
+          description: 'The date to which the specified product is active and can be used by the user. It must be future date in Timezone of the club. format: yyyy-MM-dd. Max date is 2050-12-31'
+      required:
+      - productId
+  securitySchemes:
+    mms:
+      type: apiKey
+      description: Authentication is validated via an API key that is generated by EGYM for each gym location. This API key will not be identical with the access token used in the EGYM Gym API v1
+      name: x-api-key
+      in: header
+x-tagGroups:
+- name: Member Account Management
+  tags:
+  - Member Account
+  - Member Account Roles
+  - Member RFIDs
+  - Products booking
+- name: NFC management (Beta version)
+  tags:
+  - Member Account NFC
+- name: Member Migration
+  tags:
+  - Migrating members
+- name: Gym Visit Management
+  tags:
+  - Gym Visit
+- name: Trainer Task Management
+  tags:
+  - Trainer Task
+- name: Integration
+  tags:
+  - Webhooks
+  - Push notifications

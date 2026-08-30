@@ -1,0 +1,547 @@
+openapi: 3.2.0
+info:
+  title: Egym Flexibility Measurement API
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  termsOfService: https://egym.com/us/terms/
+  version: '1.0'
+  description: 'Operations tagged Flexibility Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+  description: Generated server url
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+tags:
+- name: Flexibility Measurement
+paths:
+  /api/v1/measurements/flexibility:
+    post:
+      tags:
+      - Flexibility Measurement
+      summary: Create Flexibility Measurement
+      description: This endpoint creates a flexibility measurement for the user. See the Flexibility Measurements document for the list of available measurements that can be transferred to EGYM cloud.
+      operationId: createFlexibilityMeasurement
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MeasurementDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+      security:
+      - user: []
+    get:
+      tags:
+      - Flexibility Measurement
+      summary: Get Flexibility Measurement
+      description: This endpoint retrieves the latest flexibility measurement of the user
+      operationId: getUserFlexibilityMeasurements
+      parameters:
+      - name: metrics
+        in: query
+        description: Subset of FlexibilityMetricType values to include in the response. When omitted, all available metric types are returned.
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - RANGE_OF_MOVEMENT_SCORE
+            - SYMMETRIC_SCORE
+            - HARMONY_SCORE
+            - TOTAL_SCORE
+            - ADDUCTOR_LEFT_DEGREE
+            - ADDUCTOR_LEFT_SCORE
+            - ADDUCTOR_RIGHT_DEGREE
+            - ADDUCTOR_RIGHT_SCORE
+            - ADDUCTOR_RANGE_OF_MOTION_SCORE
+            - ADDUCTOR_SYMMETRY_SCORE
+            - LEG_BACKSIDE_LYING_LEFT_DEGREE
+            - LEG_BACKSIDE_LYING_LEFT_SCORE
+            - LEG_BACKSIDE_LYING_RIGHT_DEGREE
+            - LEG_BACKSIDE_LYING_RIGHT_SCORE
+            - LEG_BACKSIDE_LYING_RANGE_OF_MOTION_SCORE
+            - LEG_BACKSIDE_LYING_SYMMETRY_SCORE
+            - LEG_BACKSIDE_STANDING_LEFT_DEGREE
+            - LEG_BACKSIDE_STANDING_LEFT_SCORE
+            - LEG_BACKSIDE_STANDING_RIGHT_DEGREE
+            - LEG_BACKSIDE_STANDING_RIGHT_SCORE
+            - LEG_BACKSIDE_STANDING_RANGE_OF_MOTION_SCORE
+            - LEG_BACKSIDE_STANDING_SYMMETRY_SCORE
+            - LEG_EXTENSION_LEFT_DEGREE
+            - LEG_EXTENSION_LEFT_SCORE
+            - LEG_EXTENSION_RIGHT_DEGREE
+            - LEG_EXTENSION_RIGHT_SCORE
+            - LEG_EXTENSION_RANGE_OF_MOTION_SCORE
+            - LEG_EXTENSION_SYMMETRY_SCORE
+            - CHEST_LYING_LEFT_DEGREE
+            - CHEST_LYING_LEFT_SCORE
+            - CHEST_LYING_RIGHT_DEGREE
+            - CHEST_LYING_RIGHT_SCORE
+            - CHEST_LYING_RANGE_OF_MOTION_SCORE
+            - CHEST_LYING_SYMMETRY_SCORE
+            - CHEST_SITTING_LEFT_DEGREE
+            - CHEST_SITTING_LEFT_SCORE
+            - CHEST_SITTING_RIGHT_DEGREE
+            - CHEST_SITTING_RIGHT_SCORE
+            - CHEST_SITTING_RANGE_OF_MOTION_SCORE
+            - CHEST_SITTING_SYMMETRY_SCORE
+            - HIP_FLEXOR_LEFT_DEGREE
+            - HIP_FLEXOR_LEFT_SCORE
+            - HIP_FLEXOR_RIGHT_DEGREE
+            - HIP_FLEXOR_RIGHT_SCORE
+            - HIP_FLEXOR_RANGE_OF_MOTION_SCORE
+            - HIP_FLEXOR_SYMMETRY_SCORE
+            - TORSO_MUSCLES_LYING_LEFT_DEGREE
+            - TORSO_MUSCLES_LYING_LEFT_SCORE
+            - TORSO_MUSCLES_LYING_RIGHT_DEGREE
+            - TORSO_MUSCLES_LYING_RIGHT_SCORE
+            - TORSO_MUSCLES_LYING_RANGE_OF_MOTION_SCORE
+            - TORSO_MUSCLES_LYING_SYMMETRY_SCORE
+            - TORSO_MUSCLES_SITTING_LEFT_DEGREE
+            - TORSO_MUSCLES_SITTING_LEFT_SCORE
+            - TORSO_MUSCLES_SITTING_RIGHT_DEGREE
+            - TORSO_MUSCLES_SITTING_RIGHT_SCORE
+            - TORSO_MUSCLES_SITTING_RANGE_OF_MOTION_SCORE
+            - TORSO_MUSCLES_SITTING_SYMMETRY_SCORE
+            - SHOULDER_NECK_LEFT_DEGREE
+            - SHOULDER_NECK_LEFT_SCORE
+            - SHOULDER_NECK_RIGHT_DEGREE
+            - SHOULDER_NECK_RIGHT_SCORE
+            - SHOULDER_NECK_RANGE_OF_MOTION_SCORE
+            - SHOULDER_NECK_SYMMETRY_SCORE
+            - CALF_LEFT_DEGREE
+            - CALF_LEFT_SCORE
+            - CALF_RIGHT_DEGREE
+            - CALF_RIGHT_SCORE
+            - CALF_RANGE_OF_MOTION_SCORE
+            - CALF_SYMMETRY_SCORE
+            - TORSO_LATERAL_FLEXION_LEFT_DEGREE
+            - TORSO_LATERAL_FLEXION_RIGHT_DEGREE
+            - TORSO_LATERAL_FLEXION_LEFT_NORMALIZED
+            - TORSO_LATERAL_FLEXION_RIGHT_NORMALIZED
+            - NECK_LATERAL_FLEXION_LEFT_DEGREE
+            - NECK_LATERAL_FLEXION_RIGHT_DEGREE
+            - NECK_LATERAL_FLEXION_LEFT_NORMALIZED
+            - NECK_LATERAL_FLEXION_RIGHT_NORMALIZED
+            - CHEST_EXTENSION_LEFT_DEGREE
+            - CHEST_EXTENSION_RIGHT_DEGREE
+            - CHEST_EXTENSION_LEFT_NORMALIZED
+            - CHEST_EXTENSION_RIGHT_NORMALIZED
+            - HIP_EXTENSION_LEFT_DEGREE
+            - HIP_EXTENSION_RIGHT_DEGREE
+            - HIP_EXTENSION_LEFT_NORMALIZED
+            - HIP_EXTENSION_RIGHT_NORMALIZED
+            - HAMSTRING_EXTENSION_LEFT_DEGREE
+            - HAMSTRING_EXTENSION_RIGHT_DEGREE
+            - HAMSTRING_EXTENSION_LEFT_NORMALIZED
+            - HAMSTRING_EXTENSION_RIGHT_NORMALIZED
+            - SQUAT_DEPTH
+            - SQUAT_SHOULDER_DEGREE
+            - SQUAT_BACK_DEGREE
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LatestFlexibilityMeasurementsValuesResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+      description: Generated server url
+  /api/v1/measurements/flexibility/history:
+    get:
+      tags:
+      - Flexibility Measurement
+      summary: Get Flexibility History for a user
+      description: This endpoint retrieves flexibility measurements history for the user with pagination support
+      operationId: getUserFlexibilityHistory
+      parameters:
+      - name: lastId
+        in: query
+        description: Cursor for keyset pagination. When provided, only measurements with an ID strictly less than this value are returned, allowing the client to page backwards through the history. Omit on the first request.
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: measurementLimit
+        in: query
+        description: Maximum number of measurements to return. Must be a positive integer. When omitted, the server applies its default limit.
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FlexibilityMeasurementHistoryResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+    servers:
+    - url: https://partner-api.ext-1.test.co.egym.coffee
+      description: Test (ext-1)
+    - url: https://partner-api.api.egym.com
+      description: Production
+components:
+  schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+    MeasurementDTO:
+      required:
+      - data
+      - gymId
+      - machineName
+      - timestamp
+      - uniqueMeasurementId
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time.
+          format: int64
+          example: 1553074207520
+        machineName:
+          type: string
+          description: The machine name of the equipment that generates the measurement. Machine name needs to be registered at EGYM.
+          example: device123
+        gymId:
+          type: integer
+          description: The EGYM Gym Location ID.
+          format: int64
+          example: 130
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          example: f5c15c853c1e46de
+        data:
+          type: object
+          additionalProperties:
+            type: number
+            description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+          description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    FlexibilityMetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The type of the flexibility metric
+          enum:
+          - RANGE_OF_MOVEMENT_SCORE
+          - SYMMETRIC_SCORE
+          - HARMONY_SCORE
+          - TOTAL_SCORE
+          - ADDUCTOR_LEFT_DEGREE
+          - ADDUCTOR_LEFT_SCORE
+          - ADDUCTOR_RIGHT_DEGREE
+          - ADDUCTOR_RIGHT_SCORE
+          - ADDUCTOR_RANGE_OF_MOTION_SCORE
+          - ADDUCTOR_SYMMETRY_SCORE
+          - LEG_BACKSIDE_LYING_LEFT_DEGREE
+          - LEG_BACKSIDE_LYING_LEFT_SCORE
+          - LEG_BACKSIDE_LYING_RIGHT_DEGREE
+          - LEG_BACKSIDE_LYING_RIGHT_SCORE
+          - LEG_BACKSIDE_LYING_RANGE_OF_MOTION_SCORE
+          - LEG_BACKSIDE_LYING_SYMMETRY_SCORE
+          - LEG_BACKSIDE_STANDING_LEFT_DEGREE
+          - LEG_BACKSIDE_STANDING_LEFT_SCORE
+          - LEG_BACKSIDE_STANDING_RIGHT_DEGREE
+          - LEG_BACKSIDE_STANDING_RIGHT_SCORE
+          - LEG_BACKSIDE_STANDING_RANGE_OF_MOTION_SCORE
+          - LEG_BACKSIDE_STANDING_SYMMETRY_SCORE
+          - LEG_EXTENSION_LEFT_DEGREE
+          - LEG_EXTENSION_LEFT_SCORE
+          - LEG_EXTENSION_RIGHT_DEGREE
+          - LEG_EXTENSION_RIGHT_SCORE
+          - LEG_EXTENSION_RANGE_OF_MOTION_SCORE
+          - LEG_EXTENSION_SYMMETRY_SCORE
+          - CHEST_LYING_LEFT_DEGREE
+          - CHEST_LYING_LEFT_SCORE
+          - CHEST_LYING_RIGHT_DEGREE
+          - CHEST_LYING_RIGHT_SCORE
+          - CHEST_LYING_RANGE_OF_MOTION_SCORE
+          - CHEST_LYING_SYMMETRY_SCORE
+          - CHEST_SITTING_LEFT_DEGREE
+          - CHEST_SITTING_LEFT_SCORE
+          - CHEST_SITTING_RIGHT_DEGREE
+          - CHEST_SITTING_RIGHT_SCORE
+          - CHEST_SITTING_RANGE_OF_MOTION_SCORE
+          - CHEST_SITTING_SYMMETRY_SCORE
+          - HIP_FLEXOR_LEFT_DEGREE
+          - HIP_FLEXOR_LEFT_SCORE
+          - HIP_FLEXOR_RIGHT_DEGREE
+          - HIP_FLEXOR_RIGHT_SCORE
+          - HIP_FLEXOR_RANGE_OF_MOTION_SCORE
+          - HIP_FLEXOR_SYMMETRY_SCORE
+          - TORSO_MUSCLES_LYING_LEFT_DEGREE
+          - TORSO_MUSCLES_LYING_LEFT_SCORE
+          - TORSO_MUSCLES_LYING_RIGHT_DEGREE
+          - TORSO_MUSCLES_LYING_RIGHT_SCORE
+          - TORSO_MUSCLES_LYING_RANGE_OF_MOTION_SCORE
+          - TORSO_MUSCLES_LYING_SYMMETRY_SCORE
+          - TORSO_MUSCLES_SITTING_LEFT_DEGREE
+          - TORSO_MUSCLES_SITTING_LEFT_SCORE
+          - TORSO_MUSCLES_SITTING_RIGHT_DEGREE
+          - TORSO_MUSCLES_SITTING_RIGHT_SCORE
+          - TORSO_MUSCLES_SITTING_RANGE_OF_MOTION_SCORE
+          - TORSO_MUSCLES_SITTING_SYMMETRY_SCORE
+          - SHOULDER_NECK_LEFT_DEGREE
+          - SHOULDER_NECK_LEFT_SCORE
+          - SHOULDER_NECK_RIGHT_DEGREE
+          - SHOULDER_NECK_RIGHT_SCORE
+          - SHOULDER_NECK_RANGE_OF_MOTION_SCORE
+          - SHOULDER_NECK_SYMMETRY_SCORE
+          - CALF_LEFT_DEGREE
+          - CALF_LEFT_SCORE
+          - CALF_RIGHT_DEGREE
+          - CALF_RIGHT_SCORE
+          - CALF_RANGE_OF_MOTION_SCORE
+          - CALF_SYMMETRY_SCORE
+          - TORSO_LATERAL_FLEXION_LEFT_DEGREE
+          - TORSO_LATERAL_FLEXION_RIGHT_DEGREE
+          - TORSO_LATERAL_FLEXION_LEFT_NORMALIZED
+          - TORSO_LATERAL_FLEXION_RIGHT_NORMALIZED
+          - NECK_LATERAL_FLEXION_LEFT_DEGREE
+          - NECK_LATERAL_FLEXION_RIGHT_DEGREE
+          - NECK_LATERAL_FLEXION_LEFT_NORMALIZED
+          - NECK_LATERAL_FLEXION_RIGHT_NORMALIZED
+          - CHEST_EXTENSION_LEFT_DEGREE
+          - CHEST_EXTENSION_RIGHT_DEGREE
+          - CHEST_EXTENSION_LEFT_NORMALIZED
+          - CHEST_EXTENSION_RIGHT_NORMALIZED
+          - HIP_EXTENSION_LEFT_DEGREE
+          - HIP_EXTENSION_RIGHT_DEGREE
+          - HIP_EXTENSION_LEFT_NORMALIZED
+          - HIP_EXTENSION_RIGHT_NORMALIZED
+          - HAMSTRING_EXTENSION_LEFT_DEGREE
+          - HAMSTRING_EXTENSION_RIGHT_DEGREE
+          - HAMSTRING_EXTENSION_LEFT_NORMALIZED
+          - HAMSTRING_EXTENSION_RIGHT_NORMALIZED
+          - SQUAT_DEPTH
+          - SQUAT_SHOULDER_DEGREE
+          - SQUAT_BACK_DEGREE
+          example: RANGE_OF_MOVEMENT_SCORE
+        value:
+          type: number
+          description: The value of the metric
+          example: '85.0'
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    LatestFlexibilityMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of flexibility metric types to their latest recorded numeric values. Keys are FlexibilityMetricType enum string values. Score metrics (e.g. TOTAL_SCORE, RANGE_OF_MOVEMENT_SCORE) are on a 0–100 scale; degree metrics (e.g. ADDUCTOR_LEFT_DEGREE) represent the measured angle in degrees. Only metrics that have been measured for the user are present in the response.
+          example:
+            TOTAL_SCORE: 78
+            RANGE_OF_MOVEMENT_SCORE: 85
+            SYMMETRIC_SCORE: 72.5
+            ADDUCTOR_LEFT_DEGREE: 42
+            ADDUCTOR_RIGHT_DEGREE: 44
+    MeasurementDTO_2:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+    FlexibilityMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of flexibility metrics for this measurement
+          items:
+            $ref: '#/components/schemas/FlexibilityMetricDTO'
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: apiKey
+      name: x-api-key
+      in: header
+x-refined-from:
+- egym-equipment-vendor-server-openapi.yml
+- egym-equipment-vendor-standalone-openapi.yml

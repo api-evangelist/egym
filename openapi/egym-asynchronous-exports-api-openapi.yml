@@ -1,0 +1,180 @@
+openapi: 3.2.0
+info:
+  title: Data Hub Asynchronous exports API
+  description: APIs for exporting analytics, Smart Strength workouts, and measurement data for the authenticated gym location. Data Hub is in pilot and available exclusively to EGYM Enterprise Pack customers; functionality and API contracts may change.
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: Operator Experience Team
+    url: https://egym.com/
+    email: ox-dev@egym.com
+  version: Pilot
+servers:
+- url: https://analytics.api.egym.com
+  description: Production
+security:
+- apiKeyAuth: []
+tags:
+- name: Asynchronous exports
+  description: Background export jobs that produce downloadable JSON, JSONL, or CSV files.
+paths:
+  /api/v1/data/async:
+    post:
+      tags:
+      - Asynchronous exports
+      summary: Create async export job
+      description: Creates a background export job for a file-based event data export. Async exports can go back up to one year. Requests cannot include event data older than one year, and each export job can cover at most 365 days.
+      operationId: createAsyncExportJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AsyncExportCreateRequest'
+      responses:
+        '201':
+          description: Export job created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncExportCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/async/jobs/{jobId}:
+    get:
+      tags:
+      - Asynchronous exports
+      summary: Get async export job status
+      description: Returns the current status of an async export job. A downloadURL is returned only when the job status is DONE.
+      operationId: getAsyncExportJobStatus
+      parameters:
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Export job status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncExportStatusResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    AsyncExportStatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AsyncExportJobStatus'
+        downloadURL:
+          type:
+          - string
+          - 'null'
+          format: uri
+    ExportType:
+      type: string
+      enum:
+      - SMART_STRENGTH_WORKOUTS
+      - SMART_STRENGTH_ASSESSMENTS
+      - FLEXIBILITY_MEASUREMENTS
+      - BODY_MEASUREMENTS
+    AsyncExportFileType:
+      type: string
+      enum:
+      - JSON
+      - JSONL
+      - CSV
+    AsyncExportCreateRequest:
+      type: object
+      required:
+      - startDate
+      - endDate
+      - exportType
+      properties:
+        startDate:
+          type: string
+          format: date
+          description: Start date in YYYY-MM-DD format. Must not be older than one year.
+        endDate:
+          type: string
+          format: date
+          description: End date in YYYY-MM-DD format. The requested period cannot exceed 365 days or include data older than one year.
+        exportType:
+          $ref: '#/components/schemas/ExportType'
+        fileType:
+          description: Optional output format. Defaults to JSONL when omitted.
+          default: JSONL
+          allOf:
+          - $ref: '#/components/schemas/AsyncExportFileType'
+    AsyncExportCreateResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/AsyncExportJobStatus'
+    AsyncExportJobStatus:
+      type: string
+      enum:
+      - IN_PROGRESS
+      - DONE
+      - FAILED
+      - EXPIRED
+  responses:
+    BadRequest:
+      description: Invalid request parameters or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Forbidden:
+      description: API key is not authorized to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Unauthorized:
+      description: Missing, malformed, or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    InternalServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      description: API key generated by EGYM for a gym location.
+      name: x-api-key
+      in: header

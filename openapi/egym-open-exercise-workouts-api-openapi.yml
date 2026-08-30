@@ -1,0 +1,220 @@
+openapi: 3.2.0
+info:
+  title: Equipment Vendor API (for standalone clients) Open Exercise Workouts API
+  description: "At EGYM, we believe that fitness is the soul of healthy living. Work together with partners to help us bringing new ways of working out to\nmillions of gym members, and new ways of prescribing exercises to hundred of thousands of gym trainers, all around the world.\n\nEGYM provides a Fitness Platform for the Connected Gym so you can help us with the mission to ***make the gym work for everyone***.\nEGYM provides a global account that is not scoped for a specific tenant, brand or gym. The account is called EGYM ID. The EGYM ID allows\nusers to use different services of the gym. The EGYM ID is used for the login to EGYM hardware and software products and conneceted equipment.\n\nEGYM works with the best of breed of the fitness industry. In this documentation, we provide tools and info needed to build a variety of workout\nexperiences that integrate directly with the EGYM Ecosystem. We are happy to welcome you as a partner of EGYM.\n\n---\n\n# \U0001F4E6 Changelog of Documentation\n\n| Version | Changes |\n|---------|---------|\n| **1.2.0** | ✅ Added support for **Genius Training Plans** — see [`GET /api/v1/cardio/training-plans`] and [`GET /api/v1/strength/training-plans`]|\n| **1.1.0** | \U0001F510 Introduced **NFC-based login** via Apple/Google Wallet — see [`POST /api/v1/oauth/token`](#tag/OAuth/operation/token) |\n\n---\n\n# \U0001F510 Authentication\n\nThe Equipment Vendor API authentication is based on the OAuth 2.0 as specified in the [RFC6749](https://tools.ietf.org/html/rfc6749),\nmore concretely on the [Resource Owner Password Credentials Grant](https://tools.ietf.org/html/rfc6749#page-37) due to constraint\nenvironment that can be found in our partner devices, i.e. devices with no screen or using the RFID for user identification.\n\nCurrently, different methods for obtaining the Access Token are made available:\n\n- By specifying **user credentials**\n- By specifying **RFID**\n- **By specifying NFC (Wallet) credentials** *(since v1.1.0)*\n\nThe OAuth `client_id` and `client_secret` are issued by EGYM to each partner (vendor) for each gym. These are used in a `Basic` authentication header as:\n\n```\nAuthorization: Basic Base64(client_id:client_secret)\n```\n\n---\n\n## \U0001F511 User Credentials (EGYM ID)\n\n_This is the classic Resource Owner Password Grant._\n\n\n```http\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=password&machine_type=bike&serial_number=ser123&username=johndoe&password=•••\n```\n\n---\n\n## \U0001F4F6 User RFID\n\n\n```http\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=rfid&machine_type=bike&serial_number=ser123&rfid=AB12CD34&rfid_format=MIFARE\n```\n\n---\n\n## \U0001F4F1 NFC Login (Apple / Google Wallet)\n\n_Introduced in v1.1.0_\n\nThis method uses NFC payloads from Apple/Google Wallet. Use `grant_type=nfc` and supply:\n\n- `payload`: the NFC data string\n- `transponder_type`: either `APPLE` or `GOOGLE`\n- One of:\n  - `issuer_id`: the Wallet issuer identifier (e.g., `com.egym.apple`)\n  - `configuration_index`: the DotOrigin VTAP slot ID\n\nExamples:\n\n```APPLE\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&transponder_type=APPLE&issuer_id=com.egym.apple\n```\n\n```GOOGLE\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&transponder_type=GOOGLE&issuer_id=123456789\n```\n\n```VTAP\nPOST /api/v1/oauth/token\nAuthorization: Basic <Base64(client_id:client_secret)>\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=nfc&machine_type=bike&serial_number=ser123&payload=abc123&configuration_index=2\n```\n\n\n## \U0001F4DC Terms and Conditions Handling\n\nSome users may not have accepted the latest EGYM Terms and Conditions (T&C). In that case, the user details will indicate that the user did not accepted them yet and partners must handle T&C interaction:\n\n### 1. Retrieve the T&C and privacy policy\n\n```T&C\nGET /api/v1/ressources/terms-and-conditions\nContent-Type: text/html\n\nlocale=en_US\n```\n\n```PP\nGET /api/v1/ressources/privacy-policy\nContent-Type: text/html\n\nlocale=en_US\n```\nResponse will be terms.\n\n\n### 2. Prompt the user to accept or decline\n\n- If **accepted**, proceed to step 3\n- If **declined**, exit the login flow gracefully\n\n### 3. Submit confirmation of acceptance\n\n```http\nPUT /api/v1/users/terms-and-conditions\nAuthorization: Bearer {access_token}\nContent-Type: application/json\n\nlocale=en_US\n```\n\n---\n\n## ⏱ Rate Limit\n\nAuthentication is rate-limited per `client_id`: **10 requests per second**.\n\n---\n\n# \U0001F504 Integration Flow Overview\n\n```plaintext\n[Authenticate (POST /oauth/token)]\n              ↓\n[Get User Details (GET /users)]\n              ↓\n  ┌────────────────────────────┬────────────────────────────┐\n  │                            │                            │\n  │   Fitness Equipment        │   Measurement Devices       │\n  │                            │                            │\n  │ - Get Training Plan        │ - Submit Measurements       │\n  │   → GET /training-plans    │   → POST /measurements/*    │\n  │ - Submit Workout           │                            │\n  │   → POST /workouts         │                            │\n  └────────────────────────────┴────────────────────────────┘\n```\n\n---\n\n# ⚠️ Error Handling\n\nAll endpoints return descriptive errors when something goes wrong.\n\n### Common HTTP Status Codes\n\n| Code | Meaning         | Notes |\n|------|------------------|-------|\n| 200  | OK               | Success |\n| 204  | No Content       | Success, no response body |\n| 400  | Bad Request      | Validation or field error |\n| 401  | Unauthorized     | Missing or invalid auth - credentials are invalid |\n| 403  | Forbidden        | Insufficient permission - endpoint is not available for equipment type|\n| 404  | Not Found        | Resource doesn't exist - unknown RFID|\n| 500  | Internal Error   | Something unexpected |\n\n### Sample Error Response\n\n```json\n{\n  \"message\": \"Invalid input\",\n  \"fieldErrors\": [\n    {\n      \"name\": \"username\",\n      \"message\": \"Must not be null\"\n    }\n  ]\n}\n```\n\n---\n\nIf you have any questions or need help integrating, contact us at [integrations@egym.com](mailto:integrations@egym.com).\n\n---\n\n# \U0001F4DD Integration FAQ – Standalone Devices API\n\nThis section addresses common technical integration questions specific to the **Standalone Devices** model.\n\n## 1. Supported Login Types\n- **EGYM ID Login** (`grant_type=password`): EGYM Username & password\n- **RFID Login** (`grant_type=rfid`): RFID number + format\n- **NFC Login** (`grant_type=nfc`): NFC payload + issuer ID or configuration index\n\n## 2. Handling Terms & Conditions\nIf the user has not accepted the latest Terms & Conditions (T&C):\n1. Retrieve T&C URL: `GET /users/{userId}/terms`\n2. Display link to user for acceptance/rejection\n3. If accepted: `POST /users/{userId}/terms/accept`\n4. If rejected: exit the login flow gracefully\n\n## 3. Key Endpoints for Standalone Integrations\n- Authentication: `POST /oauth/token`\n- User details: `GET /users`\n- Training plan: `GET /training-plans`\n- Workout results: `POST /workouts`\n- Measurements: `POST /measurements/*`\n\n## 4. Error Handling Best Practices\n- **401 Unauthorized**: Invalid/missing credentials or token\n- **403 Forbidden**: Permission issue\n- **429 Too Many Requests**: Rate limit exceeded; retry after delay\n- Important: Provide meaningful error messages to the user (not just error codes, ideally with localized description), or silently retry when user experience requires\n\n## 5. Rate Limits\n- Authentication: 10 requests/second per `client_id`\n- Other endpoints: See API documentation\n\n## 6. Testing\n- Use the **EGYM Sandbox** with provided test credentials.\n- Test credentials are prodvided by EGYM\n- Test login flows, training plan retrieval, workout submission, and T&C handling\n\n## 7. What if I send the same measurement twice?**\nUse a different `uniqueMeasurementId` each time.\n\n## .When should I use `issuerId` vs `configurationIndex` in NFC?**\nThese are alternatives for identifying the wallet pass source. Provide one depending on the integration project with EGYM. Configuration Index is only supported when using the Dot Origin VTAP readers.\n"
+  termsOfService: https://egym.com/us/terms/
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  license:
+    name: Pending License
+    url: https://egym.com/
+  version: 1.2.0
+servers:
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+tags:
+- name: Open Exercise Workouts
+paths:
+  /api/v1/open-exercises/workouts:
+    post:
+      tags:
+      - Open Exercise Workouts
+      summary: Create
+      description: This endpoint creates an open exercise workout
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenExerciseWorkoutDTO'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponseDTO'
+      security:
+      - user: []
+components:
+  schemas:
+    OpenExerciseWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        averageHeartRate:
+          type: integer
+          format: int32
+          description: The average heart rate of this workout in <b>beats/min (bpm)</b>.
+          example: 150
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        intervals:
+          type: array
+          description: The open-exercises workout intervals (sets of exercises).
+          items:
+            $ref: '#/components/schemas/OpenExerciseWorkoutIntervalDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - intervals
+      - startTimestamp
+      - uniqueExerciseId
+    OpenExerciseWorkoutIntervalDTO:
+      type: object
+      properties:
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - duration
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: /api/v1/oauth/token
+          scopes: {}
+x-tagGroups:
+- name: Authentication
+  tags:
+  - OAuth
+- name: Partners Information
+  tags:
+  - Partners
+- name: Measurements
+  tags:
+  - Body Measurement
+  - Cardio Measurement
+  - Flexibility Measurement
+- name: User
+  tags:
+  - User
+  - Image
+  - Statistics
+- name: Machine
+  tags:
+  - Machine
+- name: Resource
+  tags:
+  - Resource
+- name: Workouts
+  tags:
+  - Strength Workouts
+  - Cardio Workouts
+  - Open Exercise Workouts
+- name: Cardio Test
+  tags:
+  - Cardio Test
+- name: Logging
+  tags:
+  - Logging

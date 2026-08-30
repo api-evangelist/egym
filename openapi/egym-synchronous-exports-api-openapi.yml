@@ -1,0 +1,523 @@
+openapi: 3.2.0
+info:
+  title: Data Hub Synchronous exports API
+  description: APIs for exporting analytics, Smart Strength workouts, and measurement data for the authenticated gym location. Data Hub is in pilot and available exclusively to EGYM Enterprise Pack customers; functionality and API contracts may change.
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: Operator Experience Team
+    url: https://egym.com/
+    email: ox-dev@egym.com
+  version: Pilot
+servers:
+- url: https://analytics.api.egym.com
+  description: Production
+security:
+- apiKeyAuth: []
+tags:
+- name: Synchronous exports
+  description: Immediate paginated JSON exports for weekly analytics and recent event data.
+paths:
+  /api/v1/data/analytics:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export weekly analytics
+      description: Returns weekly analytics metrics for the gym location associated with the API key. The maximum date range is 365 days.
+      operationId: getAnalyticsExport
+      parameters:
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Analytics export page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/smart-strength-workouts:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export recent Smart Strength workouts
+      description: Returns recent Smart Strength workout data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.
+      operationId: getSmartStrengthWorkoutsExport
+      parameters:
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Smart Strength workout export page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartStrengthWorkoutsExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/smart-strength-assessments:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export recent Smart Strength assessments
+      description: Returns recent Smart Strength assessment data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.
+      operationId: getSmartStrengthAssessmentsExport
+      parameters:
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Smart Strength assessment export page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SmartStrengthAssessmentsExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/flexibility-measurements:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export recent flexibility measurements
+      description: Returns recent flexibility measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.
+      operationId: getFlexibilityMeasurementsExport
+      parameters:
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Flexibility measurement export page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlexibilityMeasurementsExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/body-measurements:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export recent body measurements
+      description: Returns recent body measurement data for the gym location associated with the API key. The maximum date range is 30 days and startDate must be within the last month.
+      operationId: getBodyMeasurementsExport
+      parameters:
+      - $ref: '#/components/parameters/startDate'
+      - $ref: '#/components/parameters/endDate'
+      - $ref: '#/components/parameters/cursor'
+      responses:
+        '200':
+          description: Body measurement export page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMeasurementsExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/data/opted-out-users:
+    get:
+      tags:
+      - Synchronous exports
+      summary: Export opted-out users
+      description: Returns the members at the gym location who have not opted in to health data and consumer-to-business (C2B) sharing. These members are excluded from all event exports, so use this endpoint to identify accounts whose previously exported data must be deleted to comply with GDPR and other data-protection requirements. The endpoint takes no query parameters and is not paginated; it returns all opted-out users for the gym location in a single response.
+      operationId: getOptedOutUsersExport
+      responses:
+        '200':
+          description: Opted-out users for the gym location.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptedOutUsersExportResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    OptedOutUsersExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptedOutUserExportItem'
+    SmartStrengthAssessmentsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SmartStrengthAssessmentItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    BodyMeasurementItem:
+      type: object
+      properties:
+        externalAccountId:
+          type: string
+          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
+        mmsMembershipId:
+          type:
+          - string
+          - 'null'
+          description: Optional membership identifier from source systems. May be null when unavailable.
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        measurementSource:
+          type:
+          - string
+          - 'null'
+        isStaff:
+          type:
+          - boolean
+          - 'null'
+        measurementCompleted:
+          type:
+          - boolean
+          - 'null'
+        chainName:
+          type:
+          - string
+          - 'null'
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+    OptedOutUserExportItem:
+      type: object
+      properties:
+        externalAccountId:
+          type: string
+          description: Unique, stable identifier for the member's account. When a member opts out, EGYM shares only this ID so the gym can identify and delete the member's previously exported data without EGYM transmitting any personal information.
+        lastSeenAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    FlexibilityMeasurementItem:
+      type: object
+      properties:
+        externalAccountId:
+          type: string
+          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
+        mmsMembershipId:
+          type:
+          - string
+          - 'null'
+          description: Optional membership identifier from source systems. May be null when unavailable.
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        measurementType:
+          type:
+          - string
+          - 'null'
+        isStaff:
+          type:
+          - boolean
+          - 'null'
+        measurementCompleted:
+          type:
+          - boolean
+          - 'null'
+        chainName:
+          type:
+          - string
+          - 'null'
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+    SmartStrengthAssessmentItem:
+      type: object
+      properties:
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        bodyRegion:
+          type:
+          - string
+          - 'null'
+        typeId:
+          type:
+          - string
+          - 'null'
+        activityName:
+          type:
+          - string
+          - 'null'
+        measurementCompleted:
+          type:
+          - boolean
+          - 'null'
+        chainName:
+          type:
+          - string
+          - 'null'
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+        externalAccountId:
+          type: string
+          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
+        mmsMembershipId:
+          type:
+          - string
+          - 'null'
+          description: Optional membership identifier from source systems. May be null when unavailable.
+    AnalyticsExportItem:
+      type: object
+      properties:
+        periodStart:
+          type: string
+          format: date
+        periodEnd:
+          type: string
+          format: date
+        metricType:
+          type: string
+        metricKey:
+          type: string
+        metricSubType:
+          type: string
+        value:
+          type: number
+          format: double
+    AnalyticsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsExportItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    BodyMeasurementsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BodyMeasurementItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    SmartStrengthWorkoutsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SmartStrengthWorkoutItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    FlexibilityMeasurementsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlexibilityMeasurementItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    GymInfo:
+      type: object
+      properties:
+        name:
+          type: string
+    ErrorDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    SmartStrengthWorkoutItem:
+      type: object
+      properties:
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        externalAccountId:
+          type: string
+          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
+        mmsMembershipId:
+          type:
+          - string
+          - 'null'
+          description: Optional membership identifier from source systems. May be null when unavailable.
+        isGuestUser:
+          type:
+          - boolean
+          - 'null'
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
+        machineType:
+          type:
+          - string
+          - 'null'
+        trainingMethod:
+          type:
+          - string
+          - 'null'
+        operationMode:
+          type:
+          - string
+          - 'null'
+        trainingVisualization:
+          type:
+          - string
+          - 'null'
+  responses:
+    BadRequest:
+      description: Invalid request parameters or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Forbidden:
+      description: API key is not authorized to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Unauthorized:
+      description: Missing, malformed, or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    InternalServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+  parameters:
+    endDate:
+      name: endDate
+      in: query
+      required: true
+      description: End date in YYYY-MM-DD format.
+      schema:
+        type: string
+        format: date
+    startDate:
+      name: startDate
+      in: query
+      required: true
+      description: Start date in YYYY-MM-DD format.
+      schema:
+        type: string
+        format: date
+    cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Pagination cursor returned as nextCursor by the previous response.
+      schema:
+        type: string
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      description: API key generated by EGYM for a gym location.
+      name: x-api-key
+      in: header

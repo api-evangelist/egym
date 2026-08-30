@@ -1,0 +1,331 @@
+openapi: 3.2.0
+info:
+  title: DATA EXPORT Workouts API
+  termsOfService: https://egym.com/en/terms/
+  contact:
+    name: MMS Connect Team
+    url: https://egym.com/
+    email: connect@egym.com
+  version: Alpha preview
+  description: These operations are needed to retrieve workouts. Additional permissions are required to access these endpoints.
+servers:
+- url: https://one-mms-service.ext-1.test.co.egym.coffee
+  description: Test
+- url: https://mms.api.egym.com
+  description: Prod
+security:
+- mms: []
+tags:
+- name: Workouts
+  description: These operations are needed to retrieve workouts. Additional permissions are required to access these endpoints.
+paths:
+  /api/v2/accounts/{accountId}/workouts:
+    get:
+      tags:
+      - Workouts
+      summary: Workouts
+      description: Retrieve workouts using accountId.
+      operationId: getWorkouts
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: fromTimestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      - name: toTimestamp
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date-time
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkoutDetailsDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+components:
+  schemas:
+    HRMDataDto:
+      type: object
+      properties:
+        targetHeartRate:
+          type: integer
+          format: int32
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartRateZoneDto'
+      description: HRM (heart rate monitor) data.
+    CombinedActivityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        rangeOfMotion:
+          type: number
+          format: double
+        strengthBenchmarkMale:
+          type: number
+          format: double
+        strengthBenchmarkFemale:
+          type: number
+          format: double
+        calculationMethod:
+          type: string
+          enum:
+          - ADD_SPECIFIED_WEIGHT
+          - SUBTRACT_SPECIFIED_WEIGHT
+        maxStrengthTestBodyRegion:
+          type: string
+          enum:
+          - UPPER_BODY
+          - CORE
+          - LEGS
+          - WHOLE
+      description: Activity details
+    WorkoutExerciseSummaryDTO:
+      type: object
+      properties:
+        totalDuration:
+          type: integer
+          description: Total duration of the whole exercise in seconds.
+          format: int64
+        totalDistance:
+          type: number
+          description: The total distance of the whole exercise in metres.
+          format: double
+        verticalDistance:
+          type: number
+          description: The vertical distance of this exercise in metres.
+          format: double
+        avgPace:
+          type: number
+          description: Average pace in minute per kilometer
+          format: double
+        avgHeartRate:
+          type: integer
+          description: Average heart rate in beats per minute (bpm)
+          format: int32
+        maxHeartRate:
+          type: integer
+          description: Max heart rate in beats per minute (bpm)
+          format: int32
+        avgSpeed:
+          type: number
+          description: Average speed in in metres per second
+          format: double
+        avgIncline:
+          type: number
+          description: Average incline
+          format: double
+      description: Workout summary contains data fields which summarize the exercise, thus one does not need to go over all sets.
+    HeartRateZoneDto:
+      type: object
+      properties:
+        min:
+          type: integer
+          format: int32
+        max:
+          type: integer
+          format: int32
+        duration:
+          type: integer
+          format: int64
+        label:
+          type: string
+        orderNumber:
+          type: integer
+          format: int32
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional information of the error context
+          description: Additional information of the error context
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    WorkoutDetailsDTO:
+      type: object
+      properties:
+        exercises:
+          type: array
+          description: Exercises of workout
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseDetailsDTO'
+        completedAt:
+          type: string
+          description: Workout tracking local time
+          format: date-time
+        timezone:
+          type: string
+          description: Workout tracking timezone
+          format: time-zone
+    WorkoutExerciseSetDTO:
+      required:
+      - setType
+      type: object
+      properties:
+        setType:
+          type: string
+          description: The type of the training set, i.e. REP_BASED or TIME_BASED.
+          enum:
+          - REP_BASED
+          - TIME_BASED
+        numberOfReps:
+          type: integer
+          description: Set number of repetitions
+          format: int32
+        weight:
+          type: number
+          description: Set weight in kilograms/pounds
+          format: double
+        duration:
+          type: integer
+          description: Set duration in seconds
+          format: int64
+        distance:
+          type: number
+          description: Set distance in meters
+          format: double
+        heartRate:
+          type: integer
+          description: Set heart rate in beats per minute (bpm)
+          format: int32
+        speed:
+          type: number
+          description: Set speed in metres per second
+          format: double
+        incline:
+          type: number
+          description: Set incline
+          format: double
+        recoveryTime:
+          type: integer
+          description: Set recovery time in seconds
+          format: int64
+      description: Exercise sets
+    WorkoutExerciseDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Exercise ID
+          format: int64
+        activity:
+          $ref: '#/components/schemas/CombinedActivityDto'
+        sets:
+          type: array
+          description: Exercise sets
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetDTO'
+        completedAt:
+          type: string
+          description: Exercise completion local time
+          format: date-time
+        timezone:
+          type: string
+          description: Exercise completion timezone
+          format: time-zone
+        kiloCalories:
+          type: number
+          description: Exercise kilocalories
+          format: double
+        hrmData:
+          $ref: '#/components/schemas/HRMDataDto'
+        summary:
+          $ref: '#/components/schemas/WorkoutExerciseSummaryDTO'
+      description: Exercises of workout
+  securitySchemes:
+    mms:
+      type: apiKey
+      description: Authentication is validated via an API key that is generated by EGYM for each gym location. This API key will not be identical with the access token used in the EGYM Gym API v1
+      name: x-api-key
+      in: header
+x-stoplight:
+  id: api

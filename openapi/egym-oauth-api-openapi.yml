@@ -1,0 +1,681 @@
+openapi: 3.2.0
+info:
+  title: Egym O Auth API
+  contact:
+    name: EGYM GmbH
+    url: https://egym.com/
+    email: support@egym.com
+  termsOfService: https://egym.com/us/terms/
+  version: '1.0'
+  description: 'Operations tagged OAuth across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+  description: Generated server url
+- url: https://partner-api.ext-1.test.co.egym.coffee
+  description: Test (ext-1)
+- url: https://partner-api.api.egym.com
+  description: Production
+tags:
+- name: OAuth
+paths:
+  /api/v1/oauth/token:
+    post:
+      tags:
+      - OAuth
+      summary: Login
+      description: This endpoint logs in the user and returns the access token
+      operationId: createToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: Select the grant type
+              anyOf:
+              - $ref: '#/components/schemas/RfidTokenRequestDTO'
+              - $ref: '#/components/schemas/NfcTokenRequestDTO'
+              - $ref: '#/components/schemas/EncryptedUserIdTokenRequestDTO'
+              - $ref: '#/components/schemas/ObfuscatedUserIdTokenRequestDTO'
+              - $ref: '#/components/schemas/RefreshTokenRequestDTO'
+            examples:
+              EncryptedUserId:
+                summary: Encrypted User ID Login
+                value:
+                  grantType: ENCRYPTED_USER_ID
+                  userId: 4337273027797130000
+              ObfuscatedUserId:
+                summary: Obfuscated User ID Login
+                value:
+                  grantType: OBFUSCATED_USER_ID
+                  obfuscatedUserId: -1c2yqo37vn9m
+              RFID:
+                summary: RFID Login
+                value:
+                  grantType: RFID
+                  rfid: AB1020CD
+                  rfidFormat: MIFARE
+                  machineName: scale
+              NFC (Google):
+                summary: NFC Login Google
+                value:
+                  grantType: NFC
+                  machineName: scale
+                  gymId: 130
+                  payload: nfc-token-data-abc123
+                  transponderType: GOOGLE
+                  issuerId:
+                    collector: '123456789'
+              NFC (Apple):
+                summary: NFC Login Apple
+                value:
+                  grantType: NFC
+                  machineName: scale
+                  gymId: 130
+                  payload: nfc-token-data-abc123
+                  transponderType: APPLE
+                  issuerId:
+                    passTypeId: example.apple.com
+              NFC (DotOrigin VTAP ConfigurationIndex):
+                summary: NFC Login (VTAP)
+                value:
+                  grantType: NFC
+                  machineName: scale
+                  gymId: 130
+                  payload: nfc-token-data-abc123
+                  transponderType: GOOGLE
+                  configurationIndex:
+                    configurationIndex: '2'
+              RefreshToken:
+                summary: Refresh Token Login
+                value:
+                  grantType: REFRESH_TOKEN
+                  refreshToken: sample-refresh-token-123
+        required: true
+        description: Select from the dropdown the Login method that should be used
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseDTO'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponseDTO'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+      security:
+      - partner: []
+    servers:
+    - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+      description: Generated server url
+  /api/v1/oauth/.well-known/jwks.json:
+    get:
+      tags:
+      - OAuth
+      summary: well-known
+      description: This endpoint returns a JSON Web Key (JWK) set.
+      operationId: wellKnown
+      security: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+                example:
+                  keys:
+                  - kty: RSA
+                    kid: '1'
+                    alg: RS256
+                    e: AQAB
+                    n: jvb
+    servers:
+    - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
+      description: Generated server url
+components:
+  schemas:
+    TokenRequestDTO:
+      type: object
+      discriminator:
+        propertyName: grantType
+        mapping:
+          RFID: '#/components/schemas/RfidTokenRequestDTO'
+          ENCRYPTED_USER_ID: '#/components/schemas/EncryptedUserIdTokenRequestDTO'
+          OBFUSCATED_USER_ID: '#/components/schemas/ObfuscatedUserIdTokenRequestDTO'
+          REFRESH_TOKEN: '#/components/schemas/RefreshTokenRequestDTO'
+          NFC: '#/components/schemas/NfcTokenRequestDTO'
+      description: Grant Type
+      properties:
+        grantType:
+          type: string
+          description: The grant type.
+          enum:
+          - RFID
+          - ENCRYPTED_USER_ID
+          - REFRESH_TOKEN
+          - OBFUSCATED_USER_ID
+          - NFC
+      required:
+      - grantType
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+    RefreshTokenRequestDTO:
+      required:
+      - grantType
+      - refreshToken
+      type: object
+      title: Refresh Token
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          refreshToken:
+            type: string
+            description: The refresh token.
+            example: ab3a16b67...
+    TokenResponseDTO:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          description: The access token.
+          example: a9a160b77797f...
+        ab3a16b67...:
+          type: string
+          description: The refresh token.
+        expirationTime:
+          type: integer
+          description: The expiration time of the access token.
+          format: int64
+          example: 1553074207520
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    IssuerId:
+      type: object
+      description: The issuer of the NFC data. Must be provided if vtap configurationIndex is not provided.
+      x-internal: false
+      properties:
+        passTypeId:
+          type: string
+          description: The Google collector ID of the pass issuer.
+        collectorId:
+          type: string
+          description: The Apple pass type ID of the pass issuer.
+    RfidTokenRequestDTO:
+      required:
+      - grantType
+      - machineName
+      - rfid
+      - rfidFormat
+      type: object
+      title: RFID
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          rfid:
+            type: string
+            description: RFID serial number.
+          rfidFormat:
+            type: string
+            description: RFID Format.
+            enum:
+            - MIFARE
+            - LEGIC
+          machineName:
+            type: string
+            description: The name of the machine.
+    ObfuscatedUserIdTokenRequestDTO:
+      required:
+      - grantType
+      - obfuscatedUserId
+      type: object
+      title: Obfuscated User ID
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          obfuscatedUserId:
+            type: string
+            description: EGYM User ID obfuscated.
+    VtapKeySlot:
+      type: object
+      description: The VTAP configuration index read. Must be provided if issuerId is not provided.
+      x-internal: false
+      properties:
+        configurationIndex:
+          type: string
+          example: '2'
+      title: ''
+    NfcTokenRequestDTO:
+      required:
+      - grantType
+      - machineName
+      - payload
+      - transponderType
+      - gymId
+      title: NFC
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - required:
+        - machineName
+        - gymId
+        - payload
+        properties:
+          machineName:
+            type: string
+            description: The name of the machine.
+          gymId:
+            type: integer
+            example: 130
+            description: The EGYM Gym Location ID. Mandatory if the grant_type is NFC.
+          payload:
+            type: string
+            description: The NFC payload. The NFC payload is a string that represents the NFC data contained in a wallet pass. The string must be no more than 64 bytes long and may only contain ASCII characters. In the case of an Apple Wallet pass, corresponds to the `message` property of the [`Pass.NFC`](https://developer.apple.com/documentation/walletpasses/pass/nfc#properties) object. In the case of a Google Wallet pass, corresponds to the `smartTapRedemptionValue` property of the [`GenericObject`](https://developers.google.com/wallet/reference/rest/v1/genericobject#GenericObject.FIELDS.smart_tap_redemption_value) resource. Mandatory if the grant_type is NFC.
+          transponderType:
+            type: string
+            description: The pass type of the NFC data. Can be Apple or Google.
+            enum:
+            - APPLE
+            - GOOGLE
+          issuerId:
+            $ref: '#/components/schemas/IssuerId'
+          configurationIndex:
+            $ref: '#/components/schemas/VtapKeySlot'
+      x-internal: false
+      type: object
+    EncryptedUserIdTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - properties:
+          userId:
+            type: integer
+            description: EGYM User ID encrypted.
+            format: int64
+      title: Encrypted User ID
+      description: Encrypted User ID Login
+      type: object
+    TokenRequestDTO_2:
+      type: object
+      discriminator:
+        propertyName: grant_type
+        mapping:
+          PASSWORD: '#/components/schemas/PasswordTokenRequestDTO'
+          RFID: '#/components/schemas/RfidTokenRequestDTO'
+          REFRESH_TOKEN: '#/components/schemas/RefreshTokenRequestDTO'
+          XID: '#/components/schemas/XidTokenRequestDTO'
+          NFC: '#/components/schemas/NfcTokenRequestDTO'
+          DEVICE: '#/components/schemas/DeviceTokenRequestDTO'
+      properties:
+        grant_type:
+          type: string
+          description: The grant type.
+          enum:
+          - PASSWORD
+          - RFID
+          - REFRESH_TOKEN
+          - XID
+          - NFC
+          - DEVICE
+        serial_number:
+          type: string
+          description: The unique serial number of the machine.
+          minLength: 1
+        machine_type:
+          type: string
+          description: The machine type name of the device.
+          minLength: 1
+        locale:
+          type: string
+          description: The locale, if there is the need to override it during the login process.
+          example: en_US
+        measurement_system:
+          type: string
+          description: The measurement system, if there is the need to override it during the login process.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+        machine_sw_version:
+          type: string
+          description: The version of the Software running on the Machine.
+          example: 5.3.7.323
+        egym_sw_version:
+          type: string
+          description: The version of the EGYM Software running on the machine.
+          example: '3.589'
+      required:
+      - grant_type
+      - machine_type
+      - serial_number
+    AppleVasPassType:
+      allOf:
+      - $ref: '#/components/schemas/IssuerId_2'
+      - type: object
+        properties:
+          passTypeId:
+            type: string
+    DeviceTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          device_token:
+            type: string
+            description: The EGYM-signed device token
+          obfuscated_user_id:
+            type: string
+            description: The user ID for authentication
+            minLength: 1
+      description: Device Token Request for a user, using an egym-signed partner
+      required:
+      - grant_type
+      - machine_type
+      - obfuscated_user_id
+      - serial_number
+      title: DeviceTokenRequestDTO
+    XidTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          xid:
+            type: string
+            description: xID is used to log in a user together with the passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+          passcode:
+            type: string
+            description: The passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+      description: xID Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - passcode
+      - serial_number
+      - xid
+      title: XidTokenRequestDTO
+    RefreshTokenRequestDTO_2:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          refresh_token:
+            type: string
+            description: The refresh token. Mandatory if the grant_type is refresh_token.
+            minLength: 1
+      description: Refresh Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - refresh_token
+      - serial_number
+      title: RefreshTokenRequestDTO
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    TokenResponseDTO_2:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: The access token
+        expiration_time:
+          type: integer
+          format: int64
+          description: The expiration time of the access token
+          example: 1672531200000
+        refresh_token:
+          type: string
+          description: The refresh token
+        token_type:
+          type: string
+          description: The type of token
+    IssuerId_2: {}
+    GoogleSmartTapCollector:
+      allOf:
+      - $ref: '#/components/schemas/IssuerId_2'
+      - type: object
+        properties:
+          collectorId:
+            type: integer
+            format: int32
+    RfidTokenRequestDTO_2:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          rfid:
+            type: string
+            description: RFID serial number. Mandatory if the grant_type is rfid.
+            minLength: 1
+          rfid_format:
+            type: string
+            description: RFID Format. Mandatory if the grant_type is rfid.
+            enum:
+            - HITAG1
+            - HITAG2
+            - EM4001
+            - EM4002
+            - EM4100
+            - EM4102
+            - EM4022
+            - MIFARE
+            - LEGIC
+            - NFC_EGYM_APPLE
+            - NFC_EGYM_GOOGLE
+            - NFC_EXTERNAL_APPLE
+            - NFC_EXTERNAL_GOOGLE
+      description: RFID Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - rfid
+      - rfid_format
+      - serial_number
+      title: RfidTokenRequestDTO
+    VtapConfigurationIndex:
+      type: object
+      properties:
+        configurationIndex:
+          type: integer
+          format: int32
+    NfcTokenRequestDTO_2:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          payload:
+            type: string
+            description: 'The NFC payload.
+
+
+              The NFC payload is a string that represents the NFC data contained in a wallet pass.
+
+
+              The string must be no more than 64 bytes long and may only contain ASCII characters.
+
+
+              In the case of an Apple Wallet pass, corresponds to the `message` property of the
+
+              [`Pass.NFC`](https://developer.apple.com/documentation/walletpasses/pass/nfc#properties)
+
+              object.
+
+
+              In the case of a Google Wallet pass, corresponds to the `smartTapRedemptionValue` property
+
+              of the
+
+              [`GenericObject`](https://developers.google.com/wallet/reference/rest/v1/genericobject#GenericObject.FIELDS.smart_tap_redemption_value)
+
+              resource.
+
+              '
+            maxLength: 64
+            minLength: 1
+          transponder_type:
+            type: string
+            description: The pass type of the NFC data. Can be Apple or Google.
+            enum:
+            - APPLE
+            - GOOGLE
+          issuer_id:
+            description: The issuer of the NFC data. Required if keySlot is not provided.
+            oneOf:
+            - $ref: '#/components/schemas/AppleVasPassType'
+            - $ref: '#/components/schemas/GoogleSmartTapCollector'
+          configuration_index:
+            $ref: '#/components/schemas/VtapConfigurationIndex'
+            description: The VTAP configuration index read. Required if issuerId is not provided.
+      description: NFC Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - payload
+      - serial_number
+      - transponder_type
+      title: NFCTokenRequestDTO
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+    PasswordTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          username:
+            type: string
+            description: Username. Mandatory if the grant_type is password.
+            minLength: 1
+          password:
+            type: string
+            description: Password. Mandatory if the grant_type is password.
+            minLength: 1
+      description: Password Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - password
+      - serial_number
+      - username
+      title: PasswordTokenRequestDTO
+  securitySchemes:
+    user:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    partner:
+      type: apiKey
+      name: x-api-key
+      in: header
+x-refined-from:
+- egym-equipment-vendor-server-openapi.yml
+- egym-equipment-vendor-standalone-openapi.yml

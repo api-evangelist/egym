@@ -1,0 +1,68 @@
+openapi: 3.2.0
+info:
+  title: MMS API v1 Alive API
+  description: "This API enables gym management software to connect to the EGYM system and transmit important pieces of information from the data sphere of the gym to the EGYM system. The \"data privacy concept\" section in the overview document explains more about the overall logic of data access. This API baiscally operates in \"data processing\" mode from a gyms' data privacy perspective, i.e. member data can be transmitted without prior individual consent of a user.\n\n# Use-case Overview\n\nThis API provided by EGYM covers three different use-cases:\n\n  - **User Profile\" related operations (\"**user** path\") like creating and updating member records\n  - **Trainer Task** related Operations\n  - **Product/Experience** related operations (\"**gym**\" path)\n\n## User Profile (/user)\n\nThis is the most important and most basic form of integration. The \"publish\" method allows for a combined create/update of whole member records and should be called whenever there is a new member created inside the MMS or meterial details of that record are changed. It also contains the methods to signal a \"check-in\" and \"check-out\" event.\n\n## Trainer Tasks (/task)\n\nThe Trainer Task API allows to interact with the tasks that are created and worked through on the trainer app. It provides CRUD functionalities for those tasks.\n\n## Product (/gym)\n\nThis API enables gym management software to create and update EGYM products for users on behalf of the gym.\n\n - It provides methods to retrieve all products that are available in a gym.\n - These products can be activated for users in the gym.\n - The active and future products for a user in a gym can be retrieved.\n\n___\n\n## Test environment\n\nWe provide a test environment for integration testing of the API which is particularly helpful during development. Before entering productive mode, we will jointly test all functionalities to ensure that data is correctly sent, received and interpreted.\n\nThe endpoint for test environment is: **https://mms.api.egym.com/gymapi/v1**\n\nMaking requests via this ui is not allowed but one can generate an example curl request by clicking \"Try it out\", filling in some parameters and clicking \"Execute\".\nNote the upper- and lower cases and use attribute exactly as indicated.\nPlease note that due to technical reasons the environment may temporarily not be available.\n___\n\n## Production environment\n\nThe endpoint for production environment is: **https://mms.api.egym.com/api/v2**\n___\n\n## Note on identifiers\n\nEGYM uses the fields userId, membershipId, and eMail to identify members.\nSince EGYM can accept data from multiple source (EGYM compatible fitness equipment, EGYM apps, and third parties), it is important to use these identifiers correctly.\n\nuserId is the identifier assigned to this member by the EGYM server. When publishing data of a member for the first time, the client omits this field since the userId is unknown to the client.\nThe server replies with a valid userId for this member that needs to be stored. On subsequent requests, the client must include the userId received previously.\n\nmembershipId is a String identifier used by the gym. This must be unambiguously assigned to this person and must never be reused for other members. membershipIds must be unique within all gyms that share member data (i.e. within the gym chain).\n**The membershipId is not a contractId.**\n\nAny publish request must include a valid email address. For members who have previously used the EGYM ecosystem, e.g. our fitness machines, this must be identical to the email address used as EGYM account.\nIt is important to include the correct email address with the first request sent for this member since the first API request will merge this user with pre-existing data for this person.\n___\n\n## Note on optional fields\n\nAll fields noted as 'required' or 'optional' must be supported by the client software and included in the request if this data is available.\nFields with the remark '(optional)' should be supported within the constraints of the client application, if possible.\n\nIf the value of an optional field is not known, the client must omit the the field in the request.\nThe EGYM server will then assume that last known value (which may have been retrieved by other channels) is still valid.\nPlease never sent an empty String (\"\") or empty list ([]) when the actual value is unkown.\n\n**Example imageData:**\nThe imageData field has due to its nature a larger size than other fields.\nThus, it make sense to include this field only if this is the first publish request for this user or if the image has changed. Please do not include an unchanged image in subsequent requests.\nHowever, if the first requests failed for any reason (e.g. internet unavailable or HTTP status > 299), then the client must include the image when retrying.\n\n**Example rfidList:**\nSending rfidList: [] will overwrite the list of RFIDs for this member with the emtpy list. That is, this user will not be able to use EGYM equipment.\nOn the other hand, if rfidList is missing from the request, the list of RFIDs is unchanged.\n\n**Example dateOfBirth:**\nIf the member's birthday is not known, it is OK to omit the field. However sending \"dateOfBirth\":\"\" (empty String) is invalid.\n___\n\n## Encoding\n\nAll endpoints use the JSON data type for request and response bodies and UTF-8 character encoding. In your HTTP request, please declare the Content-Type for your JSON body: \"Content-type: application/json\"\n___\n\n## Error handling\n\nRequests which cannot be processed will return a special JSON object with \"error\" and optionally \"error text\" fields.\nAuthentication problems, for example, return the following JSON:  {\"error\":401, \"errorText\":\"The provided user name or password is incorrect.\"}\n\n**Error codes**\n\n**Informational**\n- 200 OK - successful request\n- 204 No Content - successful request with empty response body\n\n**Client Error**\n- 400 Bad Request - The email is invalid. (Email field does not match the expected format of valid email addresses)\n- 401 Unauthorized - The provided login credentials are wrong. (The combination of accessToken and gymID are wrong.)\n- 403 Forbidden - Blacklisted user (Email address is blacklisted)\n- 404 Not Found - User not found. (GET request with userId for user that does not exist)\n- 404 Not Found - Email address not found. (GET request with userId for user with email address that does not exist)\n- 404 Not Found - Could not find any user with RFID = 0x.... (GET request with RFID for user that does not exist)\n- 405 Method Not Allowed - Method Not Allowed (Using GET without required data to be presented via POST)\n- 409 Conflict - Conflict in the request (Request could not be processed because of conflict.)\n- 415 Unsupported Media Type - Unsupported Media Type (Unsupported Media Type; add \"Content-type: application/json\" to the header of your request)\n\n404 error codes can indicate that user was deleted on EGYM server (e.g. he deleted his own account via the website).\n\n**Server Error**\n- 500 Internal Server Error - Internal Server Error (A bug in the server. If this occurs in productions it is probably caused by unexpected behavior of the client, i.e. there is also a bug in the client.)\n___\n\n## Authentication\n\nAuthentication is validated via an access token that is generated by EGYM for each gym location. EGYM requires a unique email for each member. EGYM uses the email address or other keys such as RFID-Id to initially match existing users in our data base.\nServer authentication of a request requires 2 additional parameters:\n- gymId: the gym location ID, as assigned by EGYM – gym chains will receive one gymId for each location\n- accesstoken: access token, provided by EGYM – each gym has a unique token\n\nExample: https://mms.api.egym.com/gymapi/v1/user/publish?gymId=123\n\n`X-ACCESS-TOKEN: ABCDE`\n\nTo test, use the Authorize-Button on the right to insert the token as a query parameter to every request.\n"
+  version: 1.0.0
+  contact:
+    name: EGYM - Connect Team
+servers:
+- url: https://mms.api.ed.ts.egym.coffee/v1
+  description: Test
+- url: https://mms.api.egym.com/v1
+  description: Prod
+security:
+- accesstoken: []
+tags:
+- name: alive
+paths:
+  /alive:
+    post:
+      summary: Alive
+      description: 'Notification that the API client is active.
+
+        This method notifies EGYM that the API client is running. Any received POST method resets a timestamp when data was last received. This method allows to send regular pings and therefore refreshes the timestamp.
+
+        Gym Owners are shown a connectivity status on the EGYM website that is changed to inactive if no request is received by any method for 24h - therefore best practice would be to send this request at least once per day.
+
+        '
+      tags:
+      - alive
+      parameters:
+      - in: query
+        name: gymId
+        description: The id of the gym
+        schema:
+          type: number
+          example: 234
+        required: true
+      responses:
+        '204':
+          description: No content
+        4XX:
+          description: Client Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+components:
+  schemas:
+    ErrorDto:
+      type: object
+      description: This model provides information about an API error.
+      properties:
+        error:
+          type: integer
+          format: int32
+          description: The error code.
+          example: 401
+        errorText:
+          type: string
+          description: The error message.
+          example: The provided user name or password is incorrect.
+  securitySchemes:
+    accesstoken:
+      type: apiKey
+      in: header
+      name: X-ACCESS-TOKEN
+      description: The token that will allow access the EGYM gym api for a specific gym.
+      x-example: 77266b05a7ba4ba2aa3360b86711002d
