@@ -1,17 +1,16 @@
 aid: egym
 name: EGYM
-description: 'EGYM is a Munich-headquartered fitness and health technology company that builds
-  the connected-gym platform used by commercial fitness operators worldwide: Smart Strength
-  and Smart Flex networked equipment, the EGYM Genius AI training engine, the EGYM Fitness Hub
-  and Trainer apps, and the EGYM Wellpass / Corporate Fitness membership network that lets
-  employers give staff access to thousands of partner venues. For developers, EGYM operates a
-  public developer portal at developer.egym.com covering eight machine-readable APIs across
-  three integration audiences — member-management-system (MMS) vendors syncing members,
-  memberships, RFID/NFC credentials, check-ins, products and trainer tasks into EGYM Cloud;
-  equipment vendors submitting body, cardio and flexibility measurements from devices or
-  backends; and analytics consumers exporting workout and measurement data. EGYM also
-  publishes an official documentation MCP server, an llms.txt, a written AI-agent instruction
-  page, a dated change log, published rate limits and a documented webhook event catalog.'
+description: 'EGYM is a Munich-headquartered fitness and health technology company that builds the connected-gym
+  platform used by commercial fitness operators worldwide: Smart Strength and Smart Flex networked equipment,
+  the EGYM Genius AI training engine, the EGYM Fitness Hub and Trainer apps, and the EGYM Wellpass / Corporate
+  Fitness membership network that lets employers give staff access to thousands of partner venues. For
+  developers, EGYM operates a public developer portal at developer.egym.com covering eight machine-readable
+  APIs across three integration audiences — member-management-system (MMS) vendors syncing members, memberships,
+  RFID/NFC credentials, check-ins, products and trainer tasks into EGYM Cloud; equipment vendors submitting
+  body, cardio and flexibility measurements from devices or backends; and analytics consumers exporting
+  workout and measurement data. EGYM also publishes an official documentation MCP server, an llms.txt,
+  a written AI-agent instruction page, a dated change log, published rate limits and a documented webhook
+  event catalog.'
 url: https://raw.githubusercontent.com/api-evangelist/egym/refs/heads/main/apis.yml
 deliveryModel:
   model: saas
@@ -46,7 +45,7 @@ x-type: company
 x-source: harvest:secondary-market
 specificationVersion: '0.23'
 created: '2026-08-12'
-modified: '2026-08-12'
+modified: '2026-09-16'
 tags:
 - Company
 - Fitness
@@ -80,11 +79,10 @@ tags_raw:
 apis:
 - aid: egym:pay-with-wellpass
   name: EGYM Pay with Wellpass API
-  description: >-
-    Authorization-and-capture API for booking platforms. A Wellpass member generates a single-use booking
-    code in the Wellpass app for a specific gym; the partner platform validates the code (dryRun true),
-    then redeems it (dryRun false), which creates the booking and charges the member's Wellpass credit
-    wallet, returning a payout amount. A cancel operation returns credits and is explicitly documented
+  description: Authorization-and-capture API for booking platforms. A Wellpass member generates a single-use
+    booking code in the Wellpass app for a specific gym; the partner platform validates the code (dryRun
+    true), then redeems it (dryRun false), which creates the booking and charges the member's Wellpass
+    credit wallet, returning a payout amount. A cancel operation returns credits and is explicitly documented
     as idempotent. Currently available in France and Belgium only. Two operations, documented in prose
     with a 13-entry typed business-error registry — EGYM publishes no OpenAPI for this surface and the
     base URL is a {baseUrl} placeholder issued to partners at onboarding, so no public host exists to
@@ -103,10 +101,9 @@ apis:
     url: sandbox/egym-sandbox.yml
 - aid: egym:mcp-docs
   name: EGYM Documentation MCP Server
-  description: >-
-    Official hosted Model Context Protocol server published by EGYM at developer.egym.com/mcp and documented
-    on the portal with copy-paste Codex configuration. Exposes six tools over the API catalog and documentation
-    corpus — list-apis, get-endpoints, get-endpoint-info, get-security-schemes, get-full-api-description
+  description: Official hosted Model Context Protocol server published by EGYM at developer.egym.com/mcp
+    and documented on the portal with copy-paste Codex configuration. Exposes six tools over the API catalog
+    and documentation corpus — list-apis, get-endpoints, get-endpoint-info, get-security-schemes, get-full-api-description
     and search. The endpoint answers tools/list anonymously; an OAuth authorization-server metadata document
     is served at /.well-known/oauth-authorization-server for clients that authenticate.
   humanURL: https://developer.egym.com/general/ai-agent-integration
@@ -606,11 +603,10 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-gym-visit-api
   name: EGYM Gym Visit API
-  description: >-
-    These operations are needed to transmit the information to EGYM, that a specific member is currently
-    in the gym. Based on that information several business logics are built, to provide a seamless training
-    floor experience to the members of that gym. For example the trainer on the Training Floor is informed
-    that this member is here and that he should complete some tasks.
+  description: These operations are needed to transmit the information to EGYM, that a specific member
+    is currently in the gym. Based on that information several business logics are built, to provide a
+    seamless training floor experience to the members of that gym. For example the trainer on the Training
+    Floor is informed that this member is here and that he should complete some tasks.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -850,9 +846,8 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-measurements-api
   name: EGYM Measurements API
-  description: >-
-    These operations are needed to retrieve measurements with corresponding metrics. Additional permissions
-    are required to access these endpoints.
+  description: These operations are needed to retrieve measurements with corresponding metrics. Additional
+    permissions are required to access these endpoints.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -900,8 +895,7 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-member-account-api
   name: EGYM Member Account API
-  description: >-
-    These operations are needed to create and update member accounts and their membership information.
+  description: These operations are needed to create and update member accounts and their membership information.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -949,9 +943,8 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-member-account-nfc-api
   name: EGYM Member Account NFC API
-  description: >-
-    Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM and partner
-    sides.
+  description: Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM
+    and partner sides.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1289,9 +1282,8 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-products-booking-api
   name: EGYM Products booking API
-  description: >-
-    Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine Admission)
-    and EGYM+
+  description: Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine
+    Admission) and EGYM+
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1825,9 +1817,8 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-workouts-api
   name: EGYM Workouts API
-  description: >-
-    These operations are needed to retrieve workouts. Additional permissions are required to access these
-    endpoints.
+  description: These operations are needed to retrieve workouts. Additional permissions are required to
+    access these endpoints.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1981,7 +1972,7 @@ common:
 - type: ToolCrosswalk
   url: mcp/egym-tool-crosswalk.yml
 - type: OpenAPI
-  url: openapi/egym-mms-api-v2-openapi.yml
+  url: openapi/_original/egym-mms-api-v2-openapi.yml
 x-enrichment:
   date: '2026-08-12'
   status: enriched
