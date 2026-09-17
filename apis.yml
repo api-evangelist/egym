@@ -79,10 +79,11 @@ tags_raw:
 apis:
 - aid: egym:pay-with-wellpass
   name: EGYM Pay with Wellpass API
-  description: Authorization-and-capture API for booking platforms. A Wellpass member generates a single-use
-    booking code in the Wellpass app for a specific gym; the partner platform validates the code (dryRun
-    true), then redeems it (dryRun false), which creates the booking and charges the member's Wellpass
-    credit wallet, returning a payout amount. A cancel operation returns credits and is explicitly documented
+  description: >-
+    Authorization-and-capture API for booking platforms. A Wellpass member generates a single-use booking
+    code in the Wellpass app for a specific gym; the partner platform validates the code (dryRun true),
+    then redeems it (dryRun false), which creates the booking and charges the member's Wellpass credit
+    wallet, returning a payout amount. A cancel operation returns credits and is explicitly documented
     as idempotent. Currently available in France and Belgium only. Two operations, documented in prose
     with a 13-entry typed business-error registry — EGYM publishes no OpenAPI for this surface and the
     base URL is a {baseUrl} placeholder issued to partners at onboarding, so no public host exists to
@@ -101,9 +102,10 @@ apis:
     url: sandbox/egym-sandbox.yml
 - aid: egym:mcp-docs
   name: EGYM Documentation MCP Server
-  description: Official hosted Model Context Protocol server published by EGYM at developer.egym.com/mcp
-    and documented on the portal with copy-paste Codex configuration. Exposes six tools over the API catalog
-    and documentation corpus — list-apis, get-endpoints, get-endpoint-info, get-security-schemes, get-full-api-description
+  description: >-
+    Official hosted Model Context Protocol server published by EGYM at developer.egym.com/mcp and documented
+    on the portal with copy-paste Codex configuration. Exposes six tools over the API catalog and documentation
+    corpus — list-apis, get-endpoints, get-endpoint-info, get-security-schemes, get-full-api-description
     and search. The endpoint answers tools/list anonymously; an OAuth authorization-server metadata document
     is served at /.well-known/oauth-authorization-server for clients that authenticate.
   humanURL: https://developer.egym.com/general/ai-agent-integration
@@ -603,10 +605,11 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-gym-visit-api
   name: EGYM Gym Visit API
-  description: These operations are needed to transmit the information to EGYM, that a specific member
-    is currently in the gym. Based on that information several business logics are built, to provide a
-    seamless training floor experience to the members of that gym. For example the trainer on the Training
-    Floor is informed that this member is here and that he should complete some tasks.
+  description: >-
+    These operations are needed to transmit the information to EGYM, that a specific member is currently
+    in the gym. Based on that information several business logics are built, to provide a seamless training
+    floor experience to the members of that gym. For example the trainer on the Training Floor is informed
+    that this member is here and that he should complete some tasks.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -846,8 +849,9 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-measurements-api
   name: EGYM Measurements API
-  description: These operations are needed to retrieve measurements with corresponding metrics. Additional
-    permissions are required to access these endpoints.
+  description: >-
+    These operations are needed to retrieve measurements with corresponding metrics. Additional permissions
+    are required to access these endpoints.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -895,7 +899,8 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-member-account-api
   name: EGYM Member Account API
-  description: These operations are needed to create and update member accounts and their membership information.
+  description: >-
+    These operations are needed to create and update member accounts and their membership information.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -943,8 +948,9 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-member-account-nfc-api
   name: EGYM Member Account NFC API
-  description: Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM
-    and partner sides.
+  description: >-
+    Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM and partner
+    sides.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1134,56 +1140,6 @@ apis:
     url: https://developer.egym.com/user-connect-api/docs/introduction
   - type: APIReference
     url: https://developer.egym.com/mms-blueprints/canonical-classes
-- aid: egym:egym-oauth-api
-  name: EGYM O Auth API
-  description: The OAuth API from EGYM — 2 operation(s) for oauth.
-  humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
-  baseURL: https://mms.api.egym.com
-  tags:
-  - Authentication
-  tags_raw:
-  - OAuth
-  properties:
-  - type: OpenAPI
-    url: openapi/egym-oauth-api-openapi.yml
-  - type: Documentation
-    url: https://developer.egym.com/mms-api-v2
-  - type: APIReference
-    url: https://developer.egym.com/mms-api-v2/apis/mms-v2
-  - type: GettingStarted
-    url: https://developer.egym.com/mms-api-v2/guide
-  - type: Authentication
-    url: https://developer.egym.com/mms-api-v2/authentication
-  - type: RateLimits
-    url: https://developer.egym.com/mms-api-v2/rate-limits
-  - type: ErrorCatalog
-    url: https://developer.egym.com/mms-api-v2/errors
-  - type: ChangeLog
-    url: https://developer.egym.com/mms-api-v2/change-log
-  - type: APIReference
-    url: https://developer.egym.com/mms-api-v2/gymapi/api
-  - type: Deprecation
-    url: https://developer.egym.com/general/general-info
-  - type: APIReference
-    url: https://developer.egym.com/data-hub/api
-  - type: Authentication
-    url: https://developer.egym.com/data-hub/authentication
-  - type: Documentation
-    url: https://developer.egym.com/data-hub
-  - type: APIReference
-    url: https://developer.egym.com/equipment/partner-api
-  - type: Documentation
-    url: https://developer.egym.com/equipment/01-introduction-to-egym-equipment-vendor-apis
-  - type: APIReference
-    url: https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025
-  - type: APIReference
-    url: https://developer.egym.com/user-connect-api/apis/user-connect-api
-  - type: Authentication
-    url: https://developer.egym.com/user-connect-api/docs/authentication
-  - type: Documentation
-    url: https://developer.egym.com/user-connect-api/docs/introduction
-  - type: APIReference
-    url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-open-exercise-workouts-api
   name: EGYM Open Exercise Workouts API
   description: The Open Exercise Workouts API from EGYM — 1 operation(s) for open exercise workouts.
@@ -1282,8 +1238,9 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-products-booking-api
   name: EGYM Products booking API
-  description: Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine
-    Admission) and EGYM+
+  description: >-
+    Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine Admission)
+    and EGYM+
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1817,8 +1774,9 @@ apis:
     url: https://developer.egym.com/mms-blueprints/canonical-classes
 - aid: egym:egym-workouts-api
   name: EGYM Workouts API
-  description: These operations are needed to retrieve workouts. Additional permissions are required to
-    access these endpoints.
+  description: >-
+    These operations are needed to retrieve workouts. Additional permissions are required to access these
+    endpoints.
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
@@ -1826,6 +1784,54 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/egym-workouts-api-openapi.yml
+  - type: Documentation
+    url: https://developer.egym.com/mms-api-v2
+  - type: APIReference
+    url: https://developer.egym.com/mms-api-v2/apis/mms-v2
+  - type: GettingStarted
+    url: https://developer.egym.com/mms-api-v2/guide
+  - type: Authentication
+    url: https://developer.egym.com/mms-api-v2/authentication
+  - type: RateLimits
+    url: https://developer.egym.com/mms-api-v2/rate-limits
+  - type: ErrorCatalog
+    url: https://developer.egym.com/mms-api-v2/errors
+  - type: ChangeLog
+    url: https://developer.egym.com/mms-api-v2/change-log
+  - type: APIReference
+    url: https://developer.egym.com/mms-api-v2/gymapi/api
+  - type: Deprecation
+    url: https://developer.egym.com/general/general-info
+  - type: APIReference
+    url: https://developer.egym.com/data-hub/api
+  - type: Authentication
+    url: https://developer.egym.com/data-hub/authentication
+  - type: Documentation
+    url: https://developer.egym.com/data-hub
+  - type: APIReference
+    url: https://developer.egym.com/equipment/partner-api
+  - type: Documentation
+    url: https://developer.egym.com/equipment/01-introduction-to-egym-equipment-vendor-apis
+  - type: APIReference
+    url: https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025
+  - type: APIReference
+    url: https://developer.egym.com/user-connect-api/apis/user-connect-api
+  - type: Authentication
+    url: https://developer.egym.com/user-connect-api/docs/authentication
+  - type: Documentation
+    url: https://developer.egym.com/user-connect-api/docs/introduction
+  - type: APIReference
+    url: https://developer.egym.com/mms-blueprints/canonical-classes
+- aid: egym:egym-oauth-api
+  name: EGYM O Auth API
+  description: The OAuth API from EGYM — 2 operation(s) for oauth.
+  humanURL: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
+  baseURL: https://developer.egym.com/mcp
+  tags:
+  - OAuth
+  properties:
+  - type: OpenAPI
+    url: openapi/egym-oauth-api-openapi.yml
   - type: Documentation
     url: https://developer.egym.com/mms-api-v2
   - type: APIReference
