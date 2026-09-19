@@ -1828,6 +1828,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass
   baseURL: https://developer.egym.com/mcp
   tags:
+  - Authentication
+  tags_raw:
   - OAuth
   properties:
   - type: OpenAPI
