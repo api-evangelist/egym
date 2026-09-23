@@ -7,7 +7,7 @@ info:
     email: support@egym.com
   termsOfService: https://egym.com/us/terms/
   version: '1.0'
-  description: 'Operations tagged OAuth across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged OAuth across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
   description: Generated server url
@@ -154,29 +154,15 @@ paths:
       description: Generated server url
 components:
   schemas:
-    TokenRequestDTO:
+    VtapKeySlot:
       type: object
-      discriminator:
-        propertyName: grantType
-        mapping:
-          RFID: '#/components/schemas/RfidTokenRequestDTO'
-          ENCRYPTED_USER_ID: '#/components/schemas/EncryptedUserIdTokenRequestDTO'
-          OBFUSCATED_USER_ID: '#/components/schemas/ObfuscatedUserIdTokenRequestDTO'
-          REFRESH_TOKEN: '#/components/schemas/RefreshTokenRequestDTO'
-          NFC: '#/components/schemas/NfcTokenRequestDTO'
-      description: Grant Type
+      description: The VTAP configuration index read. Must be provided if issuerId is not provided.
+      x-internal: false
       properties:
-        grantType:
+        configurationIndex:
           type: string
-          description: The grant type.
-          enum:
-          - RFID
-          - ENCRYPTED_USER_ID
-          - REFRESH_TOKEN
-          - OBFUSCATED_USER_ID
-          - NFC
-      required:
-      - grantType
+          example: '2'
+      title: ''
     ErrorDTO:
       type: object
       properties:
@@ -220,6 +206,53 @@ components:
             type: string
             description: The refresh token.
             example: ab3a16b67...
+    TokenRequestDTO:
+      type: object
+      discriminator:
+        propertyName: grantType
+        mapping:
+          RFID: '#/components/schemas/RfidTokenRequestDTO'
+          ENCRYPTED_USER_ID: '#/components/schemas/EncryptedUserIdTokenRequestDTO'
+          OBFUSCATED_USER_ID: '#/components/schemas/ObfuscatedUserIdTokenRequestDTO'
+          REFRESH_TOKEN: '#/components/schemas/RefreshTokenRequestDTO'
+          NFC: '#/components/schemas/NfcTokenRequestDTO'
+      description: Grant Type
+      properties:
+        grantType:
+          type: string
+          description: The grant type.
+          enum:
+          - RFID
+          - ENCRYPTED_USER_ID
+          - REFRESH_TOKEN
+          - OBFUSCATED_USER_ID
+          - NFC
+      required:
+      - grantType
+    ObfuscatedUserIdTokenRequestDTO:
+      required:
+      - grantType
+      - obfuscatedUserId
+      type: object
+      title: Obfuscated User ID
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - type: object
+        properties:
+          obfuscatedUserId:
+            type: string
+            description: EGYM User ID obfuscated.
+    IssuerId:
+      type: object
+      description: The issuer of the NFC data. Must be provided if vtap configurationIndex is not provided.
+      x-internal: false
+      properties:
+        passTypeId:
+          type: string
+          description: The Google collector ID of the pass issuer.
+        collectorId:
+          type: string
+          description: The Apple pass type ID of the pass issuer.
     TokenResponseDTO:
       type: object
       properties:
@@ -235,6 +268,17 @@ components:
           description: The expiration time of the access token.
           format: int64
           example: 1553074207520
+    EncryptedUserIdTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO'
+      - properties:
+          userId:
+            type: integer
+            description: EGYM User ID encrypted.
+            format: int64
+      title: Encrypted User ID
+      description: Encrypted User ID Login
+      type: object
     FieldErrorDTO:
       type: object
       properties:
@@ -251,17 +295,6 @@ components:
           description: The rejected value.
           example: 3
       description: The constraint violations.
-    IssuerId:
-      type: object
-      description: The issuer of the NFC data. Must be provided if vtap configurationIndex is not provided.
-      x-internal: false
-      properties:
-        passTypeId:
-          type: string
-          description: The Google collector ID of the pass issuer.
-        collectorId:
-          type: string
-          description: The Apple pass type ID of the pass issuer.
     RfidTokenRequestDTO:
       required:
       - grantType
@@ -286,28 +319,6 @@ components:
           machineName:
             type: string
             description: The name of the machine.
-    ObfuscatedUserIdTokenRequestDTO:
-      required:
-      - grantType
-      - obfuscatedUserId
-      type: object
-      title: Obfuscated User ID
-      allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO'
-      - type: object
-        properties:
-          obfuscatedUserId:
-            type: string
-            description: EGYM User ID obfuscated.
-    VtapKeySlot:
-      type: object
-      description: The VTAP configuration index read. Must be provided if issuerId is not provided.
-      x-internal: false
-      properties:
-        configurationIndex:
-          type: string
-          example: '2'
-      title: ''
     NfcTokenRequestDTO:
       required:
       - grantType
@@ -345,17 +356,69 @@ components:
             $ref: '#/components/schemas/VtapKeySlot'
       x-internal: false
       type: object
-    EncryptedUserIdTokenRequestDTO:
+    DeviceTokenRequestDTO:
       allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO'
-      - properties:
-          userId:
-            type: integer
-            description: EGYM User ID encrypted.
-            format: int64
-      title: Encrypted User ID
-      description: Encrypted User ID Login
-      type: object
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          device_token:
+            type: string
+            description: The EGYM-signed device token
+          obfuscated_user_id:
+            type: string
+            description: The user ID for authentication
+            minLength: 1
+      description: Device Token Request for a user, using an egym-signed partner
+      required:
+      - grant_type
+      - machine_type
+      - obfuscated_user_id
+      - serial_number
+      title: DeviceTokenRequestDTO
+    AppleVasPassType:
+      allOf:
+      - $ref: '#/components/schemas/IssuerId_2'
+      - type: object
+        properties:
+          passTypeId:
+            type: string
+    RefreshTokenRequestDTO_2:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          refresh_token:
+            type: string
+            description: The refresh token. Mandatory if the grant_type is refresh_token.
+            minLength: 1
+      description: Refresh Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - refresh_token
+      - serial_number
+      title: RefreshTokenRequestDTO
+    XidTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          xid:
+            type: string
+            description: xID is used to log in a user together with the passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+          passcode:
+            type: string
+            description: The passcode. Mandatory if the grant_type is xid.
+            minLength: 1
+      description: xID Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - passcode
+      - serial_number
+      - xid
+      title: XidTokenRequestDTO
     TokenRequestDTO_2:
       type: object
       discriminator:
@@ -409,82 +472,81 @@ components:
       - grant_type
       - machine_type
       - serial_number
-    AppleVasPassType:
+    PasswordTokenRequestDTO:
+      allOf:
+      - $ref: '#/components/schemas/TokenRequestDTO_2'
+      - type: object
+        properties:
+          username:
+            type: string
+            description: Username. Mandatory if the grant_type is password.
+            minLength: 1
+          password:
+            type: string
+            description: Password. Mandatory if the grant_type is password.
+            minLength: 1
+      description: Password Token Request for a user
+      required:
+      - grant_type
+      - machine_type
+      - password
+      - serial_number
+      - username
+      title: PasswordTokenRequestDTO
+    VtapConfigurationIndex:
+      type: object
+      properties:
+        configurationIndex:
+          type: integer
+          format: int32
+    GoogleSmartTapCollector:
       allOf:
       - $ref: '#/components/schemas/IssuerId_2'
       - type: object
         properties:
-          passTypeId:
-            type: string
-    DeviceTokenRequestDTO:
-      allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO_2'
-      - type: object
-        properties:
-          device_token:
-            type: string
-            description: The EGYM-signed device token
-          obfuscated_user_id:
-            type: string
-            description: The user ID for authentication
-            minLength: 1
-      description: Device Token Request for a user, using an egym-signed partner
-      required:
-      - grant_type
-      - machine_type
-      - obfuscated_user_id
-      - serial_number
-      title: DeviceTokenRequestDTO
-    XidTokenRequestDTO:
-      allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO_2'
-      - type: object
-        properties:
-          xid:
-            type: string
-            description: xID is used to log in a user together with the passcode. Mandatory if the grant_type is xid.
-            minLength: 1
-          passcode:
-            type: string
-            description: The passcode. Mandatory if the grant_type is xid.
-            minLength: 1
-      description: xID Token Request for a user
-      required:
-      - grant_type
-      - machine_type
-      - passcode
-      - serial_number
-      - xid
-      title: XidTokenRequestDTO
-    RefreshTokenRequestDTO_2:
-      allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO_2'
-      - type: object
-        properties:
-          refresh_token:
-            type: string
-            description: The refresh token. Mandatory if the grant_type is refresh_token.
-            minLength: 1
-      description: Refresh Token Request for a user
-      required:
-      - grant_type
-      - machine_type
-      - refresh_token
-      - serial_number
-      title: RefreshTokenRequestDTO
-    FieldErrorDTO_2:
+          collectorId:
+            type: integer
+            format: int32
+    IssuerId_2: {}
+    ApiErrorResponseDTO:
       type: object
+      description: Standard error response returned by the API for all error status codes.
       properties:
-        name:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
           type: string
-          description: The field name.
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
         message:
           type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
     TokenResponseDTO_2:
       type: object
       properties:
@@ -502,15 +564,19 @@ components:
         token_type:
           type: string
           description: The type of token
-    IssuerId_2: {}
-    GoogleSmartTapCollector:
-      allOf:
-      - $ref: '#/components/schemas/IssuerId_2'
-      - type: object
-        properties:
-          collectorId:
-            type: integer
-            format: int32
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     RfidTokenRequestDTO_2:
       allOf:
       - $ref: '#/components/schemas/TokenRequestDTO_2'
@@ -545,12 +611,6 @@ components:
       - rfid_format
       - serial_number
       title: RfidTokenRequestDTO
-    VtapConfigurationIndex:
-      type: object
-      properties:
-        configurationIndex:
-          type: integer
-          format: int32
     NfcTokenRequestDTO_2:
       allOf:
       - $ref: '#/components/schemas/TokenRequestDTO_2'
@@ -607,66 +667,6 @@ components:
       - serial_number
       - transponder_type
       title: NFCTokenRequestDTO
-    ApiErrorResponseDTO:
-      type: object
-      description: Standard error response returned by the API for all error status codes.
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
-          type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          example: 400
-        error:
-          type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
-          type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
-          type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
-          type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO_2'
-        errorCode:
-          type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
-    PasswordTokenRequestDTO:
-      allOf:
-      - $ref: '#/components/schemas/TokenRequestDTO_2'
-      - type: object
-        properties:
-          username:
-            type: string
-            description: Username. Mandatory if the grant_type is password.
-            minLength: 1
-          password:
-            type: string
-            description: Password. Mandatory if the grant_type is password.
-            minLength: 1
-      description: Password Token Request for a user
-      required:
-      - grant_type
-      - machine_type
-      - password
-      - serial_number
-      - username
-      title: PasswordTokenRequestDTO
   securitySchemes:
     user:
       type: http
@@ -677,5 +677,5 @@ components:
       name: x-api-key
       in: header
 x-refined-from:
-- egym-equipment-vendor-server-openapi.yml
-- egym-equipment-vendor-standalone-openapi.yml
+- egym-equipment-vendor-server-openapi-original.json
+- egym-equipment-vendor-standalone-openapi-original.json

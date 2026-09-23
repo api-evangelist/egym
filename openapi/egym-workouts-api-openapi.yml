@@ -85,80 +85,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    HRMDataDto:
-      type: object
-      properties:
-        targetHeartRate:
-          type: integer
-          format: int32
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/HeartRateZoneDto'
-      description: HRM (heart rate monitor) data.
-    CombinedActivityDto:
-      type: object
-      properties:
-        name:
-          type: string
-        rangeOfMotion:
-          type: number
-          format: double
-        strengthBenchmarkMale:
-          type: number
-          format: double
-        strengthBenchmarkFemale:
-          type: number
-          format: double
-        calculationMethod:
-          type: string
-          enum:
-          - ADD_SPECIFIED_WEIGHT
-          - SUBTRACT_SPECIFIED_WEIGHT
-        maxStrengthTestBodyRegion:
-          type: string
-          enum:
-          - UPPER_BODY
-          - CORE
-          - LEGS
-          - WHOLE
-      description: Activity details
-    WorkoutExerciseSummaryDTO:
-      type: object
-      properties:
-        totalDuration:
-          type: integer
-          description: Total duration of the whole exercise in seconds.
-          format: int64
-        totalDistance:
-          type: number
-          description: The total distance of the whole exercise in metres.
-          format: double
-        verticalDistance:
-          type: number
-          description: The vertical distance of this exercise in metres.
-          format: double
-        avgPace:
-          type: number
-          description: Average pace in minute per kilometer
-          format: double
-        avgHeartRate:
-          type: integer
-          description: Average heart rate in beats per minute (bpm)
-          format: int32
-        maxHeartRate:
-          type: integer
-          description: Max heart rate in beats per minute (bpm)
-          format: int32
-        avgSpeed:
-          type: number
-          description: Average speed in in metres per second
-          format: double
-        avgIncline:
-          type: number
-          description: Average incline
-          format: double
-      description: Workout summary contains data fields which summarize the exercise, thus one does not need to go over all sets.
     HeartRateZoneDto:
       type: object
       properties:
@@ -214,22 +140,6 @@ components:
             type: string
             description: Additional information of the error context
           description: Additional information of the error context
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
     WorkoutDetailsDTO:
       type: object
       properties:
@@ -246,6 +156,127 @@ components:
           type: string
           description: Workout tracking timezone
           format: time-zone
+    CombinedActivityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        rangeOfMotion:
+          type: number
+          format: double
+        strengthBenchmarkMale:
+          type: number
+          format: double
+        strengthBenchmarkFemale:
+          type: number
+          format: double
+        calculationMethod:
+          type: string
+          enum:
+          - ADD_SPECIFIED_WEIGHT
+          - SUBTRACT_SPECIFIED_WEIGHT
+        maxStrengthTestBodyRegion:
+          type: string
+          enum:
+          - UPPER_BODY
+          - CORE
+          - LEGS
+          - WHOLE
+      description: Activity details
+    WorkoutExerciseDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Exercise ID
+          format: int64
+        activity:
+          $ref: '#/components/schemas/CombinedActivityDto'
+        sets:
+          type: array
+          description: Exercise sets
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetDTO'
+        completedAt:
+          type: string
+          description: Exercise completion local time
+          format: date-time
+        timezone:
+          type: string
+          description: Exercise completion timezone
+          format: time-zone
+        kiloCalories:
+          type: number
+          description: Exercise kilocalories
+          format: double
+        hrmData:
+          $ref: '#/components/schemas/HRMDataDto'
+        summary:
+          $ref: '#/components/schemas/WorkoutExerciseSummaryDTO'
+      description: Exercises of workout
+    WorkoutExerciseSummaryDTO:
+      type: object
+      properties:
+        totalDuration:
+          type: integer
+          description: Total duration of the whole exercise in seconds.
+          format: int64
+        totalDistance:
+          type: number
+          description: The total distance of the whole exercise in metres.
+          format: double
+        verticalDistance:
+          type: number
+          description: The vertical distance of this exercise in metres.
+          format: double
+        avgPace:
+          type: number
+          description: Average pace in minute per kilometer
+          format: double
+        avgHeartRate:
+          type: integer
+          description: Average heart rate in beats per minute (bpm)
+          format: int32
+        maxHeartRate:
+          type: integer
+          description: Max heart rate in beats per minute (bpm)
+          format: int32
+        avgSpeed:
+          type: number
+          description: Average speed in in metres per second
+          format: double
+        avgIncline:
+          type: number
+          description: Average incline
+          format: double
+      description: Workout summary contains data fields which summarize the exercise, thus one does not need to go over all sets.
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    HRMDataDto:
+      type: object
+      properties:
+        targetHeartRate:
+          type: integer
+          format: int32
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/HeartRateZoneDto'
+      description: HRM (heart rate monitor) data.
     WorkoutExerciseSetDTO:
       required:
       - setType
@@ -290,37 +321,6 @@ components:
           description: Set recovery time in seconds
           format: int64
       description: Exercise sets
-    WorkoutExerciseDetailsDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: Exercise ID
-          format: int64
-        activity:
-          $ref: '#/components/schemas/CombinedActivityDto'
-        sets:
-          type: array
-          description: Exercise sets
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseSetDTO'
-        completedAt:
-          type: string
-          description: Exercise completion local time
-          format: date-time
-        timezone:
-          type: string
-          description: Exercise completion timezone
-          format: time-zone
-        kiloCalories:
-          type: number
-          description: Exercise kilocalories
-          format: double
-        hrmData:
-          $ref: '#/components/schemas/HRMDataDto'
-        summary:
-          $ref: '#/components/schemas/WorkoutExerciseSummaryDTO'
-      description: Exercises of workout
   securitySchemes:
     mms:
       type: apiKey

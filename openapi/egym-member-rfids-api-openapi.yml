@@ -1,26 +1,7 @@
 openapi: 3.2.0
 info:
   title: MMS API V2 Member RFIDs API
-  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
-
-
-    **Key Features:**
-
-    - Member account and membership management
-
-    - RFID assignment and management
-
-    - Real-time gym visit tracking (check-in/check-out)
-
-    - EGYM product booking (Smart Strength, EGYM+)
-
-    - Trainer task creation and tracking
-
-    - Webhook subscriptions for event notifications
-
-    - Push notifications to EGYM mobile apps
-
-    - Member migration from V1 API'
+  description: RESTful API specification for integrating gym management systems with the EGYM platform.
   termsOfService: https://egym.com/en/terms/
   contact:
     name: MMS Connect Team
@@ -327,109 +308,50 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    CorporateFitnessDTO:
+    MemberAccountDTO:
       type: object
       properties:
-        startTimestamp:
+        accountId:
           type: string
-          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership will start, in case that is in the future. This field will not be returned in case of an active or past corporate fitness membership.
-          example: '2021-03-08T18:26:47Z'
-        endTimestamp:
+          description: The EGYM account ID for the Gym Member.
+          readOnly: true
+        email:
           type: string
-          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership ends. This field is only returned in case there is a defined end timestamp for the corporate fitness membership.
-          example: '2021-03-08T18:26:47Z'
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
+          description: The Member email address. It should be unique within the gym chain.
+          minLength: 1
+        firstName:
           type: string
-          format: date-time
-          description: The timestamp of the request.
-        path:
+          description: The Member first name.
+          example: John
+          minLength: 1
+        lastName:
           type: string
-          description: The path requested.
-        requestId:
+          description: The Member last name.
+          example: Wick
+          minLength: 1
+        dateOfBirth:
           type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          format: int32
-          description: The http status code.
-        error:
+          format: date
+          description: 'The Member date of birth. format: yyyy-MM-dd'
+        gender:
           type: string
-          description: The error.
-        errorCode:
-          type: string
-          description: The static error code.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          description: Additional information of the error context
-    RfidDTO:
-      type: object
-      properties:
-        rfid:
-          type: string
-          description: String representing RFID value in hex (with leading "0x"). Please ensure that the RFID string after "0x" contains an even number of hexadecimal characters and that only RFID information is sent in this field, but no other medium like magnetic stripe card numbers or bar codes.
-          pattern: ^0x([0-9a-fA-F]{2})+$
-        tagFormat:
-          type: string
-          description: The rfid tag format.
+          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE for the usage of the machines.
           enum:
-          - HITAG1
-          - MIFARE
-          - LEGIC
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        contact:
+          $ref: '#/components/schemas/ContactDTO'
+          description: The user's contact information
+        membership:
+          $ref: '#/components/schemas/MembershipDTO'
+          description: The membership details.
       required:
-      - rfid
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
-    ContactDTO:
-      type: object
-      properties:
-        phone:
-          type: string
-          description: The Member telephone number.
-        street:
-          type: string
-          description: Street name in member's address.
-        streetNumber:
-          type: string
-          description: Street number in member's address.
-        zipCode:
-          type: string
-          description: Zip Code in member's address.
-        city:
-          type: string
-          description: City in member's address.
-        state:
-          type: string
-          description: State in member's address.
-        country:
-          type: string
-          description: Country of the member's address in ISO 3166-1 alpha-2.
-          example: DE
+      - email
+      - firstName
+      - gender
+      - lastName
+      - membership
     MembershipDTO:
       type: object
       properties:
@@ -478,50 +400,109 @@ components:
       - membershipId
       - membershipType
       - startOfContract
-    MemberAccountDTO:
+    RfidDTO:
       type: object
       properties:
-        accountId:
+        rfid:
           type: string
-          description: The EGYM account ID for the Gym Member.
-          readOnly: true
-        email:
+          description: String representing RFID value in hex (with leading "0x"). Please ensure that the RFID string after "0x" contains an even number of hexadecimal characters and that only RFID information is sent in this field, but no other medium like magnetic stripe card numbers or bar codes.
+          pattern: ^0x([0-9a-fA-F]{2})+$
+        tagFormat:
           type: string
-          description: The Member email address. It should be unique within the gym chain.
-          minLength: 1
-        firstName:
-          type: string
-          description: The Member first name.
-          example: John
-          minLength: 1
-        lastName:
-          type: string
-          description: The Member last name.
-          example: Wick
-          minLength: 1
-        dateOfBirth:
-          type: string
-          format: date
-          description: 'The Member date of birth. format: yyyy-MM-dd'
-        gender:
-          type: string
-          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE for the usage of the machines.
+          description: The rfid tag format.
           enum:
-          - MALE
-          - FEMALE
-          - NON_BINARY
-        contact:
-          $ref: '#/components/schemas/ContactDTO'
-          description: The user's contact information
-        membership:
-          $ref: '#/components/schemas/MembershipDTO'
-          description: The membership details.
+          - HITAG1
+          - MIFARE
+          - LEGIC
       required:
-      - email
-      - firstName
-      - gender
-      - lastName
-      - membership
+      - rfid
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
+    ContactDTO:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: The Member telephone number.
+        street:
+          type: string
+          description: Street name in member's address.
+        streetNumber:
+          type: string
+          description: Street number in member's address.
+        zipCode:
+          type: string
+          description: Zip Code in member's address.
+        city:
+          type: string
+          description: City in member's address.
+        state:
+          type: string
+          description: State in member's address.
+        country:
+          type: string
+          description: Country of the member's address in ISO 3166-1 alpha-2.
+          example: DE
+    CorporateFitnessDTO:
+      type: object
+      properties:
+        startTimestamp:
+          type: string
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership will start, in case that is in the future. This field will not be returned in case of an active or past corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
+        endTimestamp:
+          type: string
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership ends. This field is only returned in case there is a defined end timestamp for the corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
     RfidListDTO:
       type: object
       properties:

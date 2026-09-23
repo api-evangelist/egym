@@ -1,7 +1,7 @@
 openapi: 3.2.0
 info:
   title: Canonical GroupX Classes L2 API
-  description: "This specification defines *Canonical API* for GroupX Classes Service, which provides operations for working with Group Exercise Classes, their schedules and attendees.\n\n## Introduction to ClubMS and Canonical APIs\n**Club Management Software (ClubMS)** is a suite of software for managing fitness clubs: billing system, members management, group calendars, payments processing, personal trainers, etc. ClubMS is also know as Membership Management Software (MMS).\n\n\nThere are a lot of different ClubMS in the world, and they all have different domain models. Generally speaking, for a given fitness location, different services might be provided by different external ClubMS.\n\n**Canonical API** hides this difference by mapping to EGYM Canonical Model. Implementation of Canonical API for a certain ClubMS service makes it compatible with EGYM Platform.\n\nSome of the contracts in this Canonical API definition depend on multiple meta options. These meta options are not reflected by API parameters directly, but define conditional API contracts. Meta option values reflect ClubMS specifics and are provided by *Implementer of Canonical API*. EGYM Platform is then configured with these option values to enable integration with the given canonized service. **For example:** Different ClubMS use different types of credentials (security schemas) for their operations: client secret, chain secret, or location secret. Galaxy will expect corresponding configuration and pass appropriate parameters depending on corresponding meta option value.\n\nThe meta options are defined by a json schema that accompanies the yaml file (they should be sent together).\n\nAll conditional contracts that depend on specific meta option values are described in this Canonical API with references like `metaOption::someOptionName`. Implementer of Canonical API might want to remove all these conditional contracts and replace them by concrete contracts based on ClubMS specific meta option values (that should be known to the Implementer of Canonical API). String \"metaOption::\" can be used for quick finding of all such conditional contracts.\n\n\n## General API Contracts\n### Date Format\nAll dates in the API are strings in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format and in **UTC time zone**:\n```\nyyyy-MM-dd'T'HH:mm:ss'Z'\n```\nValid example:\n```\n2010-08-21T22:31:20Z\n```\nInvalid examples:\n```\n2008-05-26T07:23: (missing seconds)\n2008-05-26T07:23:01.500Z (nanoseconds value is not supported)\n2008-05-26 07:23:01Z  ('T' in the middle is not specified)\n2008-05-23T07:23:01 (trailing 'Z' is missing)\n```\n\n### Additional Data HTTP Headers\nThere are several HTTP Headers that must be used to provide additional data to every canonical operation.\nThese headers presence based on *`metaOption::includeClientData`*, *`metaOption::includeChainData`*, *`metaOption::includeLocationData`*, *`metaOption::includeLocationGroupData`*, *`metaOption::includeUserData`* options. These options should be switched to `true` if any of the following applicable:\n* security access of certain level required;\n* extra configuration data is expected on some level;\n\n#### X-Client-ID\nThis header contains Partner Client ID. It is a credential to access canonical API in scope of specific Partner implementation.\n\nIt is required for every canonical operation which supports API access restriction on Partner level.\nIn this case *`metaOption::includeClientData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Client-Secret\nThis header contains Partner Client Secret. It is a credential to access canonical API in scope of specific Partner implementation.\nIt is required for every canonical operation which supports API access restriction on Partner level.\nIn this case *`metaOption::includeClientData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Chain-ID\nThis header provides ID of a Chain which we access in canonical operation.\n\nRequired for every canonical operaiton based on Chain information (security, configuration etc.)\nIn this case *`metaOption::includeChainData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Chain-Secret\nThis header provides chain-level secret correspondent to Chain ID defined in `X-Chain-ID` header.\n\nRequired if ClubMS expects access tokens or secret keys on accessing to Chain level information via API.\nIn this case *`metaOption::includeChainData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Secret can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Group-ID\nThis header provides ID of a Location Group which we access in canonical operation.\nRequired for every canonical operation based on Location Group information (security, configuration etc.)\nIn this case *`metaOption::includeLocationGroupData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Group-Secret\nThis header provides location group level secret correspondent to Location Group ID defined in `X-Location-Group-ID` header.\nRequired if ClubMS expects access tokens or secret keys on accessing to Location Group level information via API.\nIn this case *`metaOption::includeLocationGroupData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Access data can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\n Possible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-ID\nThis header provides ID of a Location which we access in canonical operation.\nRequired for every canonical operaiton based on Location information (security, configuration etc.)\nIn this case *`metaOption::includeLocationData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-Location-Secret\nThis header provides location-level secret correspondent to Location ID defined in `X-Location-ID` header.\nRequired if ClubMS expects access tokens or secret keys on accessing to Location level information via API.\nIn this case *`metaOption::includeLocationData`* must be switched on for that operation.\n\n**_Additional Contracts:_** Access data can be any string of up to 1024 characters allowed for HTTP header values (see RFC2616).\n\n Possible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-ID\nThis header contains User ID in Partner system. Required for every canonical operaiton which supports API access restriction on User level.\nIn this case *`metaOption::includeUserData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-Secret\nThis header contains User Secret in Partner system.\nIt is required for every canonical operation which supports API access restriction on User level.\nIn this case *`metaOption::includeUserData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n#### X-User-Locale\nThis header contains Locale which was choosed on users phone. Required for every canonical operaiton which supports needs localization.\nIn this case *`metaOption::includeLocalizationData`* must be switched on for that operation.\n\nPossible reasons of validation errors:\n* missing => 400\n* invalid => 401\n\n&nbsp;\n\n### Errors\nConventional HTTP response codes are used to indicate the success or failure of an API request.\n\nGeneral Requirements:\n* The contracts of this section apply to every operation of Canonical APIs.\n* Furthermore, every operation specifies its own specific contracts which extend these ones.\n* Every error response has field `message`.\n* Every error response has field `cause`.\n  * There are standard causes associated with corresponding HTTP status codes (4xx, 5xx).\n  * And there might be also custom causes always defined on operation level and associated with 422 status code.\n\n\n#### 400: Bad Request\nCause is `badRequest`. This cause is used for all parameter-level validation errors. This is often due to missing a required parameter or wrong parameter format. This can be also due to violation of some contract defined in the given specification for a certain parameter.\n\nRequirements:\n* Error message can simply contain \"Bad Request\"\n* Additional field `errors` must be present, which is a map of pairs: `\"<parameterName>\": \"<reason>\"`. See example.\n* Parameter names are defined in the documentation of respective canonical operations.\n* Possible reasons are defined in the documentation of parameters of respective canonical operations.\n\nExample:\n```\n{\n  \"message\": \"Bad Request\",\n  \"cause\": \"badRequest\",\n  \"errors\": {\n    \"locationId\": \"missing\",\n    \"startDateTime\": \"greaterThanEndDateTime\",\n    \"endDateTime\": \"lessThanStartDateTime\"\n  }\n}\n```\n&nbsp;\n\n#### 401: Unauthorized Access\nCause is `unauthorizedAccess`. Bad, unexpected or expired access data (see 'Additional Data HTTP Headers': `X-Client-ID`/`X-Client-Secret`, `X-Chain-ID`/`X-Chain-Secret`, `X-Location-ID`/`X-Location-Secret`, `X-Location-Group-ID`/`X-Location-Group-Secret`, `X-User-ID`/`X-User-Secret`).\n\nRequirements:\n* Error message must clearly indicate the reason of the failure and what is expected to fix it.\n* Additional field `accessLevel` must indicate the level of access requested that caused this error (i.e. level of access backed by correspondent access headers): `client`, `chain`, or `location`.\n\nSuggested action: Fix access data and then retry.\n\nExample:\n```\n// 1st example\n{\n  \"message\": \"X-Client-Id is invalid\",\n  \"cause\": \"unauthorizedAccess\",\n  \"accessLevel\": \"client\"\n}\n// 2nd example\n{\n  \"message\": \"X-Location-Secret is invalid\",\n  \"cause\": \"unauthorizedAccess\",\n  \"accessLevel\": \"location\"\n}\n```\n&nbsp;\n\n#### 404: Entity Not Found\nCause is `entityNotFound`. Any referenced entity or resource is not found.\n\nRequirements:\n* Error message must clearly indicate the reason of the failure.\n* Additional field `parameter` must be present. Parameter indicates which parameter of the request has wrong value that was not found. This parameter is then indicated in the documentation of respective canonical operation in section \"Possible reasons of validation errors\".\n\nExample:\n```\n{\n  \"message\": \"Location 'ESD3432' is not found\",\n  \"cause\": \"entityNotFound\",\n  \"parameter\": \"locationId\"\n}\n```\n&nbsp;\n\n#### 404: Resource Not Found\nCause is `resourceNotFound`. The requested endpoint does not exist or is not supported.\n\nExample:\n```\n{\n  \"message\": \"Requested endpoint is not supported\",\n  \"cause\": \"resourceNotFound\"\n}\n```\n&nbsp;\n\n#### 405: Method Not Allowed\nUsed HTTP method is not supported for the given endpoint. For example, POST, PUT, DELETE, etc.\n&nbsp;\n\n#### 422: Custom Cause\nThe request was well-formed but could not be completed due to failed server-side validation checks, which can't be performed by client without server calls.\n\nThis error can be used only if it is specified on operation level.\nRequirements:\n* Error message must clearly indicate the reason of the failure.\n* Additional field `cause` must indicate what exactly has caused this error.\n* Additional field `reason` must indicate the reason of the failure and is logically bound to the `cause` by extending it.\n* The values for `cause` and `reason` must be strictly defined at operation level. The values that are not defined at operation level must never be used.\n\nExamples:\n```\n// 1st example\n{\n  \"message\": \"Cannot add an Exerciser id='E67' to a Class 'Stretching' Waitlist since the Exerciser is already in this Waitlist\",\n  \"cause\": \"addToWaitlistFailed\",\n  \"reason\": \"userAlreadyInWaitlist\"\n}\n// 2nd example\n{\n  \"message\": \"Cannot add an Exerciser id='E67' to a Class 'Stretching' Waitlist since the Exerciser is the Class Attendee already\",\n  \"cause\": \"addToWaitlistFailed\",\n  \"reason\": \"userAlreadyAttendee\"\n}\n// 3nd example\n{\n  \"message\": \"Class 'Yoga 24/7' canot be booked by Exerciser with id='E3471' due to lack of Product to pay for the Class\",\n  \"cause\": \"bookingFailed\",\n  \"reason\": \"lackOfProduct\"\n}\n```\n&nbsp;\n\n#### 429: Too Many Requests\nCause is `rateLimitsExceeded`. Too many requests hit the API too quickly (Rate limit exceeded).\n\nExample:\n```\n{\n  \"message\": \"Rate limit exceeded. External system response: 'Rate limit exceeded'\",\n  \"cause\": \"rateLimitsExceeded\"\n}\n```\n&nbsp;\n\n#### 500: Internal Server Error\nCause is `internalUnexpectedError`. An unexpected error occurred while processing the request. Suggested action: Use exponential backoff.\n\nDetailed reason of internal server error is usually not returned in response to the client. Detailed reason (error stack trace) must be logged in internal logging system.\n\nExample:\n```\n{\n  \"message\": \"Internal Server Error: NullPointerException\",\n  \"cause\": \"internalUnexpectedError\"\n}\n```\n&nbsp;\n\n#### 503: System Unavailable\nCause is `systemUnavailable`. The server is currently unavailable (because it is overloaded or down for maintenance). Generally, this is a temporary state.\n\nExample:\n```\n{\n  \"message\": \"Server is down for maintenance\",\n  \"cause\": \"systemUnavailable\"\n}\n```\n&nbsp;\n"
+  description: This specification defines *Canonical API* for GroupX Classes Service, which provides operations for working with Group Exercise Classes, their schedules and attendees.
   version: '1.0'
 servers:
 - url: https://example.org/%3Cpartner%3E/group-classes/v1.0
@@ -19,9 +19,7 @@ paths:
 
         #### Additional contracts
 
-        N/A
-
-        '
+        N/A'
       operationId: searchClasses
       parameters:
       - name: locationId
@@ -138,7 +136,14 @@ paths:
       tags:
       - L2
       summary: Get Class Details
-      description: "This operation returns all detailed information about GroupX Class.\n\n#### Additional Contracts\n 1. Parameter `exerciserId` is supported only if *`metaOption::bookingEnabled`* = true. If booking is disabled, then 400 status code must be returned when `exerciserId` is specified.\n 2. If *`metaOption::bookingEnabled`* = true, parameter `exerciserId` is optional. If it is specified, then `GroupXClassAttendeeBookingDetails` is provided in response. If `exerciserId` is not specified, then response has no attendee booking details.\n"
+      description: 'This operation returns all detailed information about GroupX Class.
+
+
+        #### Additional Contracts
+
+        1. Parameter `exerciserId` is supported only if *`metaOption::bookingEnabled`* = true. If booking is disabled, then 400 status code must be returned when `exerciserId` is specified.
+
+        2. If *`metaOption::bookingEnabled`* = true, parameter `exerciserId` is optional. If it is specified, then `GroupXClassAttendeeBookingDetails` is provided in response. If `exerciserId` is not specified, then response has no attendee booking details.'
       operationId: getClassDetails
       parameters:
       - name: classId
@@ -250,50 +255,14 @@ paths:
                           eligible: false
 components:
   parameters:
+    userLocaleHeader:
+      name: X-User-Locale
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
     chainIdHeader:
       name: X-Chain-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationGroupIdHeader:
-      name: X-Location-Group-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    userSecretHeader:
-      name: X-User-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    clientIdHeader:
-      name: X-Client-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationIdHeader:
-      name: X-Location-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationSecretHeader:
-      name: X-Location-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    chainSecretHeader:
-      name: X-Chain-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    userIdHeader:
-      name: X-User-ID
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
@@ -304,55 +273,72 @@ components:
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
+    userSecretHeader:
+      name: X-User-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationSecretHeader:
+      name: X-Location-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationIdHeader:
+      name: X-Location-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    userIdHeader:
+      name: X-User-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    chainSecretHeader:
+      name: X-Chain-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationGroupIdHeader:
+      name: X-Location-Group-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
     clientSecretHeader:
       name: X-Client-Secret
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
-    userLocaleHeader:
-      name: X-User-Locale
+    clientIdHeader:
+      name: X-Client-ID
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
   schemas:
-    GroupXClassOperationExtendedEligibility:
-      type: object
-      description: Represents particular operation eligibility for Class/Exerciser pair providing extra data.
-      properties:
-        eligible:
-          type: boolean
-          description: 'Indicates if operation on a given Class is eligible for a give Exerciser.
+    CustomInfo:
+      type: array
+      description: 'Key-Value map to represent additional information of an entity.
 
-            '
-        lackOfProduct:
-          type: boolean
-          description: 'Indicates that there are enough products on an Exerciser''s account balance to pay for a Class. Products could be Class bundles, points etc.
+        Partners could contain diverse information of same entities. This type designed to store that information.
 
-            This attribute must be absent for eligible=`true`.
-
-            '
-        userPaymentOnFile:
-          type: boolean
-          description: 'Indicates that user has a valid payment source on file to pay for a Class.
-
-            This attribute must be absent for eligible=`true` or lackOfProduct=`false`.
-
-            '
-      required:
-      - eligible
-    GroupXClassOperationEligibility:
-      type: object
-      description: Represents particular operation eligibility for Class/Exerciser pair.
-      properties:
-        eligible:
-          type: boolean
-          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
-
-            '
-      required:
-      - eligible
+        '
+      items:
+        type: object
+        properties:
+          key:
+            type: string
+          value:
+            type: string
+        required:
+        - key
+        - value
     GroupXClassBrief:
       type: object
       description: Brief details of the groupX class for bulk retrieval
@@ -422,23 +408,6 @@ components:
       - name
       - startDateTime
       - endDateTime
-    CustomInfo:
-      type: array
-      description: 'Key-Value map to represent additional information of an entity.
-
-        Partners could contain diverse information of same entities. This type designed to store that information.
-
-        '
-      items:
-        type: object
-        properties:
-          key:
-            type: string
-          value:
-            type: string
-        required:
-        - key
-        - value
     GroupXClass:
       type: object
       description: GroupX Class with all details
@@ -534,32 +503,42 @@ components:
           description: Legal notes for this class (often provider specific)
         customInfo:
           $ref: '#/components/schemas/CustomInfo'
-    GroupXClassAttendeeBookingDetails:
+    GroupXClassOperationExtendedEligibility:
       type: object
-      description: Information about attendance of the given exerciser in this GroupX Class
+      description: Represents particular operation eligibility for Class/Exerciser pair providing extra data.
       properties:
-        exerciserId:
-          type: string
-          description: ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.
-        booked:
+        eligible:
           type: boolean
-          description: Indicates whether this class is booked by the given exerciser
-        waitlistBooked:
+          description: 'Indicates if operation on a given Class is eligible for a give Exerciser.
+
+            '
+        lackOfProduct:
           type: boolean
-          description: Indicates whether the given exerciser is in the waitlist of this class
-        spotBooked:
-          type: string
-          description: Indicates exact spot booked by the given exerciser
-        eligibility:
-          $ref: '#/components/schemas/GroupXClassEligibility'
-        waitlistPosition:
-          type: integer
-          description: Position of given exerciser in the waitlist of this class
-          format: int32
+          description: 'Indicates that there are enough products on an Exerciser''s account balance to pay for a Class. Products could be Class bundles, points etc.
+
+            This attribute must be absent for eligible=`true`.
+
+            '
+        userPaymentOnFile:
+          type: boolean
+          description: 'Indicates that user has a valid payment source on file to pay for a Class.
+
+            This attribute must be absent for eligible=`true` or lackOfProduct=`false`.
+
+            '
       required:
-      - exerciserId
-      - booked
-      - waitlistBooked
+      - eligible
+    GroupXClassOperationEligibility:
+      type: object
+      description: Represents particular operation eligibility for Class/Exerciser pair.
+      properties:
+        eligible:
+          type: boolean
+          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
+
+            '
+      required:
+      - eligible
     GroupXClassBookingDetails:
       type: object
       description: Booking details of the GroupX Class
@@ -586,4 +565,30 @@ components:
       - capacity
       - booked
       - waitlistCapacity
+      - waitlistBooked
+    GroupXClassAttendeeBookingDetails:
+      type: object
+      description: Information about attendance of the given exerciser in this GroupX Class
+      properties:
+        exerciserId:
+          type: string
+          description: ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.
+        booked:
+          type: boolean
+          description: Indicates whether this class is booked by the given exerciser
+        waitlistBooked:
+          type: boolean
+          description: Indicates whether the given exerciser is in the waitlist of this class
+        spotBooked:
+          type: string
+          description: Indicates exact spot booked by the given exerciser
+        eligibility:
+          $ref: '#/components/schemas/GroupXClassEligibility'
+        waitlistPosition:
+          type: integer
+          description: Position of given exerciser in the waitlist of this class
+          format: int32
+      required:
+      - exerciserId
+      - booked
       - waitlistBooked

@@ -7,7 +7,7 @@ info:
     email: support@egym.com
   termsOfService: https://egym.com/us/terms/
   version: '1.0'
-  description: 'Operations tagged Body Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Body Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
   description: Generated server url
@@ -968,32 +968,6 @@ components:
           type: number
           description: The value of the metric
           example: '75.5'
-    FieldErrorDTO_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
-    LatestBodyMeasurementsValuesResponseDTO:
-      type: object
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string values. Only metrics that have been measured for the user are present in the response.
-          example:
-            BMI: 22.5
-            WEIGHT_KG: 75
-            HEIGHT_CM: 180
-            BODY_FAT_PERCENTS: 18.3
-            WAIST_CM: 82
     MeasurementDTO_2:
       type: object
       properties:
@@ -1055,6 +1029,32 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    LatestBodyMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            BMI: 22.5
+            WEIGHT_KG: 75
+            HEIGHT_CM: 180
+            BODY_FAT_PERCENTS: 18.3
+            WAIST_CM: 82
   securitySchemes:
     user:
       type: http
@@ -1065,5 +1065,5 @@ components:
       name: x-api-key
       in: header
 x-refined-from:
-- egym-equipment-vendor-server-openapi.yml
-- egym-equipment-vendor-standalone-openapi.yml
+- egym-equipment-vendor-server-openapi-original.json
+- egym-equipment-vendor-standalone-openapi-original.json

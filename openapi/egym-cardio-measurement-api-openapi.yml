@@ -7,7 +7,7 @@ info:
     email: support@egym.com
   termsOfService: https://egym.com/us/terms/
   version: '1.0'
-  description: 'Operations tagged Cardio Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Cardio Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
   description: Generated server url
@@ -317,24 +317,6 @@ components:
           description: The rejected value.
           example: 3
       description: The constraint violations.
-    CardioMeasurementHistoryResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the measurement
-          example: 123
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp when the measurement was created (epoch milliseconds)
-          example: 1647685800000
-        metrics:
-          type: array
-          description: List of cardio metrics for this measurement
-          items:
-            $ref: '#/components/schemas/CardioMetricDTO'
     CardioMetricDTO:
       type: object
       properties:
@@ -434,32 +416,6 @@ components:
           type: number
           description: The value of the metric
           example: '120.5'
-    LatestCardioMeasurementsValuesResponseDTO:
-      type: object
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-          description: Map of cardio metric types to their latest recorded numeric values. Keys are CardioMetricType enum string values. Only metrics that have been measured for the user are present in the response.
-          example:
-            RESTING_HEART_RATE: 62
-            VO2MAX: 48.5
-            SYSTOLIC_PRESSURE: 120
-            DIASTOLIC_PRESSURE: 80
-            MAX_WATTS: 310
-    FieldErrorDTO_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     MeasurementDTO_2:
       type: object
       properties:
@@ -521,6 +477,50 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    LatestCardioMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of cardio metric types to their latest recorded numeric values. Keys are CardioMetricType enum string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            RESTING_HEART_RATE: 62
+            VO2MAX: 48.5
+            SYSTOLIC_PRESSURE: 120
+            DIASTOLIC_PRESSURE: 80
+            MAX_WATTS: 310
+    CardioMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of cardio metrics for this measurement
+          items:
+            $ref: '#/components/schemas/CardioMetricDTO'
   securitySchemes:
     user:
       type: http
@@ -531,5 +531,5 @@ components:
       name: x-api-key
       in: header
 x-refined-from:
-- egym-equipment-vendor-server-openapi.yml
-- egym-equipment-vendor-standalone-openapi.yml
+- egym-equipment-vendor-server-openapi-original.json
+- egym-equipment-vendor-standalone-openapi-original.json

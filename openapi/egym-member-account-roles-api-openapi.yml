@@ -1,26 +1,7 @@
 openapi: 3.2.0
 info:
   title: MMS API V2 Member Account Roles API
-  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
-
-
-    **Key Features:**
-
-    - Member account and membership management
-
-    - RFID assignment and management
-
-    - Real-time gym visit tracking (check-in/check-out)
-
-    - EGYM product booking (Smart Strength, EGYM+)
-
-    - Trainer task creation and tracking
-
-    - Webhook subscriptions for event notifications
-
-    - Push notifications to EGYM mobile apps
-
-    - Member migration from V1 API'
+  description: RESTful API specification for integrating gym management systems with the EGYM platform.
   termsOfService: https://egym.com/en/terms/
   contact:
     name: MMS Connect Team
@@ -141,15 +122,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    GymRolesDTO:
-      type: object
-      properties:
-        trainer:
-          type: boolean
-          description: If trainer is true, assign trainer right for account, otherwise remove trainer rights.
-        gymOwner:
-          type: boolean
-          description: If gymOwner is true, assign gymOwner right for account, otherwise remove gymOwner rights.
     ErrorDTO:
       type: object
       properties:
@@ -187,6 +159,15 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
+    GymRolesDTO:
+      type: object
+      properties:
+        trainer:
+          type: boolean
+          description: If trainer is true, assign trainer right for account, otherwise remove trainer rights.
+        gymOwner:
+          type: boolean
+          description: If gymOwner is true, assign gymOwner right for account, otherwise remove gymOwner rights.
     FieldErrorDTO:
       type: object
       properties:

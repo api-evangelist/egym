@@ -75,12 +75,65 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 components:
+  responses:
+    Unauthorized:
+      description: Missing, malformed, or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Forbidden:
+      description: API key is not authorized to access this resource.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    BadRequest:
+      description: Invalid request parameters or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    InternalServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
   schemas:
+    AsyncExportJobStatus:
+      type: string
+      enum:
+      - IN_PROGRESS
+      - DONE
+      - FAILED
+      - EXPIRED
     ErrorDTO:
       type: object
       properties:
         message:
           type: string
+    ExportType:
+      type: string
+      enum:
+      - SMART_STRENGTH_WORKOUTS
+      - SMART_STRENGTH_ASSESSMENTS
+      - FLEXIBILITY_MEASUREMENTS
+      - BODY_MEASUREMENTS
+    AsyncExportCreateResponse:
+      type: object
+      properties:
+        jobId:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/AsyncExportJobStatus'
     AsyncExportStatusResponse:
       type: object
       properties:
@@ -91,13 +144,6 @@ components:
           - string
           - 'null'
           format: uri
-    ExportType:
-      type: string
-      enum:
-      - SMART_STRENGTH_WORKOUTS
-      - SMART_STRENGTH_ASSESSMENTS
-      - FLEXIBILITY_MEASUREMENTS
-      - BODY_MEASUREMENTS
     AsyncExportFileType:
       type: string
       enum:
@@ -126,52 +172,6 @@ components:
           default: JSONL
           allOf:
           - $ref: '#/components/schemas/AsyncExportFileType'
-    AsyncExportCreateResponse:
-      type: object
-      properties:
-        jobId:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/AsyncExportJobStatus'
-    AsyncExportJobStatus:
-      type: string
-      enum:
-      - IN_PROGRESS
-      - DONE
-      - FAILED
-      - EXPIRED
-  responses:
-    BadRequest:
-      description: Invalid request parameters or body.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    Forbidden:
-      description: API key is not authorized to access this resource.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    Unauthorized:
-      description: Missing, malformed, or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    InternalServerError:
-      description: Unexpected server error.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    NotFound:
-      description: Requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
   securitySchemes:
     apiKeyAuth:
       type: apiKey

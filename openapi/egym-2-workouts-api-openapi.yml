@@ -74,42 +74,20 @@ paths:
                 $ref: '#/components/schemas/WorkoutBriefResponse'
 components:
   schemas:
-    WorkoutBriefResponse:
+    ValidationErrorDto:
       type: object
       properties:
-        exercises:
-          type: array
-          description: Submitted workout exercises.
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseResponse'
-        completedAt:
-          type: string
-          format: date-time
-          description: Workout tracking local time.
-        timezone:
-          type: string
-          description: Workout tracking timezone.
-    WorkoutExerciseResponse:
-      type: object
-      properties:
-        id:
+        code:
           type: integer
-          format: int64
-          description: Server-workout exercise ID.
-        activityId:
-          type: integer
-          format: int64
-          description: EGYM activity ID.
-        label:
-          type: string
-          description: Localized activity name.
-    FieldErrorDto:
-      type: object
-      properties:
-        name:
+          format: int32
+        error:
           type: string
         message:
           type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldErrorDto'
     WorkoutExerciseSetRequest:
       type: object
       properties:
@@ -169,6 +147,39 @@ components:
           - MAX_OUT
       required:
       - setType
+    WorkoutRequest:
+      type: object
+      properties:
+        exercises:
+          type: array
+          description: Exercises of the workout.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseRequest'
+          minItems: 1
+      required:
+      - exercises
+    WorkoutBriefResponse:
+      type: object
+      properties:
+        exercises:
+          type: array
+          description: Submitted workout exercises.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseResponse'
+        completedAt:
+          type: string
+          format: date-time
+          description: Workout tracking local time.
+        timezone:
+          type: string
+          description: Workout tracking timezone.
+    FieldErrorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
     WorkoutExerciseRequest:
       type: object
       properties:
@@ -205,28 +216,17 @@ components:
       required:
       - activityId
       - sets
-    ValidationErrorDto:
+    WorkoutExerciseResponse:
       type: object
       properties:
-        code:
+        id:
           type: integer
-          format: int32
-        error:
+          format: int64
+          description: Server-workout exercise ID.
+        activityId:
+          type: integer
+          format: int64
+          description: EGYM activity ID.
+        label:
           type: string
-        message:
-          type: string
-        fieldErrors:
-          type: array
-          items:
-            $ref: '#/components/schemas/FieldErrorDto'
-    WorkoutRequest:
-      type: object
-      properties:
-        exercises:
-          type: array
-          description: Exercises of the workout.
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseRequest'
-          minItems: 1
-      required:
-      - exercises
+          description: Localized activity name.

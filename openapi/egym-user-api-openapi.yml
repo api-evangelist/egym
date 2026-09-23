@@ -2,7 +2,7 @@ openapi: 3.2.0
 info:
   title: Egym User API
   version: '1.0'
-  description: 'Operations tagged User across 2 of this provider''s published API definitions: egym-equipment-vendor-standalone-openapi.yml, egym-mms-api-v1-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged User across 2 of this provider''s published API definitions: egym-equipment-vendor-standalone-openapi-original.json, egym-mms-api-v1-openapi-original.yaml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://partner-api.ext-1.test.co.egym.coffee
   description: Test (ext-1)
@@ -271,6 +271,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: postUserPublish
+      x-operation-id-source: derived
     servers:
     - url: https://mms.api.ed.ts.egym.coffee/v1
       description: Test
@@ -331,6 +333,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: getUserProfile
+      x-operation-id-source: derived
     servers:
     - url: https://mms.api.ed.ts.egym.coffee/v1
       description: Test
@@ -381,6 +385,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: getUserProduct
+      x-operation-id-source: derived
     put:
       summary: Update product
       description: 'Activates or updates a product for a user in a gym.
@@ -389,9 +395,7 @@ paths:
 
         The product is active starting from the specified start date to the end date.
 
-        In case the product is already active for the user, the start and end date are updated to the transmitted dates.
-
-        '
+        In case the product is already active for the user, the start and end date are updated to the transmitted dates.'
       tags:
       - User
       parameters:
@@ -438,6 +442,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: putUserProduct
+      x-operation-id-source: derived
     servers:
     - url: https://mms.api.ed.ts.egym.coffee/v1
       description: Test
@@ -475,6 +481,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: postUserCheckin
+      x-operation-id-source: derived
     servers:
     - url: https://mms.api.ed.ts.egym.coffee/v1
       description: Test
@@ -512,6 +520,8 @@ paths:
                 $ref: '#/components/schemas/ErrorDto'
       security:
       - accesstoken: []
+      operationId: postUserCheckout
+      x-operation-id-source: derived
     servers:
     - url: https://mms.api.ed.ts.egym.coffee/v1
       description: Test
@@ -519,30 +529,135 @@ paths:
       description: Prod
 components:
   schemas:
-    ImageReferenceDTO:
+    CardioTestUserInfoDTO:
       type: object
       properties:
-        imageType:
+        reminder:
+          type: integer
+          format: int64
+          description: The date of the next cardio-test.
+          example: 1553074207520
+        instructions:
+          type: array
+          description: The instructions to the next step.
+          items:
+            type: string
+            enum:
+            - CONTINUE
+            - FINISH
+            - REQUEST_TRAINING_GOAL
+            - REQUEST_TRAINING_PROGRAM
+            - REQUEST_HEIGHT
+            - REQUEST_WEIGHT
+            - REQUEST_GENDER
+            - REQUEST_DATE_OF_BIRTH
+            - TERMS_AND_CONDITIONS
+            - SUGGEST_CARDIO_TEST
+            - FIRST_CARDIO_TEST
+            - TEST_SKIPPED
+          uniqueItems: true
+    RfidDTO:
+      type: object
+      properties:
+        rfidFormat:
           type: string
+          description: The RFID format.
           enum:
-          - EXERCISE
-          - EQUIPMENT
-          - AVATAR
-          - COVER
-          - GYM_BANNER
-          - GYM_PROFILE
-          - GYM_HEADER
-          - GYM
-          - CHART
-          - BLOG
-          - PARTNER
-          - MOBILESPLASH
-          - SIGNATURE
-          - CARDIOSCAN
-          - MUSCLES
-          - SHARED
-        imageId:
+          - HITAG1
+          - HITAG2
+          - EM4001
+          - EM4002
+          - EM4100
+          - EM4102
+          - EM4022
+          - MIFARE
+          - LEGIC
+          - NFC_EGYM_APPLE
+          - NFC_EGYM_GOOGLE
+          - NFC_EXTERNAL_APPLE
+          - NFC_EXTERNAL_GOOGLE
+        rfid:
           type: string
+          description: The RFID.
+          minLength: 1
+      required:
+      - rfid
+      - rfidFormat
+    TrainingMuscleGroupPreferenceDTO:
+      type: object
+      properties:
+        muscleGroup:
+          type: string
+          description: Denotes which muscle group is targeted in this preference setting
+          enum:
+          - NECK_AND_SHOULDERS
+          - ARMS
+          - CHEST
+          - UPPER_BACK
+          - ABDOMINAL
+          - LOWER_BACK
+          - HIP
+          - BUTTOCK
+          - THIGHS
+          - CALVES
+        muscleGroupIntent:
+          type: string
+          description: Denotes the intention with the targeted muscle group. Currently can be Focus or Exclude
+          enum:
+          - FOCUS
+          - EXCLUDE
+    UpdateUserDTO:
+      type: object
+      properties:
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        dateOfBirth:
+          type: string
+          format: date
+          description: The user's date of birth in ISO 8601 format (yyyy-MM-dd).
+        gender:
+          type: string
+          description: The user's gender.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        optIns:
+          type: object
+          additionalProperties:
+            type: boolean
+          description: The list of opt-ins to be enabled/disabled.
+        locale:
+          type: string
+          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
+          example: en_US
+        unitSystem:
+          type: string
+          description: The user's preferred unit system.
+          enum:
+          - METRIC
+          - US_CUSTOMARY
+          - IMPERIAL
+          example: METRIC
+    Status:
+      type: object
+      properties:
+        state:
+          type: string
+          description: Denotes whether the onboarding checklist item is complete, incomplete or expired
+          enum:
+          - UNSPECIFIED
+          - INCOMPLETE
+          - COMPLETE
+          - EXPIRED
+        expiresAt:
+          type: string
+          format: date-time
+          description: Date of expiration for this checklist item
     EquipmentUserDTO:
       type: object
       properties:
@@ -639,33 +754,45 @@ components:
           description: The cardio test user information. It is enabled only for Smart Cardio.
       required:
       - firstName
-    RfidDTO:
+    ApiErrorResponseDTO:
       type: object
+      description: Standard error response returned by the API for all error status codes.
       properties:
-        rfidFormat:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
           type: string
-          description: The RFID format.
-          enum:
-          - HITAG1
-          - HITAG2
-          - EM4001
-          - EM4002
-          - EM4100
-          - EM4102
-          - EM4022
-          - MIFARE
-          - LEGIC
-          - NFC_EGYM_APPLE
-          - NFC_EGYM_GOOGLE
-          - NFC_EXTERNAL_APPLE
-          - NFC_EXTERNAL_GOOGLE
-        rfid:
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
           type: string
-          description: The RFID.
-          minLength: 1
-      required:
-      - rfid
-      - rfidFormat
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
     FieldErrorDTO:
       type: object
       properties:
@@ -679,44 +806,6 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
-    TrainingMuscleGroupPreferenceDTO:
-      type: object
-      properties:
-        muscleGroup:
-          type: string
-          description: Denotes which muscle group is targeted in this preference setting
-          enum:
-          - NECK_AND_SHOULDERS
-          - ARMS
-          - CHEST
-          - UPPER_BACK
-          - ABDOMINAL
-          - LOWER_BACK
-          - HIP
-          - BUTTOCK
-          - THIGHS
-          - CALVES
-        muscleGroupIntent:
-          type: string
-          description: Denotes the intention with the targeted muscle group. Currently can be Focus or Exclude
-          enum:
-          - FOCUS
-          - EXCLUDE
-    Status:
-      type: object
-      properties:
-        state:
-          type: string
-          description: Denotes whether the onboarding checklist item is complete, incomplete or expired
-          enum:
-          - UNSPECIFIED
-          - INCOMPLETE
-          - COMPLETE
-          - EXPIRED
-        expiresAt:
-          type: string
-          format: date-time
-          description: Date of expiration for this checklist item
     TrainingPlanPreferencesDTO:
       type: object
       properties:
@@ -771,109 +860,71 @@ components:
         machineSettingsMeasurements:
           $ref: '#/components/schemas/Status'
           description: Genius Onboarding checklist item status that checks if the user has machine settings generated by Fitness Hub
-    CardioTestUserInfoDTO:
+    ImageReferenceDTO:
       type: object
       properties:
-        reminder:
-          type: integer
-          format: int64
-          description: The date of the next cardio-test.
-          example: 1553074207520
-        instructions:
-          type: array
-          description: The instructions to the next step.
-          items:
-            type: string
-            enum:
-            - CONTINUE
-            - FINISH
-            - REQUEST_TRAINING_GOAL
-            - REQUEST_TRAINING_PROGRAM
-            - REQUEST_HEIGHT
-            - REQUEST_WEIGHT
-            - REQUEST_GENDER
-            - REQUEST_DATE_OF_BIRTH
-            - TERMS_AND_CONDITIONS
-            - SUGGEST_CARDIO_TEST
-            - FIRST_CARDIO_TEST
-            - TEST_SKIPPED
-          uniqueItems: true
-    UpdateUserDTO:
-      type: object
-      properties:
-        firstName:
+        imageType:
           type: string
-          description: The user's first name.
-        lastName:
-          type: string
-          description: The user's last name.
-        dateOfBirth:
-          type: string
-          format: date
-          description: The user's date of birth in ISO 8601 format (yyyy-MM-dd).
-        gender:
-          type: string
-          description: The user's gender.
           enum:
-          - MALE
-          - FEMALE
-          - NON_BINARY
-        optIns:
-          type: object
-          additionalProperties:
-            type: boolean
-          description: The list of opt-ins to be enabled/disabled.
-        locale:
+          - EXERCISE
+          - EQUIPMENT
+          - AVATAR
+          - COVER
+          - GYM_BANNER
+          - GYM_PROFILE
+          - GYM_HEADER
+          - GYM
+          - CHART
+          - BLOG
+          - PARTNER
+          - MOBILESPLASH
+          - SIGNATURE
+          - CARDIOSCAN
+          - MUSCLES
+          - SHARED
+        imageId:
           type: string
-          description: 'The user locale is either in ISO 15897 standard format. i.e.: ''en_US'' or just language. i.e.: ''en'''
-          example: en_US
-        unitSystem:
-          type: string
-          description: The user's preferred unit system.
-          enum:
-          - METRIC
-          - US_CUSTOMARY
-          - IMPERIAL
-          example: METRIC
-    ApiErrorResponseDTO:
+    UserIdDTO:
       type: object
-      description: Standard error response returned by the API for all error status codes.
+      description: This model provides string representation of a userId.
       properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
+        userId:
           type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
+          description: The id of the member.
+          example: id12
+    ProductInstanceDto:
+      type: object
+      description: This model provides information about an active product for a user in the gym.
+      properties:
+        productId:
           type: integer
           format: int32
-          description: HTTP status code.
-          example: 400
-        error:
+          description: The id of the product.
+          example: '1337'
+        productTitle:
           type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
+          description: The title of the product.
+          example: PREMIUM SELECT
+          readOnly: true
+        productDescription:
           type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
+          description: The description of the product.
+          example: Enables Premium training features for the users on all EGYM machines.
+          readOnly: true
+        start:
           type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
-          type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        errorCode:
+          description: The date from which the specified product is active and can be used by the user.
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          example: '2018-09-11'
+        end:
           type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
+          description: The date to which the specified product is active and can be used by the user.
+          format: 'date in format "YYYY-MM-DD"
+
+            '
+          example: '2018-10-11'
     MemberInformationDTO:
       type: object
       description: This model provides information about a member.
@@ -1122,39 +1173,6 @@ components:
           type: string
           description: The error message.
           example: The provided user name or password is incorrect.
-    ProductInstanceDto:
-      type: object
-      description: This model provides information about an active product for a user in the gym.
-      properties:
-        productId:
-          type: integer
-          format: int32
-          description: The id of the product.
-          example: '1337'
-        productTitle:
-          type: string
-          description: The title of the product.
-          example: PREMIUM SELECT
-          readOnly: true
-        productDescription:
-          type: string
-          description: The description of the product.
-          example: Enables Premium training features for the users on all EGYM machines.
-          readOnly: true
-        start:
-          type: string
-          description: The date from which the specified product is active and can be used by the user.
-          format: 'date in format "YYYY-MM-DD"
-
-            '
-          example: '2018-09-11'
-        end:
-          type: string
-          description: The date to which the specified product is active and can be used by the user.
-          format: 'date in format "YYYY-MM-DD"
-
-            '
-          example: '2018-10-11'
     UserInformationDTO:
       type: object
       description: This model provides information about a member.
@@ -1183,14 +1201,6 @@ components:
           example: 1606228021
       example:
         userId: -qwn9fgz5sa3i
-    UserIdDTO:
-      type: object
-      description: This model provides string representation of a userId.
-      properties:
-        userId:
-          type: string
-          description: The id of the member.
-          example: id12
   securitySchemes:
     user:
       type: http
@@ -1209,5 +1219,5 @@ components:
       description: The token that will allow access the EGYM gym api for a specific gym.
       x-example: 77266b05a7ba4ba2aa3360b86711002d
 x-refined-from:
-- egym-equipment-vendor-standalone-openapi.yml
-- egym-mms-api-v1-openapi.yml
+- egym-equipment-vendor-standalone-openapi-original.json
+- egym-mms-api-v1-openapi-original.yaml

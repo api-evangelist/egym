@@ -7,7 +7,7 @@ info:
     email: support@egym.com
   termsOfService: https://egym.com/us/terms/
   version: '1.0'
-  description: 'Operations tagged Flexibility Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi.yml, egym-equipment-vendor-standalone-openapi.yml. Each path carries the servers of the definition it was published in.'
+  description: 'Operations tagged Flexibility Measurement across 2 of this provider''s published API definitions: egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://b2b-partner-api.ext-1.test.co.egym.coffee
   description: Generated server url
@@ -323,6 +323,98 @@ components:
           description: The rejected value.
           example: 3
       description: The constraint violations.
+    FlexibilityMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of flexibility metrics for this measurement
+          items:
+            $ref: '#/components/schemas/FlexibilityMetricDTO'
+    MeasurementDTO_2:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     FlexibilityMetricDTO:
       type: object
       properties:
@@ -428,19 +520,6 @@ components:
           type: number
           description: The value of the metric
           example: '85.0'
-    FieldErrorDTO_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     LatestFlexibilityMeasurementsValuesResponseDTO:
       type: object
       properties:
@@ -454,85 +533,6 @@ components:
             SYMMETRIC_SCORE: 72.5
             ADDUCTOR_LEFT_DEGREE: 42
             ADDUCTOR_RIGHT_DEGREE: 44
-    MeasurementDTO_2:
-      type: object
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
-          example: 1672531200000
-        uniqueMeasurementId:
-          type: string
-          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
-          minLength: 1
-        data:
-          type: object
-          additionalProperties:
-            type: number
-          description: A map of properties that define each measurement for this equipment.
-          minProperties: 1
-      required:
-      - data
-      - timestamp
-      - uniqueMeasurementId
-    ApiErrorResponseDTO:
-      type: object
-      description: Standard error response returned by the API for all error status codes.
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
-          type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          example: 400
-        error:
-          type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
-          type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
-          type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
-          type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO_2'
-        errorCode:
-          type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
-    FlexibilityMeasurementHistoryResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the measurement
-          example: 123
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp when the measurement was created (epoch milliseconds)
-          example: 1647685800000
-        metrics:
-          type: array
-          description: List of flexibility metrics for this measurement
-          items:
-            $ref: '#/components/schemas/FlexibilityMetricDTO'
   securitySchemes:
     user:
       type: http
@@ -543,5 +543,5 @@ components:
       name: x-api-key
       in: header
 x-refined-from:
-- egym-equipment-vendor-server-openapi.yml
-- egym-equipment-vendor-standalone-openapi.yml
+- egym-equipment-vendor-server-openapi-original.json
+- egym-equipment-vendor-standalone-openapi-original.json

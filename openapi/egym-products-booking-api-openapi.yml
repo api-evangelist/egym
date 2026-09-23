@@ -1,26 +1,7 @@
 openapi: 3.2.0
 info:
   title: MMS API V2 Products booking API
-  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
-
-
-    **Key Features:**
-
-    - Member account and membership management
-
-    - RFID assignment and management
-
-    - Real-time gym visit tracking (check-in/check-out)
-
-    - EGYM product booking (Smart Strength, EGYM+)
-
-    - Trainer task creation and tracking
-
-    - Webhook subscriptions for event notifications
-
-    - Push notifications to EGYM mobile apps
-
-    - Member migration from V1 API'
+  description: RESTful API specification for integrating gym management systems with the EGYM platform.
   termsOfService: https://egym.com/en/terms/
   contact:
     name: MMS Connect Team
@@ -270,28 +251,6 @@ paths:
           description: No Content
 components:
   schemas:
-    ProductDTO:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: The ID of the product.
-          readOnly: true
-        title:
-          type: string
-          description: Product title.
-          readOnly: true
-        description:
-          type: string
-          description: Product description.
-          readOnly: true
-        scope:
-          type: string
-          description: The scope of the bookable package.
-          enum:
-          - LOCATION
-          - CHAIN
-          - BRAND
     ErrorDTO:
       type: object
       properties:
@@ -343,6 +302,28 @@ components:
         rejectedValue:
           description: The rejected value.
           example: 3
+    ProductDTO:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: The ID of the product.
+          readOnly: true
+        title:
+          type: string
+          description: Product title.
+          readOnly: true
+        description:
+          type: string
+          description: Product description.
+          readOnly: true
+        scope:
+          type: string
+          description: The scope of the bookable package.
+          enum:
+          - LOCATION
+          - CHAIN
+          - BRAND
     UserProductDTO:
       type: object
       properties:

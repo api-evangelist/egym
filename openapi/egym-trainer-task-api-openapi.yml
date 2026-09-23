@@ -1,26 +1,7 @@
 openapi: 3.2.0
 info:
   title: MMS API V2 Trainer Task API
-  description: 'RESTful API specification for integrating gym management systems with the EGYM platform. This OpenAPI document defines all available endpoints, request/response schemas, authentication requirements, and error codes.
-
-
-    **Key Features:**
-
-    - Member account and membership management
-
-    - RFID assignment and management
-
-    - Real-time gym visit tracking (check-in/check-out)
-
-    - EGYM product booking (Smart Strength, EGYM+)
-
-    - Trainer task creation and tracking
-
-    - Webhook subscriptions for event notifications
-
-    - Push notifications to EGYM mobile apps
-
-    - Member migration from V1 API'
+  description: RESTful API specification for integrating gym management systems with the EGYM platform.
   termsOfService: https://egym.com/en/terms/
   contact:
     name: MMS Connect Team
@@ -255,6 +236,43 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
     TaskDTO:
       type: object
       properties:
@@ -304,43 +322,6 @@ components:
       - dueDate
       - name
       - targetId
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          description: The timestamp of the request.
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          format: int32
-          description: The http status code.
-        error:
-          type: string
-          description: The error.
-        errorCode:
-          type: string
-          description: The static error code.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          description: Additional information of the error context
     FieldErrorDTO:
       type: object
       properties:
