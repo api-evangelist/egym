@@ -53,20 +53,6 @@ paths:
       - partner: []
 components:
   schemas:
-    MachineHeartbeatRequestDTO:
-      type: object
-      properties:
-        serialNumber:
-          type: string
-          description: The unique serial number of the machine.
-          minLength: 1
-        machineType:
-          type: string
-          description: The machine type name of the device.
-          minLength: 1
-      required:
-      - machineType
-      - serialNumber
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -119,6 +105,20 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
+    MachineHeartbeatRequestDTO:
+      type: object
+      properties:
+        serialNumber:
+          type: string
+          description: The unique serial number of the machine.
+          minLength: 1
+        machineType:
+          type: string
+          description: The machine type name of the device.
+          minLength: 1
+      required:
+      - machineType
+      - serialNumber
   securitySchemes:
     user:
       type: http

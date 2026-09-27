@@ -880,8 +880,44 @@ paths:
                           eligible: false
 components:
   parameters:
+    locationSecretHeader:
+      name: X-Location-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    chainSecretHeader:
+      name: X-Chain-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    clientIdHeader:
+      name: X-Client-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
     userLocaleHeader:
       name: X-User-Locale
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationIdHeader:
+      name: X-Location-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationGroupIdHeader:
+      name: X-Location-Group-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    userSecretHeader:
+      name: X-User-Secret
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
@@ -898,38 +934,8 @@ components:
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
-    userSecretHeader:
-      name: X-User-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationSecretHeader:
-      name: X-Location-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationIdHeader:
-      name: X-Location-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
     userIdHeader:
       name: X-User-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    chainSecretHeader:
-      name: X-Chain-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationGroupIdHeader:
-      name: X-Location-Group-ID
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
@@ -940,137 +946,18 @@ components:
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
-    clientIdHeader:
-      name: X-Client-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
   schemas:
-    CustomInfo:
-      type: array
-      description: 'Key-Value map to represent additional information of an entity.
-
-        Partners could contain diverse information of same entities. This type designed to store that information.
-
-        '
-      items:
-        type: object
-        properties:
-          key:
-            type: string
-          value:
-            type: string
-        required:
-        - key
-        - value
-    GroupXClassBrief:
+    GroupXClassOperationEligibility:
       type: object
-      description: Brief details of the groupX class for bulk retrieval
+      description: Represents particular operation eligibility for Class/Exerciser pair.
       properties:
-        id:
-          type: string
-          description: Unique ID of the GroupX Class in the ClubMS. This is the same ID that's used in `getClassDetails` operation
-        name:
-          type: string
-          description: Name of the Class (e.g. 'Yoga 24', 'TRX Small Group', 'Body Pump')
-        startDateTime:
-          type: string
-          description: Start date/time of the GroupX Class in UTC timezone
-          format: date-time
-        endDateTime:
-          type: string
-          description: End date/time of the GroupX Class in UTC timezone
-          format: date-time
-        locationId:
-          type: string
-          description: 'Unique ID of the location in ClubMS that this class belongs to. This is the same ID as returned by Canonical Locations API or as manually provided to EGYM admins for locations configuration.
+        eligible:
+          type: boolean
+          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
 
             '
-        free:
-          type: boolean
-          description: Indicates that the class is free (not paid)
-        waitlisted:
-          type: boolean
-          description: Indicates whether the given exerciser is in the waitlist of this class
-        childCare:
-          type: boolean
-          description: Defines if child care option is available for the Class
-        reservable:
-          type: boolean
-          description: Defines if Class is reservable
-        instructor:
-          type: object
-          description: '*Required property* Information about Intructor who leads the Class
-
-            '
-          properties:
-            firstName:
-              type: string
-            lastName:
-              type: string
-            fullName:
-              type: string
-            customInfo:
-              $ref: '#/components/schemas/CustomInfo'
-          required:
-          - fullName
-        activity:
-          type: object
-          description: '*Required property* Information about Activity of the Class
-
-            '
-          properties:
-            name:
-              type: string
-              description: Name of the Class activity (e.g. 'Yoga 24', 'TRX Small Group', 'Body Pump'), often it is the same as groupX class name, but it might be also a more general name (depends on ClubMS, e.g. 'Yoga', 'TRX')
-          required:
-          - name
-        customInfo:
-          $ref: '#/components/schemas/CustomInfo'
       required:
-      - id
-      - name
-      - startDateTime
-      - endDateTime
-    GroupXClass:
-      type: object
-      description: GroupX Class with all details
-      properties:
-        brief:
-          $ref: '#/components/schemas/GroupXClassBrief'
-        bookingDetails:
-          $ref: '#/components/schemas/GroupXClassBookingDetails'
-        details:
-          $ref: '#/components/schemas/GroupXClassDetails'
-        attendeeBookingDetails:
-          $ref: '#/components/schemas/GroupXClassAttendeeBookingDetails'
-      required:
-      - brief
-      - details
-    GroupXClassEligibility:
-      type: object
-      description: 'Represents booking/cancellation opearions eligibility for Class/Exerciser pair.
-
-        '
-      properties:
-        addToClassEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationExtendedEligibility'
-        bookSpotEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationEligibility'
-        removeFromClassEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationEligibility'
-        addToWaitlistEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationExtendedEligibility'
-        removeFromWaitlistEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationEligibility'
-        updateBookingEligibility:
-          $ref: '#/components/schemas/GroupXClassOperationEligibility'
-      required:
-      - addToClassEligibility
-      - removeFromClassEligibility
-      - addToWaitlistEligibility
-      - removeFromWaitlistEligibility
+      - eligible
     GroupXClassDetails:
       type: object
       description: Comprehensive details of the groupX class
@@ -1153,17 +1040,116 @@ components:
             '
       required:
       - eligible
-    GroupXClassOperationEligibility:
+    GroupXClass:
       type: object
-      description: Represents particular operation eligibility for Class/Exerciser pair.
+      description: GroupX Class with all details
       properties:
-        eligible:
+        brief:
+          $ref: '#/components/schemas/GroupXClassBrief'
+        bookingDetails:
+          $ref: '#/components/schemas/GroupXClassBookingDetails'
+        details:
+          $ref: '#/components/schemas/GroupXClassDetails'
+        attendeeBookingDetails:
+          $ref: '#/components/schemas/GroupXClassAttendeeBookingDetails'
+      required:
+      - brief
+      - details
+    GroupXClassAttendeeBookingDetails:
+      type: object
+      description: Information about attendance of the given exerciser in this GroupX Class
+      properties:
+        exerciserId:
+          type: string
+          description: ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.
+        booked:
           type: boolean
-          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
+          description: Indicates whether this class is booked by the given exerciser
+        waitlistBooked:
+          type: boolean
+          description: Indicates whether the given exerciser is in the waitlist of this class
+        spotBooked:
+          type: string
+          description: Indicates exact spot booked by the given exerciser
+        eligibility:
+          $ref: '#/components/schemas/GroupXClassEligibility'
+        waitlistPosition:
+          type: integer
+          description: Position of given exerciser in the waitlist of this class
+          format: int32
+      required:
+      - exerciserId
+      - booked
+      - waitlistBooked
+    GroupXClassBrief:
+      type: object
+      description: Brief details of the groupX class for bulk retrieval
+      properties:
+        id:
+          type: string
+          description: Unique ID of the GroupX Class in the ClubMS. This is the same ID that's used in `getClassDetails` operation
+        name:
+          type: string
+          description: Name of the Class (e.g. 'Yoga 24', 'TRX Small Group', 'Body Pump')
+        startDateTime:
+          type: string
+          description: Start date/time of the GroupX Class in UTC timezone
+          format: date-time
+        endDateTime:
+          type: string
+          description: End date/time of the GroupX Class in UTC timezone
+          format: date-time
+        locationId:
+          type: string
+          description: 'Unique ID of the location in ClubMS that this class belongs to. This is the same ID as returned by Canonical Locations API or as manually provided to EGYM admins for locations configuration.
 
             '
+        free:
+          type: boolean
+          description: Indicates that the class is free (not paid)
+        waitlisted:
+          type: boolean
+          description: Indicates whether the given exerciser is in the waitlist of this class
+        childCare:
+          type: boolean
+          description: Defines if child care option is available for the Class
+        reservable:
+          type: boolean
+          description: Defines if Class is reservable
+        instructor:
+          type: object
+          description: '*Required property* Information about Intructor who leads the Class
+
+            '
+          properties:
+            firstName:
+              type: string
+            lastName:
+              type: string
+            fullName:
+              type: string
+            customInfo:
+              $ref: '#/components/schemas/CustomInfo'
+          required:
+          - fullName
+        activity:
+          type: object
+          description: '*Required property* Information about Activity of the Class
+
+            '
+          properties:
+            name:
+              type: string
+              description: Name of the Class activity (e.g. 'Yoga 24', 'TRX Small Group', 'Body Pump'), often it is the same as groupX class name, but it might be also a more general name (depends on ClubMS, e.g. 'Yoga', 'TRX')
+          required:
+          - name
+        customInfo:
+          $ref: '#/components/schemas/CustomInfo'
       required:
-      - eligible
+      - id
+      - name
+      - startDateTime
+      - endDateTime
     GroupXClassBookingDetails:
       type: object
       description: Booking details of the GroupX Class
@@ -1191,29 +1177,43 @@ components:
       - booked
       - waitlistCapacity
       - waitlistBooked
-    GroupXClassAttendeeBookingDetails:
+    GroupXClassEligibility:
       type: object
-      description: Information about attendance of the given exerciser in this GroupX Class
+      description: 'Represents booking/cancellation opearions eligibility for Class/Exerciser pair.
+
+        '
       properties:
-        exerciserId:
-          type: string
-          description: ClubMS Exerciser Unique ID which is returned by Canonical Users API and/or by Canonical Members API.
-        booked:
-          type: boolean
-          description: Indicates whether this class is booked by the given exerciser
-        waitlistBooked:
-          type: boolean
-          description: Indicates whether the given exerciser is in the waitlist of this class
-        spotBooked:
-          type: string
-          description: Indicates exact spot booked by the given exerciser
-        eligibility:
-          $ref: '#/components/schemas/GroupXClassEligibility'
-        waitlistPosition:
-          type: integer
-          description: Position of given exerciser in the waitlist of this class
-          format: int32
+        addToClassEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationExtendedEligibility'
+        bookSpotEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationEligibility'
+        removeFromClassEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationEligibility'
+        addToWaitlistEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationExtendedEligibility'
+        removeFromWaitlistEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationEligibility'
+        updateBookingEligibility:
+          $ref: '#/components/schemas/GroupXClassOperationEligibility'
       required:
-      - exerciserId
-      - booked
-      - waitlistBooked
+      - addToClassEligibility
+      - removeFromClassEligibility
+      - addToWaitlistEligibility
+      - removeFromWaitlistEligibility
+    CustomInfo:
+      type: array
+      description: 'Key-Value map to represent additional information of an entity.
+
+        Partners could contain diverse information of same entities. This type designed to store that information.
+
+        '
+      items:
+        type: object
+        properties:
+          key:
+            type: string
+          value:
+            type: string
+        required:
+        - key
+        - value

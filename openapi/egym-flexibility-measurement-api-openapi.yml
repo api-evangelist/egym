@@ -245,35 +245,6 @@ paths:
       description: Production
 components:
   schemas:
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: The timestamp of the request.
-          format: date-time
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          description: The http status code.
-          format: int32
-        error:
-          type: string
-          description: The error.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
     MeasurementDTO:
       required:
       - data
@@ -307,6 +278,35 @@ components:
             type: number
             description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
           description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
     FieldErrorDTO:
       type: object
       properties:
@@ -323,46 +323,6 @@ components:
           description: The rejected value.
           example: 3
       description: The constraint violations.
-    FlexibilityMeasurementHistoryResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the measurement
-          example: 123
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp when the measurement was created (epoch milliseconds)
-          example: 1647685800000
-        metrics:
-          type: array
-          description: List of flexibility metrics for this measurement
-          items:
-            $ref: '#/components/schemas/FlexibilityMetricDTO'
-    MeasurementDTO_2:
-      type: object
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
-          example: 1672531200000
-        uniqueMeasurementId:
-          type: string
-          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
-          minLength: 1
-        data:
-          type: object
-          additionalProperties:
-            type: number
-          description: A map of properties that define each measurement for this equipment.
-          minProperties: 1
-      required:
-      - data
-      - timestamp
-      - uniqueMeasurementId
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -402,19 +362,41 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
-    FieldErrorDTO_2:
+    MeasurementDTO_2:
       type: object
       properties:
-        name:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
           type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
+    LatestFlexibilityMeasurementsValuesResponseDTO:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of flexibility metric types to their latest recorded numeric values. Keys are FlexibilityMetricType enum string values. Score metrics (e.g. TOTAL_SCORE, RANGE_OF_MOVEMENT_SCORE) are on a 0–100 scale; degree metrics (e.g. ADDUCTOR_LEFT_DEGREE) represent the measured angle in degrees. Only metrics that have been measured for the user are present in the response.
+          example:
+            TOTAL_SCORE: 78
+            RANGE_OF_MOVEMENT_SCORE: 85
+            SYMMETRIC_SCORE: 72.5
+            ADDUCTOR_LEFT_DEGREE: 42
+            ADDUCTOR_RIGHT_DEGREE: 44
     FlexibilityMetricDTO:
       type: object
       properties:
@@ -520,19 +502,37 @@ components:
           type: number
           description: The value of the metric
           example: '85.0'
-    LatestFlexibilityMeasurementsValuesResponseDTO:
+    FieldErrorDTO_2:
       type: object
       properties:
-        data:
-          type: object
-          additionalProperties: true
-          description: Map of flexibility metric types to their latest recorded numeric values. Keys are FlexibilityMetricType enum string values. Score metrics (e.g. TOTAL_SCORE, RANGE_OF_MOVEMENT_SCORE) are on a 0–100 scale; degree metrics (e.g. ADDUCTOR_LEFT_DEGREE) represent the measured angle in degrees. Only metrics that have been measured for the user are present in the response.
-          example:
-            TOTAL_SCORE: 78
-            RANGE_OF_MOVEMENT_SCORE: 85
-            SYMMETRIC_SCORE: 72.5
-            ADDUCTOR_LEFT_DEGREE: 42
-            ADDUCTOR_RIGHT_DEGREE: 44
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    FlexibilityMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of flexibility metrics for this measurement
+          items:
+            $ref: '#/components/schemas/FlexibilityMetricDTO'
   securitySchemes:
     user:
       type: http

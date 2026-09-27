@@ -95,145 +95,45 @@ paths:
       - user: []
 components:
   schemas:
-    CardioTrainingPlansDTO:
+    ApiErrorResponseDTO:
       type: object
+      description: Standard error response returned by the API for all error status codes.
       properties:
-        trainer:
-          type: array
-          description: The training plan exercises prescribed by a trainer.
-          items:
-            $ref: '#/components/schemas/TrainerCardioWorkoutDTO'
-        smart:
-          type: array
-          description: The SMART training plan exercises.
-          items:
-            $ref: '#/components/schemas/SmartCardioWorkoutDTO'
-        genius:
-          type: array
-          description: The AI (Genius) generated training plan exercises.
-          items:
-            $ref: '#/components/schemas/GeniusCardioWorkoutDTO'
-    TrainerCardioWorkoutDTO:
-      type: object
-      properties:
-        author:
-          $ref: '#/components/schemas/UserDTO'
-          description: Information about the author of the workout.
-        exerciseName:
-          type: string
-          description: The name that the partner will give to its exercise.
-        sessionName:
-          type: string
-          description: The name that the trainer will give to their exercise.
-        startTimestamp:
+        timestamp:
           type: integer
           format: int64
-          description: The start of the exercise in milliseconds since the epoch time.
-          example: 1672531200000
-        endTimestamp:
-          type: integer
-          format: int64
-          description: The end of the exercise in milliseconds since the epoch time.
-        frequency:
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
           type: integer
           format: int32
-          description: The number of times this exercise should be repeated per week.
-          example: 2
-        timezone:
+          description: HTTP status code.
+          example: 400
+        error:
           type: string
-          description: The timezone where the workout is taking place.
-        trainingPlanId:
-          type: integer
-          format: int64
-          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
-          example: 7189234126347912000
-        trainingPlanExerciseId:
-          type: integer
-          format: int64
-          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
-          example: -767612783462
-        orderNumber:
-          type: integer
-          format: int32
-          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
-          example: 1
-        intervals:
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
           type: array
-          description: The trainer cardio workout intervals.
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
           items:
-            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
-    CardioWorkoutDTO:
-      type: object
-      properties:
-        uniqueExerciseId:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
           type: string
-          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
-          minLength: 1
-        startTimestamp:
-          type: integer
-          format: int64
-          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
-          example: 1672531200000
-        endTimestamp:
-          type: integer
-          format: int64
-          description: The end of the exercise in milliseconds since the epoch time.
-        timezone:
-          type: string
-          description: The timezone where the workout is taking place.
-        frequency:
-          type: integer
-          format: int32
-          description: The number of times this exercise should be repeated per week.
-          example: 2
-        exerciseName:
-          type: string
-          description: The name that the partner will give to its exercise.
-          minLength: 1
-        kiloCalories:
-          type: number
-          format: double
-          description: The kilo calories <b>(kcal)</b> burned during the exercise.
-          example: 100
-        averageHeartRate:
-          type: integer
-          format: int32
-          description: The average heart rate of this workout in <b>beats/min (bpm)</b>.
-        trainingPlanId:
-          type: integer
-          format: int64
-          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
-          example: 7189234126347912000
-        averagePace:
-          type: number
-          format: double
-          description: the average pace of this workout in min/km
-        trainingPlanExerciseId:
-          type: integer
-          format: int64
-          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
-          example: -767612783462
-        orderNumber:
-          type: integer
-          format: int32
-          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
-          example: 1
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          description: The workout's metadata as key-value pairs.
-        intervals:
-          type: array
-          description: The cardio workout intervals (sets of exercises).
-          items:
-            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
-          minItems: 1
-      required:
-      - exerciseName
-      - intervals
-      - startTimestamp
-      - uniqueExerciseId
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
     SmartCardioWorkoutDTO:
       type: object
       properties:
@@ -338,45 +238,24 @@ components:
           description: The smart cardio workout intervals.
           items:
             $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
-    ApiErrorResponseDTO:
+    CardioTrainingPlansDTO:
       type: object
-      description: Standard error response returned by the API for all error status codes.
       properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
-          type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          example: 400
-        error:
-          type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
-          type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
-          type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
+        trainer:
           type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          description: The training plan exercises prescribed by a trainer.
           items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        errorCode:
-          type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
+            $ref: '#/components/schemas/TrainerCardioWorkoutDTO'
+        smart:
+          type: array
+          description: The SMART training plan exercises.
+          items:
+            $ref: '#/components/schemas/SmartCardioWorkoutDTO'
+        genius:
+          type: array
+          description: The AI (Genius) generated training plan exercises.
+          items:
+            $ref: '#/components/schemas/GeniusCardioWorkoutDTO'
     FieldErrorDTO:
       type: object
       properties:
@@ -460,6 +339,78 @@ components:
           description: The cardio workout intervals.
           items:
             $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+    CardioWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        averageHeartRate:
+          type: integer
+          format: int32
+          description: The average heart rate of this workout in <b>beats/min (bpm)</b>.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        averagePace:
+          type: number
+          format: double
+          description: the average pace of this workout in min/km
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: The workout's metadata as key-value pairs.
+        intervals:
+          type: array
+          description: The cardio workout intervals (sets of exercises).
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - intervals
+      - startTimestamp
+      - uniqueExerciseId
     UserDTO:
       type: object
       properties:
@@ -482,6 +433,55 @@ components:
           description: The user profile image.
       required:
       - firstName
+    TrainerCardioWorkoutDTO:
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/UserDTO'
+          description: Information about the author of the workout.
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that the trainer will give to their exercise.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        intervals:
+          type: array
+          description: The trainer cardio workout intervals.
+          items:
+            $ref: '#/components/schemas/CardioWorkoutIntervalDTO'
     CardioWorkoutIntervalDTO:
       type: object
       properties:

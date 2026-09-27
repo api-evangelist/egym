@@ -144,42 +144,45 @@ paths:
       - user: []
 components:
   schemas:
-    UpdateCardioTestDTO:
+    ApiErrorResponseDTO:
       type: object
+      description: Standard error response returned by the API for all error status codes.
       properties:
-        levelId:
-          type: integer
-          format: int32
-          description: The level id.
-          example: 1
-        stepCompletionType:
-          type: string
-          description: The completion type.
-          enum:
-          - COMPLETED
-          - ABORTED
-        ratedPerceivedExertion:
-          type: string
-          description: The rated perceived exertion.
-          enum:
-          - NO_EFFORT
-          - VERY_EASY
-          - EASY
-          - COMFORTABLE
-          - SOMEWHAT_DIFFICULT
-          - DIFFICULT
-          - HARD
-          - VERY_HARD
-          - EXTREMELY_HARD
-          - MAXIMAL_EFFORT
-        duration:
+        timestamp:
           type: integer
           format: int64
-          description: The duration in milliseconds.
-          example: 60000
-      required:
-      - levelId
-      - stepCompletionType
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
     CardioTestResultDTO:
       type: object
       properties:
@@ -198,85 +201,6 @@ components:
           format: double
           description: The maximum rate of oxygen consumption measured.
           example: '45.1'
-    CardioTestResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Identifier for this cardio test.
-          example: 1
-        testLevel:
-          $ref: '#/components/schemas/CardioLevelDTO'
-          description: The Cardio Test level.
-        cardioTestResult:
-          $ref: '#/components/schemas/CardioTestResultDTO'
-          description: The Cardio Test result.
-        instructions:
-          type: array
-          description: The instructions to the next step.
-          items:
-            type: string
-            enum:
-            - CONTINUE
-            - FINISH
-            - REQUEST_TRAINING_GOAL
-            - REQUEST_TRAINING_PROGRAM
-            - REQUEST_HEIGHT
-            - REQUEST_WEIGHT
-            - REQUEST_GENDER
-            - REQUEST_DATE_OF_BIRTH
-            - TERMS_AND_CONDITIONS
-            - SUGGEST_CARDIO_TEST
-            - FIRST_CARDIO_TEST
-            - TEST_SKIPPED
-          uniqueItems: true
-    CardioUserInfoDTO:
-      type: object
-      properties:
-        height:
-          type: number
-          format: double
-          description: The body height of the user in centimeters.
-          example: 180
-        weight:
-          type: number
-          format: double
-          description: The body weight of the user in kilograms.
-          example: 75
-        trainingGoal:
-          type: string
-          deprecated: true
-          description: The user training goal.
-          enum:
-          - WEIGHT_LOSS
-          - FITNESS
-          - MUSCLE_GAIN
-          - BBP
-          - BBP_AND_WEIGHT_LOSS
-          - REHASPORT
-        trainingProgram:
-          type: string
-          description: The user training program.
-          enum:
-          - WEIGHT_LOSS
-          - FITNESS
-          - MUSCLE_GAIN
-          - BBP
-          - BBP_AND_WEIGHT_LOSS
-          - REHASPORT
-          - IMMUNITY
-        dateOfBirth:
-          type: string
-          format: date
-          description: User date of birth in ISO 8601 format (yyyy-MM-dd).
-        gender:
-          type: string
-          description: User gender.
-          enum:
-          - MALE
-          - FEMALE
-          - NON_BINARY
     CardioLevelDTO:
       type: object
       properties:
@@ -335,6 +259,88 @@ components:
           format: double
           description: The stride length zone.
           example: 2
+    CardioUserInfoDTO:
+      type: object
+      properties:
+        height:
+          type: number
+          format: double
+          description: The body height of the user in centimeters.
+          example: 180
+        weight:
+          type: number
+          format: double
+          description: The body weight of the user in kilograms.
+          example: 75
+        trainingGoal:
+          type: string
+          deprecated: true
+          description: The user training goal.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+        trainingProgram:
+          type: string
+          description: The user training program.
+          enum:
+          - WEIGHT_LOSS
+          - FITNESS
+          - MUSCLE_GAIN
+          - BBP
+          - BBP_AND_WEIGHT_LOSS
+          - REHASPORT
+          - IMMUNITY
+        dateOfBirth:
+          type: string
+          format: date
+          description: User date of birth in ISO 8601 format (yyyy-MM-dd).
+        gender:
+          type: string
+          description: User gender.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+    UpdateCardioTestDTO:
+      type: object
+      properties:
+        levelId:
+          type: integer
+          format: int32
+          description: The level id.
+          example: 1
+        stepCompletionType:
+          type: string
+          description: The completion type.
+          enum:
+          - COMPLETED
+          - ABORTED
+        ratedPerceivedExertion:
+          type: string
+          description: The rated perceived exertion.
+          enum:
+          - NO_EFFORT
+          - VERY_EASY
+          - EASY
+          - COMFORTABLE
+          - SOMEWHAT_DIFFICULT
+          - DIFFICULT
+          - HARD
+          - VERY_HARD
+          - EXTREMELY_HARD
+          - MAXIMAL_EFFORT
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - levelId
+      - stepCompletionType
     InitialCardioTestDTO:
       type: object
       properties:
@@ -351,6 +357,52 @@ components:
       required:
       - personalFitnessRating
       - userInfo
+    CardioTestResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Identifier for this cardio test.
+          example: 1
+        testLevel:
+          $ref: '#/components/schemas/CardioLevelDTO'
+          description: The Cardio Test level.
+        cardioTestResult:
+          $ref: '#/components/schemas/CardioTestResultDTO'
+          description: The Cardio Test result.
+        instructions:
+          type: array
+          description: The instructions to the next step.
+          items:
+            type: string
+            enum:
+            - CONTINUE
+            - FINISH
+            - REQUEST_TRAINING_GOAL
+            - REQUEST_TRAINING_PROGRAM
+            - REQUEST_HEIGHT
+            - REQUEST_WEIGHT
+            - REQUEST_GENDER
+            - REQUEST_DATE_OF_BIRTH
+            - TERMS_AND_CONDITIONS
+            - SUGGEST_CARDIO_TEST
+            - FIRST_CARDIO_TEST
+            - TEST_SKIPPED
+          uniqueItems: true
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     HistoricalCardioResultDTO:
       type: object
       properties:
@@ -374,58 +426,6 @@ components:
           format: double
           description: The maximum rate of oxygen consumption measured.
           example: '45.1'
-    ApiErrorResponseDTO:
-      type: object
-      description: Standard error response returned by the API for all error status codes.
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
-          type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          example: 400
-        error:
-          type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
-          type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
-          type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
-          type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        errorCode:
-          type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
   securitySchemes:
     user:
       type: http

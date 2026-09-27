@@ -236,43 +236,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          format: date-time
-          description: The timestamp of the request.
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          format: int32
-          description: The http status code.
-        error:
-          type: string
-          description: The error.
-        errorCode:
-          type: string
-          description: The static error code.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-          description: Additional information of the error context
     TaskDTO:
       type: object
       properties:
@@ -322,6 +285,43 @@ components:
       - dueDate
       - name
       - targetId
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the request.
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          format: int32
+          description: The http status code.
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          description: Additional information of the error context
     FieldErrorDTO:
       type: object
       properties:

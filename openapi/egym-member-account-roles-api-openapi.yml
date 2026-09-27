@@ -159,15 +159,6 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
-    GymRolesDTO:
-      type: object
-      properties:
-        trainer:
-          type: boolean
-          description: If trainer is true, assign trainer right for account, otherwise remove trainer rights.
-        gymOwner:
-          type: boolean
-          description: If gymOwner is true, assign gymOwner right for account, otherwise remove gymOwner rights.
     FieldErrorDTO:
       type: object
       properties:
@@ -182,6 +173,15 @@ components:
         rejectedValue:
           description: The rejected value.
           example: 3
+    GymRolesDTO:
+      type: object
+      properties:
+        trainer:
+          type: boolean
+          description: If trainer is true, assign trainer right for account, otherwise remove trainer rights.
+        gymOwner:
+          type: boolean
+          description: If gymOwner is true, assign gymOwner right for account, otherwise remove gymOwner rights.
   securitySchemes:
     mms:
       type: apiKey

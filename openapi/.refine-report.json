@@ -48,9 +48,7 @@
     "egym-1-cardio-measurements-api-openapi.yml",
     "egym-2-workouts-api-openapi.yml"
   ],
-  "archived": [
-    "deleted 1 superseded output(s) from the previous generation"
-  ],
+  "archived": [],
   "errors": [
     "egym-canonical-groupx-classes-openapi-original.yml: dangling $ref: #/paths/~1classes/get/responses/200/examples/./0/brief",
     "egym-canonical-groupx-classes-openapi-original.yml: dangling $ref: #/paths/~1classes/get/responses/200/examples/./1/brief"
@@ -95,8 +93,7 @@
     "tag 'Flexibility Measurement' spans 2 source specs (egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json): per-path servers applied",
     "tag 'OAuth' spans 2 source specs (egym-equipment-vendor-server-openapi-original.json, egym-equipment-vendor-standalone-openapi-original.json): per-path servers applied",
     "tag 'User' spans 2 source specs (egym-equipment-vendor-standalone-openapi-original.json, egym-mms-api-v1-openapi-original.yaml): per-path servers applied",
-    "superseded outputs removed: egym-o-auth-api-openapi.yml",
-    "apis.yml register: written (+1 apis, 38 total)"
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "_original/egym-user-connect-openapi.yml: archived document superseded by a larger archived document",
@@ -128,7 +125,7 @@
     "egym-member-account-roles-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "egym-member-rfids-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "egym-migrating-members-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "egym-o-auth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "egym-oauth-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "egym-open-exercise-workouts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "egym-partners-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "egym-products-booking-api-openapi.yml: previously refined output, superseded by openapi/_original/",

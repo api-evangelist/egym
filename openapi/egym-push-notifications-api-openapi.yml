@@ -163,20 +163,6 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
     PartnerPushNotificationDTO:
       type: object
       properties:
@@ -194,6 +180,20 @@ components:
           minLength: 0
       required:
       - text
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
   securitySchemes:
     mms:
       type: apiKey

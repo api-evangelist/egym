@@ -59,6 +59,11 @@ paths:
       - user: []
 components:
   schemas:
+    UserDetailsDTO:
+      type: object
+      properties:
+        equipmentUser:
+          $ref: '#/components/schemas/EquipmentUserDetailsDTO'
     ErrorDTO:
       type: object
       properties:
@@ -149,11 +154,6 @@ components:
         termsAndConditionsAccepted:
           type: boolean
           description: Informs if the terms and conditions have been accepted.
-    UserDetailsDTO:
-      type: object
-      properties:
-        equipmentUser:
-          $ref: '#/components/schemas/EquipmentUserDetailsDTO'
     FieldErrorDTO:
       type: object
       properties:
