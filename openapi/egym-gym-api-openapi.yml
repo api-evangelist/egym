@@ -85,6 +85,19 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorDto:
+      type: object
+      description: This model provides information about an API error.
+      properties:
+        error:
+          type: integer
+          format: int32
+          description: The error code.
+          example: 401
+        errorText:
+          type: string
+          description: The error message.
+          example: The provided user name or password is incorrect.
     ProductTemplateDto:
       type: object
       description: This model provides information about an EGYM product.
@@ -105,19 +118,6 @@ components:
           description: The description of a product. The description contains more information about a product including where it can be used.
           example: Enables Premium training features for the users on all EGYM machines.
           readOnly: true
-    ErrorDto:
-      type: object
-      description: This model provides information about an API error.
-      properties:
-        error:
-          type: integer
-          format: int32
-          description: The error code.
-          example: 401
-        errorText:
-          type: string
-          description: The error message.
-          example: The provided user name or password is incorrect.
   securitySchemes:
     accesstoken:
       type: apiKey

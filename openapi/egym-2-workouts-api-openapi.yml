@@ -74,53 +74,13 @@ paths:
                 $ref: '#/components/schemas/WorkoutBriefResponse'
 components:
   schemas:
-    WorkoutExerciseRequest:
+    FieldErrorDto:
       type: object
       properties:
-        activityId:
-          type: integer
-          format: int64
-          description: EGYM activity ID.
-        completedAt:
+        name:
           type: string
-          format: date-time
-          description: Exercise local completion time.
-        timezone:
+        message:
           type: string
-          description: Exercise completion timezone.
-        templateGroupId:
-          type: integer
-          format: int64
-          description: Workout plan ID.
-        templateId:
-          type: integer
-          format: int64
-          description: Workout plan exercise ID.
-        sets:
-          type: array
-          description: Exercise sets.
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
-          minItems: 1
-        originallyDisplayedSets:
-          type: array
-          description: Sets originally displayed to the user.
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
-      required:
-      - activityId
-      - sets
-    WorkoutRequest:
-      type: object
-      properties:
-        exercises:
-          type: array
-          description: Exercises of the workout.
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseRequest'
-          minItems: 1
-      required:
-      - exercises
     WorkoutExerciseResponse:
       type: object
       properties:
@@ -135,13 +95,6 @@ components:
         label:
           type: string
           description: Localized activity name.
-    FieldErrorDto:
-      type: object
-      properties:
-        name:
-          type: string
-        message:
-          type: string
     WorkoutExerciseSetRequest:
       type: object
       properties:
@@ -201,20 +154,53 @@ components:
           - MAX_OUT
       required:
       - setType
-    ValidationErrorDto:
+    WorkoutRequest:
       type: object
       properties:
-        code:
-          type: integer
-          format: int32
-        error:
-          type: string
-        message:
-          type: string
-        fieldErrors:
+        exercises:
           type: array
+          description: Exercises of the workout.
           items:
-            $ref: '#/components/schemas/FieldErrorDto'
+            $ref: '#/components/schemas/WorkoutExerciseRequest'
+          minItems: 1
+      required:
+      - exercises
+    WorkoutExerciseRequest:
+      type: object
+      properties:
+        activityId:
+          type: integer
+          format: int64
+          description: EGYM activity ID.
+        completedAt:
+          type: string
+          format: date-time
+          description: Exercise local completion time.
+        timezone:
+          type: string
+          description: Exercise completion timezone.
+        templateGroupId:
+          type: integer
+          format: int64
+          description: Workout plan ID.
+        templateId:
+          type: integer
+          format: int64
+          description: Workout plan exercise ID.
+        sets:
+          type: array
+          description: Exercise sets.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
+          minItems: 1
+        originallyDisplayedSets:
+          type: array
+          description: Sets originally displayed to the user.
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetRequest'
+      required:
+      - activityId
+      - sets
     WorkoutBriefResponse:
       type: object
       properties:
@@ -230,3 +216,17 @@ components:
         timezone:
           type: string
           description: Workout tracking timezone.
+    ValidationErrorDto:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        error:
+          type: string
+        message:
+          type: string
+        fieldErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldErrorDto'

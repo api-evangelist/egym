@@ -213,6 +213,121 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    DatedValueWithProgressDTO:
+      type: object
+      properties:
+        value:
+          type: number
+          description: Value of measurement
+          format: double
+        createdAt:
+          type: string
+          description: DateTime when measurement was conducted
+          format: date-time
+    InterpretationRegion:
+      type: object
+      properties:
+        low:
+          type: number
+          format: double
+        top:
+          type: number
+          format: double
+        labels:
+          $ref: '#/components/schemas/Labels'
+    MetricWithInterpretationDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of metric
+          example: BODY_FAT_PERCENTS
+        value:
+          type: number
+          description: Value of metric
+          format: double
+        interpretation:
+          $ref: '#/components/schemas/Interpretation'
+        unit:
+          type: string
+          description: Unit of metric
+          example: PERCENTS
+          enum:
+          - PERCENTS
+          - CM
+          - KG
+          - KJ
+          - LITER
+          - CM2
+          - OTHER
+      description: Metrics associated with this measurement
+    Labels:
+      type: object
+      properties:
+        low:
+          type: string
+          enum:
+          - UNSPECIFIED
+          - NORMAL
+          - EXCELLENT
+          - ELEVATED
+          - LOW
+        middle:
+          type: string
+          enum:
+          - UNSPECIFIED
+          - NORMAL
+          - EXCELLENT
+          - ELEVATED
+          - LOW
+        top:
+          type: string
+          enum:
+          - UNSPECIFIED
+          - NORMAL
+          - EXCELLENT
+          - ELEVATED
+          - LOW
+    MetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of metric
+          example: BODY_FAT_PERCENTS
+        value:
+          type: number
+          description: Value of metric
+          format: double
+        unit:
+          type: string
+          description: Unit of metric
+          example: PERCENTS
+          enum:
+          - PERCENTS
+          - CM
+          - KG
+          - KJ
+          - LITER
+          - CM2
+          - OTHER
+      description: Metrics associated with this measurement
     MeasurementDTO:
       type: object
       properties:
@@ -249,54 +364,10 @@ components:
             $ref: '#/components/schemas/MetricWithInterpretationDTO'
         equipmentType:
           type: string
-    MetricDTO:
+    Interpretation:
       type: object
       properties:
-        type:
-          type: string
-          description: Type of metric
-          example: BODY_FAT_PERCENTS
-        value:
-          type: number
-          description: Value of metric
-          format: double
-        unit:
-          type: string
-          description: Unit of metric
-          example: PERCENTS
-          enum:
-          - PERCENTS
-          - CM
-          - KG
-          - KJ
-          - LITER
-          - CM2
-          - OTHER
-      description: Metrics associated with this measurement
-    StrengthMeasurementDTO:
-      type: object
-      properties:
-        createdAt:
-          type: string
-          format: date-time
-        strength:
-          $ref: '#/components/schemas/DatedValueWithProgressDTO'
-        source:
-          type: string
-        bodyRegion:
-          type: string
-          enum:
-          - ALL
-          - UPPER
-          - CORE
-          - LOWER
-          - UNSPECIFIED
-        machineType:
-          type: string
-    Labels:
-      type: object
-      properties:
-        low:
+        label:
           type: string
           enum:
           - UNSPECIFIED
@@ -304,75 +375,9 @@ components:
           - EXCELLENT
           - ELEVATED
           - LOW
-        middle:
-          type: string
-          enum:
-          - UNSPECIFIED
-          - NORMAL
-          - EXCELLENT
-          - ELEVATED
-          - LOW
-        top:
-          type: string
-          enum:
-          - UNSPECIFIED
-          - NORMAL
-          - EXCELLENT
-          - ELEVATED
-          - LOW
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
-    MetricWithInterpretationDTO:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of metric
-          example: BODY_FAT_PERCENTS
-        value:
-          type: number
-          description: Value of metric
-          format: double
-        interpretation:
-          $ref: '#/components/schemas/Interpretation'
-        unit:
-          type: string
-          description: Unit of metric
-          example: PERCENTS
-          enum:
-          - PERCENTS
-          - CM
-          - KG
-          - KJ
-          - LITER
-          - CM2
-          - OTHER
-      description: Metrics associated with this measurement
-    DatedValueWithProgressDTO:
-      type: object
-      properties:
-        value:
-          type: number
-          description: Value of measurement
-          format: double
-        createdAt:
-          type: string
-          description: DateTime when measurement was conducted
-          format: date-time
+        region:
+          $ref: '#/components/schemas/InterpretationRegion'
+      description: Interpretation of metric
     ErrorDTO:
       type: object
       properties:
@@ -411,31 +416,26 @@ components:
             type: string
             description: Additional information of the error context
           description: Additional information of the error context
-    Interpretation:
+    StrengthMeasurementDTO:
       type: object
       properties:
-        label:
+        createdAt:
+          type: string
+          format: date-time
+        strength:
+          $ref: '#/components/schemas/DatedValueWithProgressDTO'
+        source:
+          type: string
+        bodyRegion:
           type: string
           enum:
+          - ALL
+          - UPPER
+          - CORE
+          - LOWER
           - UNSPECIFIED
-          - NORMAL
-          - EXCELLENT
-          - ELEVATED
-          - LOW
-        region:
-          $ref: '#/components/schemas/InterpretationRegion'
-      description: Interpretation of metric
-    InterpretationRegion:
-      type: object
-      properties:
-        low:
-          type: number
-          format: double
-        top:
-          type: number
-          format: double
-        labels:
-          $ref: '#/components/schemas/Labels'
+        machineType:
+          type: string
   securitySchemes:
     mms:
       type: apiKey

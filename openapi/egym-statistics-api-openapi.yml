@@ -99,32 +99,6 @@ paths:
       - user: []
 components:
   schemas:
-    WorkoutPointsDTO:
-      type: object
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: The exercise timestamp
-          example: 1552262400000
-        exerciseType:
-          type: string
-          description: The exercise type
-          enum:
-          - ENDURANCE
-          - STRENGTH
-          - MOBILITY
-          - SPORT
-          - FITNESS_CLASS
-          - EGYM_CIRCLE
-          - EGYM_MACHINE
-          - DAILY_ROUTINE
-          - COORDINATION
-        points:
-          type: integer
-          format: int64
-          description: The total activity points
-          example: 10
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -177,19 +151,32 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
-    WorkoutHistoryPointsDTO:
+    WorkoutPointsDTO:
       type: object
       properties:
-        todaysPoints:
-          type: array
-          description: The activity points of the current day
-          items:
-            $ref: '#/components/schemas/WorkoutPointsDTO'
-        pointsByDay:
-          type: array
-          description: The activity points summed daily and grouped by exercise type
-          items:
-            $ref: '#/components/schemas/WorkoutPointsDTO'
+        timestamp:
+          type: integer
+          format: int64
+          description: The exercise timestamp
+          example: 1552262400000
+        exerciseType:
+          type: string
+          description: The exercise type
+          enum:
+          - ENDURANCE
+          - STRENGTH
+          - MOBILITY
+          - SPORT
+          - FITNESS_CLASS
+          - EGYM_CIRCLE
+          - EGYM_MACHINE
+          - DAILY_ROUTINE
+          - COORDINATION
+        points:
+          type: integer
+          format: int64
+          description: The total activity points
+          example: 10
     ActivityLevelResponseDTO:
       type: object
       properties:
@@ -216,6 +203,19 @@ components:
           format: int32
           description: Number of days to earn 'goal' to achieve next activity level
           example: 27
+    WorkoutHistoryPointsDTO:
+      type: object
+      properties:
+        todaysPoints:
+          type: array
+          description: The activity points of the current day
+          items:
+            $ref: '#/components/schemas/WorkoutPointsDTO'
+        pointsByDay:
+          type: array
+          description: The activity points summed daily and grouped by exercise type
+          items:
+            $ref: '#/components/schemas/WorkoutPointsDTO'
   securitySchemes:
     user:
       type: http

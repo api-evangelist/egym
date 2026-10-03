@@ -111,6 +111,16 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
+    OpenExerciseWorkoutIntervalDTO:
+      type: object
+      properties:
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - duration
     OpenExerciseWorkoutDTO:
       type: object
       properties:
@@ -163,16 +173,6 @@ components:
       - intervals
       - startTimestamp
       - uniqueExerciseId
-    OpenExerciseWorkoutIntervalDTO:
-      type: object
-      properties:
-        duration:
-          type: integer
-          format: int64
-          description: The duration in milliseconds.
-          example: 60000
-      required:
-      - duration
   securitySchemes:
     user:
       type: http

@@ -506,6 +506,22 @@ paths:
       description: Production
 components:
   schemas:
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
     MeasurementDTO:
       required:
       - data
@@ -568,44 +584,6 @@ components:
           description: The constraint violations.
           items:
             $ref: '#/components/schemas/FieldErrorDTO'
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
-    MeasurementDTO_2:
-      type: object
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
-          example: 1672531200000
-        uniqueMeasurementId:
-          type: string
-          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
-          minLength: 1
-        data:
-          type: object
-          additionalProperties:
-            type: number
-          description: A map of properties that define each measurement for this equipment.
-          minProperties: 1
-      required:
-      - data
-      - timestamp
-      - uniqueMeasurementId
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -645,19 +623,6 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
-    LatestBodyMeasurementsValuesResponseDTO:
-      type: object
-      properties:
-        data:
-          type: object
-          additionalProperties: true
-          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string values. Only metrics that have been measured for the user are present in the response.
-          example:
-            BMI: 22.5
-            WEIGHT_KG: 75
-            HEIGHT_CM: 180
-            BODY_FAT_PERCENTS: 18.3
-            WAIST_CM: 82
     FieldErrorDTO_2:
       type: object
       properties:
@@ -671,6 +636,46 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
+    BodyMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of body metrics for this measurement
+          items:
+            $ref: '#/components/schemas/BodyMetricDTO'
+    MeasurementDTO_2:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp of when the measurement took place in milliseconds since the epoch time. Maximum difference to the past is seven days.
+          example: 1672531200000
+        uniqueMeasurementId:
+          type: string
+          description: Unique identifier for this measurement. The machine should generate a unique id for each measurement submitted.
+          minLength: 1
+        data:
+          type: object
+          additionalProperties:
+            type: number
+          description: A map of properties that define each measurement for this equipment.
+          minProperties: 1
+      required:
+      - data
+      - timestamp
+      - uniqueMeasurementId
     BodyMetricDTO:
       type: object
       properties:
@@ -1037,24 +1042,19 @@ components:
           type: number
           description: The value of the metric
           example: '75.5'
-    BodyMeasurementHistoryResponseDTO:
+    LatestBodyMeasurementsValuesResponseDTO:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the measurement
-          example: 123
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp when the measurement was created (epoch milliseconds)
-          example: 1647685800000
-        metrics:
-          type: array
-          description: List of body metrics for this measurement
-          items:
-            $ref: '#/components/schemas/BodyMetricDTO'
+        data:
+          type: object
+          additionalProperties: true
+          description: Map of body metric types to their latest recorded numeric values. Keys are BodyMetricType enum string values. Only metrics that have been measured for the user are present in the response.
+          example:
+            BMI: 22.5
+            WEIGHT_KG: 75
+            HEIGHT_CM: 180
+            BODY_FAT_PERCENTS: 18.3
+            WAIST_CM: 82
   securitySchemes:
     user:
       type: http

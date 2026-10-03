@@ -880,54 +880,6 @@ paths:
                           eligible: false
 components:
   parameters:
-    locationSecretHeader:
-      name: X-Location-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    chainSecretHeader:
-      name: X-Chain-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    clientIdHeader:
-      name: X-Client-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    userLocaleHeader:
-      name: X-User-Locale
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationIdHeader:
-      name: X-Location-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    locationGroupIdHeader:
-      name: X-Location-Group-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    userSecretHeader:
-      name: X-User-Secret
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
-    chainIdHeader:
-      name: X-Chain-ID
-      in: header
-      description: see 'Additional Data HTTP Headers' for details.
-      schema:
-        type: string
     locationGroupSecretHeader:
       name: X-Location-Group-Secret
       in: header
@@ -940,121 +892,61 @@ components:
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
+    userSecretHeader:
+      name: X-User-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    clientIdHeader:
+      name: X-Client-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
     clientSecretHeader:
       name: X-Client-Secret
       in: header
       description: see 'Additional Data HTTP Headers' for details.
       schema:
         type: string
+    chainIdHeader:
+      name: X-Chain-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationGroupIdHeader:
+      name: X-Location-Group-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationIdHeader:
+      name: X-Location-ID
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    locationSecretHeader:
+      name: X-Location-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    userLocaleHeader:
+      name: X-User-Locale
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
+    chainSecretHeader:
+      name: X-Chain-Secret
+      in: header
+      description: see 'Additional Data HTTP Headers' for details.
+      schema:
+        type: string
   schemas:
-    GroupXClassOperationEligibility:
-      type: object
-      description: Represents particular operation eligibility for Class/Exerciser pair.
-      properties:
-        eligible:
-          type: boolean
-          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
-
-            '
-      required:
-      - eligible
-    GroupXClassDetails:
-      type: object
-      description: Comprehensive details of the groupX class
-      properties:
-        description:
-          type: string
-          description: Long description of the groupX class
-        room:
-          type: object
-          description: '**Optional property** The room where this class takes place.
-
-            '
-          properties:
-            name:
-              type: string
-              description: Short name of the room.
-            description:
-              type: string
-              description: Details about this room
-            roomPhotoUrl:
-              type: string
-              description: URL to the room scheme or photo
-            customInfo:
-              $ref: '#/components/schemas/CustomInfo'
-          required:
-          - name
-        level:
-          type: object
-          description: '**Optional property** The level of the groupX class (e.g. ''Intermediate'', ''Advanced'')
-
-            '
-          properties:
-            name:
-              type: string
-              description: Short name of the level.
-            description:
-              type: string
-              description: Details about this level
-          required:
-          - name
-        pricing:
-          type: object
-          description: '**Optional property** The price of paid groupX class. If the class is free could be omited
-
-            '
-          properties:
-            price:
-              type: number
-              description: price amount
-              format: double
-          required:
-          - price
-        legalNotes:
-          type: string
-          description: Legal notes for this class (often provider specific)
-        customInfo:
-          $ref: '#/components/schemas/CustomInfo'
-    GroupXClassOperationExtendedEligibility:
-      type: object
-      description: Represents particular operation eligibility for Class/Exerciser pair providing extra data.
-      properties:
-        eligible:
-          type: boolean
-          description: 'Indicates if operation on a given Class is eligible for a give Exerciser.
-
-            '
-        lackOfProduct:
-          type: boolean
-          description: 'Indicates that there are enough products on an Exerciser''s account balance to pay for a Class. Products could be Class bundles, points etc.
-
-            This attribute must be absent for eligible=`true`.
-
-            '
-        userPaymentOnFile:
-          type: boolean
-          description: 'Indicates that user has a valid payment source on file to pay for a Class.
-
-            This attribute must be absent for eligible=`true` or lackOfProduct=`false`.
-
-            '
-      required:
-      - eligible
-    GroupXClass:
-      type: object
-      description: GroupX Class with all details
-      properties:
-        brief:
-          $ref: '#/components/schemas/GroupXClassBrief'
-        bookingDetails:
-          $ref: '#/components/schemas/GroupXClassBookingDetails'
-        details:
-          $ref: '#/components/schemas/GroupXClassDetails'
-        attendeeBookingDetails:
-          $ref: '#/components/schemas/GroupXClassAttendeeBookingDetails'
-      required:
-      - brief
-      - details
     GroupXClassAttendeeBookingDetails:
       type: object
       description: Information about attendance of the given exerciser in this GroupX Class
@@ -1080,6 +972,69 @@ components:
       required:
       - exerciserId
       - booked
+      - waitlistBooked
+    GroupXClassOperationExtendedEligibility:
+      type: object
+      description: Represents particular operation eligibility for Class/Exerciser pair providing extra data.
+      properties:
+        eligible:
+          type: boolean
+          description: 'Indicates if operation on a given Class is eligible for a give Exerciser.
+
+            '
+        lackOfProduct:
+          type: boolean
+          description: 'Indicates that there are enough products on an Exerciser''s account balance to pay for a Class. Products could be Class bundles, points etc.
+
+            This attribute must be absent for eligible=`true`.
+
+            '
+        userPaymentOnFile:
+          type: boolean
+          description: 'Indicates that user has a valid payment source on file to pay for a Class.
+
+            This attribute must be absent for eligible=`true` or lackOfProduct=`false`.
+
+            '
+      required:
+      - eligible
+    GroupXClassOperationEligibility:
+      type: object
+      description: Represents particular operation eligibility for Class/Exerciser pair.
+      properties:
+        eligible:
+          type: boolean
+          description: 'Indicates if operation on a given Class is eligible for a given Exerciser.
+
+            '
+      required:
+      - eligible
+    GroupXClassBookingDetails:
+      type: object
+      description: Booking details of the GroupX Class
+      properties:
+        capacity:
+          type: integer
+          description: Capacity of the GroupX Class for booking online
+          format: int32
+        booked:
+          type: integer
+          description: Spots booked online for this GroupX Class
+          format: int32
+        waitlistCapacity:
+          type: integer
+          format: int32
+        waitlistBooked:
+          type: integer
+          format: int32
+        availableSpots:
+          type: array
+          items:
+            type: string
+      required:
+      - capacity
+      - booked
+      - waitlistCapacity
       - waitlistBooked
     GroupXClassBrief:
       type: object
@@ -1150,33 +1105,80 @@ components:
       - name
       - startDateTime
       - endDateTime
-    GroupXClassBookingDetails:
-      type: object
-      description: Booking details of the GroupX Class
-      properties:
-        capacity:
-          type: integer
-          description: Capacity of the GroupX Class for booking online
-          format: int32
-        booked:
-          type: integer
-          description: Spots booked online for this GroupX Class
-          format: int32
-        waitlistCapacity:
-          type: integer
-          format: int32
-        waitlistBooked:
-          type: integer
-          format: int32
-        availableSpots:
-          type: array
-          items:
+    CustomInfo:
+      type: array
+      description: 'Key-Value map to represent additional information of an entity.
+
+        Partners could contain diverse information of same entities. This type designed to store that information.
+
+        '
+      items:
+        type: object
+        properties:
+          key:
             type: string
-      required:
-      - capacity
-      - booked
-      - waitlistCapacity
-      - waitlistBooked
+          value:
+            type: string
+        required:
+        - key
+        - value
+    GroupXClassDetails:
+      type: object
+      description: Comprehensive details of the groupX class
+      properties:
+        description:
+          type: string
+          description: Long description of the groupX class
+        room:
+          type: object
+          description: '**Optional property** The room where this class takes place.
+
+            '
+          properties:
+            name:
+              type: string
+              description: Short name of the room.
+            description:
+              type: string
+              description: Details about this room
+            roomPhotoUrl:
+              type: string
+              description: URL to the room scheme or photo
+            customInfo:
+              $ref: '#/components/schemas/CustomInfo'
+          required:
+          - name
+        level:
+          type: object
+          description: '**Optional property** The level of the groupX class (e.g. ''Intermediate'', ''Advanced'')
+
+            '
+          properties:
+            name:
+              type: string
+              description: Short name of the level.
+            description:
+              type: string
+              description: Details about this level
+          required:
+          - name
+        pricing:
+          type: object
+          description: '**Optional property** The price of paid groupX class. If the class is free could be omited
+
+            '
+          properties:
+            price:
+              type: number
+              description: price amount
+              format: double
+          required:
+          - price
+        legalNotes:
+          type: string
+          description: Legal notes for this class (often provider specific)
+        customInfo:
+          $ref: '#/components/schemas/CustomInfo'
     GroupXClassEligibility:
       type: object
       description: 'Represents booking/cancellation opearions eligibility for Class/Exerciser pair.
@@ -1200,20 +1202,18 @@ components:
       - removeFromClassEligibility
       - addToWaitlistEligibility
       - removeFromWaitlistEligibility
-    CustomInfo:
-      type: array
-      description: 'Key-Value map to represent additional information of an entity.
-
-        Partners could contain diverse information of same entities. This type designed to store that information.
-
-        '
-      items:
-        type: object
-        properties:
-          key:
-            type: string
-          value:
-            type: string
-        required:
-        - key
-        - value
+    GroupXClass:
+      type: object
+      description: GroupX Class with all details
+      properties:
+        brief:
+          $ref: '#/components/schemas/GroupXClassBrief'
+        bookingDetails:
+          $ref: '#/components/schemas/GroupXClassBookingDetails'
+        details:
+          $ref: '#/components/schemas/GroupXClassDetails'
+        attendeeBookingDetails:
+          $ref: '#/components/schemas/GroupXClassAttendeeBookingDetails'
+      required:
+      - brief
+      - details

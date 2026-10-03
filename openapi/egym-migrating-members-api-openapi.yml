@@ -72,75 +72,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    ContactDTO:
-      type: object
-      properties:
-        phone:
-          type: string
-          description: The Member telephone number.
-        street:
-          type: string
-          description: Street name in member's address.
-        streetNumber:
-          type: string
-          description: Street number in member's address.
-        zipCode:
-          type: string
-          description: Zip Code in member's address.
-        city:
-          type: string
-          description: City in member's address.
-        state:
-          type: string
-          description: State in member's address.
-        country:
-          type: string
-          description: Country of the member's address in ISO 3166-1 alpha-2.
-          example: DE
-    MemberAccountDTO:
-      type: object
-      properties:
-        accountId:
-          type: string
-          description: The EGYM account ID for the Gym Member.
-          readOnly: true
-        email:
-          type: string
-          description: The Member email address. It should be unique within the gym chain.
-          minLength: 1
-        firstName:
-          type: string
-          description: The Member first name.
-          example: John
-          minLength: 1
-        lastName:
-          type: string
-          description: The Member last name.
-          example: Wick
-          minLength: 1
-        dateOfBirth:
-          type: string
-          format: date
-          description: 'The Member date of birth. format: yyyy-MM-dd'
-        gender:
-          type: string
-          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE for the usage of the machines.
-          enum:
-          - MALE
-          - FEMALE
-          - NON_BINARY
-        contact:
-          $ref: '#/components/schemas/ContactDTO'
-          description: The user's contact information
-        membership:
-          $ref: '#/components/schemas/MembershipDTO'
-          description: The membership details.
-      required:
-      - email
-      - firstName
-      - gender
-      - lastName
-      - membership
     FieldErrorDTO:
       type: object
       properties:
@@ -203,6 +134,31 @@ components:
       - membershipId
       - membershipType
       - startOfContract
+    ContactDTO:
+      type: object
+      properties:
+        phone:
+          type: string
+          description: The Member telephone number.
+        street:
+          type: string
+          description: Street name in member's address.
+        streetNumber:
+          type: string
+          description: Street number in member's address.
+        zipCode:
+          type: string
+          description: Zip Code in member's address.
+        city:
+          type: string
+          description: City in member's address.
+        state:
+          type: string
+          description: State in member's address.
+        country:
+          type: string
+          description: Country of the member's address in ISO 3166-1 alpha-2.
+          example: DE
     ErrorDTO:
       type: object
       properties:
@@ -240,6 +196,50 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
+    MemberAccountDTO:
+      type: object
+      properties:
+        accountId:
+          type: string
+          description: The EGYM account ID for the Gym Member.
+          readOnly: true
+        email:
+          type: string
+          description: The Member email address. It should be unique within the gym chain.
+          minLength: 1
+        firstName:
+          type: string
+          description: The Member first name.
+          example: John
+          minLength: 1
+        lastName:
+          type: string
+          description: The Member last name.
+          example: Wick
+          minLength: 1
+        dateOfBirth:
+          type: string
+          format: date
+          description: 'The Member date of birth. format: yyyy-MM-dd'
+        gender:
+          type: string
+          description: The Member gender. Please note that NON_BINARY is not correctly supported yet, we send it as FEMALE for the usage of the machines.
+          enum:
+          - MALE
+          - FEMALE
+          - NON_BINARY
+        contact:
+          $ref: '#/components/schemas/ContactDTO'
+          description: The user's contact information
+        membership:
+          $ref: '#/components/schemas/MembershipDTO'
+          description: The membership details.
+      required:
+      - email
+      - firstName
+      - gender
+      - lastName
+      - membership
     CorporateFitnessDTO:
       type: object
       properties:

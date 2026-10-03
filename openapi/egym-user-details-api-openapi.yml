@@ -59,40 +59,22 @@ paths:
       - user: []
 components:
   schemas:
-    UserDetailsDTO:
+    FieldErrorDTO:
       type: object
       properties:
-        equipmentUser:
-          $ref: '#/components/schemas/EquipmentUserDetailsDTO'
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
+        name:
           type: string
-          description: The timestamp of the request.
-          format: date-time
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          description: The http status code.
-          format: int32
-        error:
-          type: string
-          description: The error.
+          description: The field name.
+          example: age
         message:
           type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
     EquipmentUserDetailsDTO:
       type: object
       properties:
@@ -154,22 +136,40 @@ components:
         termsAndConditionsAccepted:
           type: boolean
           description: Informs if the terms and conditions have been accepted.
-    FieldErrorDTO:
+    UserDetailsDTO:
       type: object
       properties:
-        name:
+        equipmentUser:
+          $ref: '#/components/schemas/EquipmentUserDetailsDTO'
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
           type: string
-          description: The field name.
-          example: age
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
         message:
           type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
   securitySchemes:
     user:
       type: http

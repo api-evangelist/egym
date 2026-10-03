@@ -85,39 +85,33 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    HeartRateZoneDto:
+    FieldErrorDTO:
       type: object
       properties:
-        min:
-          type: integer
-          format: int32
-        max:
-          type: integer
-          format: int32
-        duration:
-          type: integer
-          format: int64
-        label:
+        name:
           type: string
-        orderNumber:
-          type: integer
-          format: int32
-    WorkoutDetailsDTO:
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
+    HRMDataDto:
       type: object
       properties:
-        exercises:
+        targetHeartRate:
+          type: integer
+          format: int32
+        zones:
           type: array
-          description: Exercises of workout
           items:
-            $ref: '#/components/schemas/WorkoutExerciseDetailsDTO'
-        completedAt:
-          type: string
-          description: Workout tracking local time
-          format: date-time
-        timezone:
-          type: string
-          description: Workout tracking timezone
-          format: time-zone
+            $ref: '#/components/schemas/HeartRateZoneDto'
+      description: HRM (heart rate monitor) data.
     WorkoutExerciseSummaryDTO:
       type: object
       properties:
@@ -154,91 +148,44 @@ components:
           description: Average incline
           format: double
       description: Workout summary contains data fields which summarize the exercise, thus one does not need to go over all sets.
-    WorkoutExerciseDetailsDTO:
+    ErrorDTO:
       type: object
       properties:
-        id:
-          type: integer
-          description: Exercise ID
-          format: int64
-        activity:
-          $ref: '#/components/schemas/CombinedActivityDto'
-        sets:
-          type: array
-          description: Exercise sets
-          items:
-            $ref: '#/components/schemas/WorkoutExerciseSetDTO'
-        completedAt:
+        timestamp:
           type: string
-          description: Exercise completion local time
+          description: The timestamp of the request.
           format: date-time
-        timezone:
+        path:
           type: string
-          description: Exercise completion timezone
-          format: time-zone
-        kiloCalories:
-          type: number
-          description: Exercise kilocalories
-          format: double
-        hrmData:
-          $ref: '#/components/schemas/HRMDataDto'
-        summary:
-          $ref: '#/components/schemas/WorkoutExerciseSummaryDTO'
-      description: Exercises of workout
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
+          description: The path requested.
+        requestId:
           type: string
-          description: The field name.
-          example: age
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
         message:
           type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
-    CombinedActivityDto:
-      type: object
-      properties:
-        name:
-          type: string
-        rangeOfMotion:
-          type: number
-          format: double
-        strengthBenchmarkMale:
-          type: number
-          format: double
-        strengthBenchmarkFemale:
-          type: number
-          format: double
-        calculationMethod:
-          type: string
-          enum:
-          - ADD_SPECIFIED_WEIGHT
-          - SUBTRACT_SPECIFIED_WEIGHT
-        maxStrengthTestBodyRegion:
-          type: string
-          enum:
-          - UPPER_BODY
-          - CORE
-          - LEGS
-          - WHOLE
-      description: Activity details
-    HRMDataDto:
-      type: object
-      properties:
-        targetHeartRate:
-          type: integer
-          format: int32
-        zones:
+          description: The message to describe the error.
+        fieldErrors:
           type: array
+          description: The constraint violations.
           items:
-            $ref: '#/components/schemas/HeartRateZoneDto'
-      description: HRM (heart rate monitor) data.
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional information of the error context
+          description: Additional information of the error context
     WorkoutExerciseSetDTO:
       required:
       - setType
@@ -283,44 +230,97 @@ components:
           description: Set recovery time in seconds
           format: int64
       description: Exercise sets
-    ErrorDTO:
+    WorkoutDetailsDTO:
       type: object
       properties:
-        timestamp:
-          type: string
-          description: The timestamp of the request.
-          format: date-time
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          description: The http status code.
-          format: int32
-        error:
-          type: string
-          description: The error.
-        errorCode:
-          type: string
-          description: The static error code.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
+        exercises:
           type: array
-          description: The constraint violations.
+          description: Exercises of workout
           items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: Additional information of the error context
-          description: Additional information of the error context
+            $ref: '#/components/schemas/WorkoutExerciseDetailsDTO'
+        completedAt:
+          type: string
+          description: Workout tracking local time
+          format: date-time
+        timezone:
+          type: string
+          description: Workout tracking timezone
+          format: time-zone
+    HeartRateZoneDto:
+      type: object
+      properties:
+        min:
+          type: integer
+          format: int32
+        max:
+          type: integer
+          format: int32
+        duration:
+          type: integer
+          format: int64
+        label:
+          type: string
+        orderNumber:
+          type: integer
+          format: int32
+    CombinedActivityDto:
+      type: object
+      properties:
+        name:
+          type: string
+        rangeOfMotion:
+          type: number
+          format: double
+        strengthBenchmarkMale:
+          type: number
+          format: double
+        strengthBenchmarkFemale:
+          type: number
+          format: double
+        calculationMethod:
+          type: string
+          enum:
+          - ADD_SPECIFIED_WEIGHT
+          - SUBTRACT_SPECIFIED_WEIGHT
+        maxStrengthTestBodyRegion:
+          type: string
+          enum:
+          - UPPER_BODY
+          - CORE
+          - LEGS
+          - WHOLE
+      description: Activity details
+    WorkoutExerciseDetailsDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Exercise ID
+          format: int64
+        activity:
+          $ref: '#/components/schemas/CombinedActivityDto'
+        sets:
+          type: array
+          description: Exercise sets
+          items:
+            $ref: '#/components/schemas/WorkoutExerciseSetDTO'
+        completedAt:
+          type: string
+          description: Exercise completion local time
+          format: date-time
+        timezone:
+          type: string
+          description: Exercise completion timezone
+          format: time-zone
+        kiloCalories:
+          type: number
+          description: Exercise kilocalories
+          format: double
+        hrmData:
+          $ref: '#/components/schemas/HRMDataDto'
+        summary:
+          $ref: '#/components/schemas/WorkoutExerciseSummaryDTO'
+      description: Exercises of workout
   securitySchemes:
     mms:
       type: apiKey

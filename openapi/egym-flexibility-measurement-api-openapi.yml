@@ -245,6 +245,22 @@ paths:
       description: Production
 components:
   schemas:
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
     MeasurementDTO:
       required:
       - data
@@ -307,22 +323,6 @@ components:
           description: The constraint violations.
           items:
             $ref: '#/components/schemas/FieldErrorDTO'
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -362,6 +362,19 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     MeasurementDTO_2:
       type: object
       properties:
@@ -397,6 +410,24 @@ components:
             SYMMETRIC_SCORE: 72.5
             ADDUCTOR_LEFT_DEGREE: 42
             ADDUCTOR_RIGHT_DEGREE: 44
+    FlexibilityMeasurementHistoryResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The ID of the measurement
+          example: 123
+        timestamp:
+          type: integer
+          format: int64
+          description: The timestamp when the measurement was created (epoch milliseconds)
+          example: 1647685800000
+        metrics:
+          type: array
+          description: List of flexibility metrics for this measurement
+          items:
+            $ref: '#/components/schemas/FlexibilityMetricDTO'
     FlexibilityMetricDTO:
       type: object
       properties:
@@ -502,37 +533,6 @@ components:
           type: number
           description: The value of the metric
           example: '85.0'
-    FieldErrorDTO_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
-    FlexibilityMeasurementHistoryResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: The ID of the measurement
-          example: 123
-        timestamp:
-          type: integer
-          format: int64
-          description: The timestamp when the measurement was created (epoch milliseconds)
-          example: 1647685800000
-        metrics:
-          type: array
-          description: List of flexibility metrics for this measurement
-          items:
-            $ref: '#/components/schemas/FlexibilityMetricDTO'
   securitySchemes:
     user:
       type: http

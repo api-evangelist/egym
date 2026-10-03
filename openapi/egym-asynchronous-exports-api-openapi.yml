@@ -82,20 +82,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDTO'
-    Unauthorized:
-      description: Missing, malformed, or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
     NotFound:
       description: Requested resource was not found.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    BadRequest:
-      description: Invalid request parameters or body.
       content:
         application/json:
           schema:
@@ -106,24 +94,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDTO'
+    Unauthorized:
+      description: Missing, malformed, or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    BadRequest:
+      description: Invalid request parameters or body.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
   schemas:
-    AsyncExportStatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AsyncExportJobStatus'
-        downloadURL:
-          type:
-          - string
-          - 'null'
-          format: uri
-    AsyncExportJobStatus:
-      type: string
-      enum:
-      - IN_PROGRESS
-      - DONE
-      - FAILED
-      - EXPIRED
     AsyncExportCreateRequest:
       type: object
       required:
@@ -146,6 +129,20 @@ components:
           default: JSONL
           allOf:
           - $ref: '#/components/schemas/AsyncExportFileType'
+    AsyncExportJobStatus:
+      type: string
+      enum:
+      - IN_PROGRESS
+      - DONE
+      - FAILED
+      - EXPIRED
+    ExportType:
+      type: string
+      enum:
+      - SMART_STRENGTH_WORKOUTS
+      - SMART_STRENGTH_ASSESSMENTS
+      - FLEXIBILITY_MEASUREMENTS
+      - BODY_MEASUREMENTS
     AsyncExportCreateResponse:
       type: object
       properties:
@@ -154,24 +151,27 @@ components:
           format: uuid
         status:
           $ref: '#/components/schemas/AsyncExportJobStatus'
+    AsyncExportStatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AsyncExportJobStatus'
+        downloadURL:
+          type:
+          - string
+          - 'null'
+          format: uri
+    ErrorDTO:
+      type: object
+      properties:
+        message:
+          type: string
     AsyncExportFileType:
       type: string
       enum:
       - JSON
       - JSONL
       - CSV
-    ExportType:
-      type: string
-      enum:
-      - SMART_STRENGTH_WORKOUTS
-      - SMART_STRENGTH_ASSESSMENTS
-      - FLEXIBILITY_MEASUREMENTS
-      - BODY_MEASUREMENTS
-    ErrorDTO:
-      type: object
-      properties:
-        message:
-          type: string
   securitySchemes:
     apiKeyAuth:
       type: apiKey
