@@ -98,6 +98,16 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
+    OpenExerciseWorkoutIntervalDTO:
+      type: object
+      properties:
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - duration
     FieldErrorDTO:
       type: object
       properties:
@@ -111,16 +121,6 @@ components:
         rejectedValue:
           description: The rejected value.
           example: Must not be null.
-    OpenExerciseWorkoutIntervalDTO:
-      type: object
-      properties:
-        duration:
-          type: integer
-          format: int64
-          description: The duration in milliseconds.
-          example: 60000
-      required:
-      - duration
     OpenExerciseWorkoutDTO:
       type: object
       properties:

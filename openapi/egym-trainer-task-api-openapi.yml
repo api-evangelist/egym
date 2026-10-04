@@ -236,20 +236,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
     TaskDTO:
       type: object
       properties:
@@ -336,6 +322,20 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
   securitySchemes:
     mms:
       type: apiKey

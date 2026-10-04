@@ -72,20 +72,31 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    FieldErrorDTO:
+    ContactDTO:
       type: object
       properties:
-        name:
+        phone:
           type: string
-          description: The field name.
-          example: age
-        message:
+          description: The Member telephone number.
+        street:
           type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
+          description: Street name in member's address.
+        streetNumber:
+          type: string
+          description: Street number in member's address.
+        zipCode:
+          type: string
+          description: Zip Code in member's address.
+        city:
+          type: string
+          description: City in member's address.
+        state:
+          type: string
+          description: State in member's address.
+        country:
+          type: string
+          description: Country of the member's address in ISO 3166-1 alpha-2.
+          example: DE
     MembershipDTO:
       type: object
       properties:
@@ -134,31 +145,31 @@ components:
       - membershipId
       - membershipType
       - startOfContract
-    ContactDTO:
+    FieldErrorDTO:
       type: object
       properties:
-        phone:
+        name:
           type: string
-          description: The Member telephone number.
-        street:
+          description: The field name.
+          example: age
+        message:
           type: string
-          description: Street name in member's address.
-        streetNumber:
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
+    CorporateFitnessDTO:
+      type: object
+      properties:
+        startTimestamp:
           type: string
-          description: Street number in member's address.
-        zipCode:
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership will start, in case that is in the future. This field will not be returned in case of an active or past corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
+        endTimestamp:
           type: string
-          description: Zip Code in member's address.
-        city:
-          type: string
-          description: City in member's address.
-        state:
-          type: string
-          description: State in member's address.
-        country:
-          type: string
-          description: Country of the member's address in ISO 3166-1 alpha-2.
-          example: DE
+          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership ends. This field is only returned in case there is a defined end timestamp for the corporate fitness membership.
+          example: '2021-03-08T18:26:47Z'
     ErrorDTO:
       type: object
       properties:
@@ -240,17 +251,6 @@ components:
       - gender
       - lastName
       - membership
-    CorporateFitnessDTO:
-      type: object
-      properties:
-        startTimestamp:
-          type: string
-          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership will start, in case that is in the future. This field will not be returned in case of an active or past corporate fitness membership.
-          example: '2021-03-08T18:26:47Z'
-        endTimestamp:
-          type: string
-          description: The date (in ISO format) when the corporate fitness (Qualitrain/Wellpass) membership ends. This field is only returned in case there is a defined end timestamp for the corporate fitness membership.
-          example: '2021-03-08T18:26:47Z'
   securitySchemes:
     mms:
       type: apiKey

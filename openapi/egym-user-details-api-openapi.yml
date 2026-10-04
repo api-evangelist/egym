@@ -59,22 +59,6 @@ paths:
       - user: []
 components:
   schemas:
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          type: object
-          description: The rejected value.
-          example: 3
-      description: The constraint violations.
     EquipmentUserDetailsDTO:
       type: object
       properties:
@@ -170,6 +154,22 @@ components:
           description: The constraint violations.
           items:
             $ref: '#/components/schemas/FieldErrorDTO'
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          type: object
+          description: The rejected value.
+          example: 3
+      description: The constraint violations.
   securitySchemes:
     user:
       type: http

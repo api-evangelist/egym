@@ -144,6 +144,42 @@ paths:
       - user: []
 components:
   schemas:
+    UpdateCardioTestDTO:
+      type: object
+      properties:
+        levelId:
+          type: integer
+          format: int32
+          description: The level id.
+          example: 1
+        stepCompletionType:
+          type: string
+          description: The completion type.
+          enum:
+          - COMPLETED
+          - ABORTED
+        ratedPerceivedExertion:
+          type: string
+          description: The rated perceived exertion.
+          enum:
+          - NO_EFFORT
+          - VERY_EASY
+          - EASY
+          - COMFORTABLE
+          - SOMEWHAT_DIFFICULT
+          - DIFFICULT
+          - HARD
+          - VERY_HARD
+          - EXTREMELY_HARD
+          - MAXIMAL_EFFORT
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+      required:
+      - levelId
+      - stepCompletionType
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -229,19 +265,6 @@ components:
           - MALE
           - FEMALE
           - NON_BINARY
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     CardioTestResponseDTO:
       type: object
       properties:
@@ -275,83 +298,6 @@ components:
             - FIRST_CARDIO_TEST
             - TEST_SKIPPED
           uniqueItems: true
-    HistoricalCardioResultDTO:
-      type: object
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: The date of the test.
-          example: 1553074068097
-        maxWatts:
-          type: number
-          format: double
-          description: The max watts.
-          example: 200
-        cardioAge:
-          type: integer
-          format: int32
-          description: The cardio age result.
-          example: 26
-        vo2max:
-          type: number
-          format: double
-          description: The maximum rate of oxygen consumption measured.
-          example: '45.1'
-    CardioTestResultDTO:
-      type: object
-      properties:
-        results:
-          type: array
-          description: The historical results.
-          items:
-            $ref: '#/components/schemas/HistoricalCardioResultDTO'
-        cardioAge:
-          type: integer
-          format: int32
-          description: The cardio age result.
-          example: 26
-        vo2max:
-          type: number
-          format: double
-          description: The maximum rate of oxygen consumption measured.
-          example: '45.1'
-    UpdateCardioTestDTO:
-      type: object
-      properties:
-        levelId:
-          type: integer
-          format: int32
-          description: The level id.
-          example: 1
-        stepCompletionType:
-          type: string
-          description: The completion type.
-          enum:
-          - COMPLETED
-          - ABORTED
-        ratedPerceivedExertion:
-          type: string
-          description: The rated perceived exertion.
-          enum:
-          - NO_EFFORT
-          - VERY_EASY
-          - EASY
-          - COMFORTABLE
-          - SOMEWHAT_DIFFICULT
-          - DIFFICULT
-          - HARD
-          - VERY_HARD
-          - EXTREMELY_HARD
-          - MAXIMAL_EFFORT
-        duration:
-          type: integer
-          format: int64
-          description: The duration in milliseconds.
-          example: 60000
-      required:
-      - levelId
-      - stepCompletionType
     CardioLevelDTO:
       type: object
       properties:
@@ -410,6 +356,19 @@ components:
           format: double
           description: The stride length zone.
           example: 2
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     InitialCardioTestDTO:
       type: object
       properties:
@@ -426,6 +385,47 @@ components:
       required:
       - personalFitnessRating
       - userInfo
+    HistoricalCardioResultDTO:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: The date of the test.
+          example: 1553074068097
+        maxWatts:
+          type: number
+          format: double
+          description: The max watts.
+          example: 200
+        cardioAge:
+          type: integer
+          format: int32
+          description: The cardio age result.
+          example: 26
+        vo2max:
+          type: number
+          format: double
+          description: The maximum rate of oxygen consumption measured.
+          example: '45.1'
+    CardioTestResultDTO:
+      type: object
+      properties:
+        results:
+          type: array
+          description: The historical results.
+          items:
+            $ref: '#/components/schemas/HistoricalCardioResultDTO'
+        cardioAge:
+          type: integer
+          format: int32
+          description: The cardio age result.
+          example: 26
+        vo2max:
+          type: number
+          format: double
+          description: The maximum rate of oxygen consumption measured.
+          example: '45.1'
   securitySchemes:
     user:
       type: http

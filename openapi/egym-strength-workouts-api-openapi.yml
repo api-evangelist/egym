@@ -95,6 +95,213 @@ paths:
       - user: []
 components:
   schemas:
+    GeniusStrengthWorkoutDTO:
+      type: object
+      properties:
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+        sessionName:
+          type: string
+          description: The name that identifies the session for the user.
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time.
+          example: 1672531200000
+        endTimestamp:
+          type: integer
+          format: int64
+          description: The end of the exercise in milliseconds since the epoch time.
+        frequency:
+          type: integer
+          format: int32
+          description: The number of times this exercise should be repeated per week.
+          example: 2
+        timezone:
+          type: string
+          description: The timezone where the workout is taking place.
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        sets:
+          type: array
+          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
+          items:
+            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
+    ImageReferenceDTO:
+      type: object
+      properties:
+        imageType:
+          type: string
+          enum:
+          - EXERCISE
+          - EQUIPMENT
+          - AVATAR
+          - COVER
+          - GYM_BANNER
+          - GYM_PROFILE
+          - GYM_HEADER
+          - GYM
+          - CHART
+          - BLOG
+          - PARTNER
+          - MOBILESPLASH
+          - SIGNATURE
+          - CARDIOSCAN
+          - MUSCLES
+          - SHARED
+        imageId:
+          type: string
+    StrengthWorkoutDTO:
+      type: object
+      properties:
+        uniqueExerciseId:
+          type: string
+          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
+          minLength: 1
+        startTimestamp:
+          type: integer
+          format: int64
+          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
+          example: 1672531200000
+        exerciseName:
+          type: string
+          description: The name that the partner will give to its exercise.
+          minLength: 1
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the exercise.
+          example: 100
+        trainingPlanId:
+          type: integer
+          format: int64
+          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
+          example: 7189234126347912000
+        trainingPlanExerciseId:
+          type: integer
+          format: int64
+          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
+          example: -767612783462
+        orderNumber:
+          type: integer
+          format: int32
+          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
+          example: 1
+        sets:
+          type: array
+          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
+          items:
+            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
+          minItems: 1
+      required:
+      - exerciseName
+      - sets
+      - startTimestamp
+      - uniqueExerciseId
+    StrengthTrainingPlansDTO:
+      type: object
+      properties:
+        trainer:
+          type: array
+          description: The training plan exercises prescribed by a trainer.
+          items:
+            $ref: '#/components/schemas/TrainerStrengthWorkoutDTO'
+        genius:
+          type: array
+          description: The AI (Genius) generated training plan exercises.
+          items:
+            $ref: '#/components/schemas/GeniusStrengthWorkoutDTO'
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User is not linked to EGYM account.
+          example: -1c2yqo37vn9m
+        bmaUserId:
+          type: string
+          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6. Only available during xID authentication
+          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        image:
+          $ref: '#/components/schemas/ImageReferenceDTO'
+          description: The user profile image.
+      required:
+      - firstName
+    StrengthWorkoutSetDTO:
+      type: object
+      properties:
+        setId:
+          type: integer
+          format: int32
+          description: 'The set id, the set IDs should be a sequential number, 1st set: 1, 2nd set: 2, etc.'
+          example: 1
+        weight:
+          type: number
+          format: double
+          description: The weight setting, in Kilogram <b>(kg)</b>, used in this set.
+          example: 100
+        repetitions:
+          type: integer
+          format: int32
+          description: The number of repetitions of this set.
+          example: 12
+        rangeOfMotion:
+          type: number
+          format: double
+          description: The length between start and returning point, in millimetres <b>(mm)</b>.
+          example: 250
+        duration:
+          type: integer
+          format: int64
+          description: The duration in milliseconds.
+          example: 60000
+        kiloCalories:
+          type: number
+          format: double
+          description: The kilo calories <b>(kcal)</b> burned during the set.
+          example: 10
+        restTime:
+          type: integer
+          format: int64
+          description: Rest/Recovery time in milliseconds.
+          example: 20000
+      required:
+      - repetitions
+      - setId
+      - weight
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -134,19 +341,6 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     TrainerStrengthWorkoutDTO:
       type: object
       properties:
@@ -196,200 +390,6 @@ components:
           description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
           items:
             $ref: '#/components/schemas/StrengthWorkoutSetDTO'
-    StrengthWorkoutDTO:
-      type: object
-      properties:
-        uniqueExerciseId:
-          type: string
-          description: Unique identifier for this exercise. The machine should generate a unique id for each exercise submitted.
-          minLength: 1
-        startTimestamp:
-          type: integer
-          format: int64
-          description: The start of the exercise in milliseconds since the epoch time. It can not be older than seven days.
-          example: 1672531200000
-        exerciseName:
-          type: string
-          description: The name that the partner will give to its exercise.
-          minLength: 1
-        kiloCalories:
-          type: number
-          format: double
-          description: The kilo calories <b>(kcal)</b> burned during the exercise.
-          example: 100
-        trainingPlanId:
-          type: integer
-          format: int64
-          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
-          example: 7189234126347912000
-        trainingPlanExerciseId:
-          type: integer
-          format: int64
-          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
-          example: -767612783462
-        orderNumber:
-          type: integer
-          format: int32
-          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
-          example: 1
-        sets:
-          type: array
-          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
-          items:
-            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
-          minItems: 1
-      required:
-      - exerciseName
-      - sets
-      - startTimestamp
-      - uniqueExerciseId
-    ImageReferenceDTO:
-      type: object
-      properties:
-        imageType:
-          type: string
-          enum:
-          - EXERCISE
-          - EQUIPMENT
-          - AVATAR
-          - COVER
-          - GYM_BANNER
-          - GYM_PROFILE
-          - GYM_HEADER
-          - GYM
-          - CHART
-          - BLOG
-          - PARTNER
-          - MOBILESPLASH
-          - SIGNATURE
-          - CARDIOSCAN
-          - MUSCLES
-          - SHARED
-        imageId:
-          type: string
-    UserDTO:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User is not linked to EGYM account.
-          example: -1c2yqo37vn9m
-        bmaUserId:
-          type: string
-          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6. Only available during xID authentication
-          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
-        firstName:
-          type: string
-          description: The user's first name.
-        lastName:
-          type: string
-          description: The user's last name.
-        image:
-          $ref: '#/components/schemas/ImageReferenceDTO'
-          description: The user profile image.
-      required:
-      - firstName
-    StrengthTrainingPlansDTO:
-      type: object
-      properties:
-        trainer:
-          type: array
-          description: The training plan exercises prescribed by a trainer.
-          items:
-            $ref: '#/components/schemas/TrainerStrengthWorkoutDTO'
-        genius:
-          type: array
-          description: The AI (Genius) generated training plan exercises.
-          items:
-            $ref: '#/components/schemas/GeniusStrengthWorkoutDTO'
-    GeniusStrengthWorkoutDTO:
-      type: object
-      properties:
-        exerciseName:
-          type: string
-          description: The name that the partner will give to its exercise.
-        sessionName:
-          type: string
-          description: The name that identifies the session for the user.
-        startTimestamp:
-          type: integer
-          format: int64
-          description: The start of the exercise in milliseconds since the epoch time.
-          example: 1672531200000
-        endTimestamp:
-          type: integer
-          format: int64
-          description: The end of the exercise in milliseconds since the epoch time.
-        frequency:
-          type: integer
-          format: int32
-          description: The number of times this exercise should be repeated per week.
-          example: 2
-        timezone:
-          type: string
-          description: The timezone where the workout is taking place.
-        trainingPlanId:
-          type: integer
-          format: int64
-          description: Training Plan ID. When the user selects an exercise from the training plan, this field should contain the training plan id from that exercise when submitting the workout.
-          example: 7189234126347912000
-        trainingPlanExerciseId:
-          type: integer
-          format: int64
-          description: Training Plan Exercise ID. When the user selects an exercise from the training plan, this field should contain the training plan exercise id from that exercise when submitting the workout.
-          example: -767612783462
-        orderNumber:
-          type: integer
-          format: int32
-          description: Order number of the exercise in the session of the training plan. This can be used for sorting.
-          example: 1
-        sets:
-          type: array
-          description: The strength workout sets. A set should represent the repetitions done by the user using the same parameters.
-          items:
-            $ref: '#/components/schemas/StrengthWorkoutSetDTO'
-    StrengthWorkoutSetDTO:
-      type: object
-      properties:
-        setId:
-          type: integer
-          format: int32
-          description: 'The set id, the set IDs should be a sequential number, 1st set: 1, 2nd set: 2, etc.'
-          example: 1
-        weight:
-          type: number
-          format: double
-          description: The weight setting, in Kilogram <b>(kg)</b>, used in this set.
-          example: 100
-        repetitions:
-          type: integer
-          format: int32
-          description: The number of repetitions of this set.
-          example: 12
-        rangeOfMotion:
-          type: number
-          format: double
-          description: The length between start and returning point, in millimetres <b>(mm)</b>.
-          example: 250
-        duration:
-          type: integer
-          format: int64
-          description: The duration in milliseconds.
-          example: 60000
-        kiloCalories:
-          type: number
-          format: double
-          description: The kilo calories <b>(kcal)</b> burned during the set.
-          example: 10
-        restTime:
-          type: integer
-          format: int64
-          description: Rest/Recovery time in milliseconds.
-          example: 20000
-      required:
-      - repetitions
-      - setId
-      - weight
   securitySchemes:
     user:
       type: http

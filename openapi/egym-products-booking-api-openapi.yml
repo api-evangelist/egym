@@ -251,20 +251,6 @@ paths:
           description: No Content
 components:
   schemas:
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
     ProductDTO:
       type: object
       properties:
@@ -341,6 +327,20 @@ components:
           description: 'The date to which the specified product is active and can be used by the user. It must be future date in Timezone of the club. format: yyyy-MM-dd. Max date is 2050-12-31'
       required:
       - productId
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
   securitySchemes:
     mms:
       type: apiKey

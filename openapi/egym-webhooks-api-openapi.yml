@@ -327,53 +327,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-          example: age
-        message:
-          type: string
-          description: The error message.
-          example: Must be greater than 10.
-        rejectedValue:
-          description: The rejected value.
-          example: 3
-    WebhookRequestDTO:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Webhook url
-          minLength: 1
-        secret:
-          type: string
-          description: Secret that will be added to the webhook call
-          minLength: 1
-      required:
-      - secret
-      - url
-    WebhookResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Webhook id
-        url:
-          type: string
-          description: Webhook url
-          minLength: 1
-        secret:
-          type: string
-          description: Secret that will be added to the webhook call
-          minLength: 1
-      required:
-      - id
-      - secret
-      - url
     ErrorDTO:
       type: object
       properties:
@@ -411,6 +364,53 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
+    WebhookRequestDTO:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - secret
+      - url
+    WebhookResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Webhook id
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - id
+      - secret
+      - url
+    FieldErrorDTO:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+          example: age
+        message:
+          type: string
+          description: The error message.
+          example: Must be greater than 10.
+        rejectedValue:
+          description: The rejected value.
+          example: 3
   securitySchemes:
     mms:
       type: apiKey
