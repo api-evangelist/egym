@@ -1,10 +1,60 @@
-generated: '2026-08-12'
-method: derived
-source: openapi/egym-equipment-vendor-standalone-openapi.yml
+generated: '2026-10-14'
+method: none
+source: openapi/egym-cardio-test-api-openapi.yml, openapi/egym-cardio-workouts-api-openapi.yml,
+  openapi/egym-image-api-openapi.yml, openapi/egym-machine-api-openapi.yml, openapi/egym-open-exercise-workouts-api-openapi.yml,
+  openapi/egym-partners-api-openapi.yml, openapi/egym-resource-api-openapi.yml, openapi/egym-statistics-api-openapi.yml,
+  openapi/egym-strength-workouts-api-openapi.yml, openapi/egym-user-api-openapi.yml
 schemes:
 - name: partner
-  source: openapi/egym-equipment-vendor-standalone-openapi.yml
+  source: openapi/egym-cardio-test-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-cardio-workouts-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-image-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-machine-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-open-exercise-workouts-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-partners-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-resource-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-statistics-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-strength-workouts-api-openapi.yml
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/v1/oauth/token
+- name: partner
+  source: openapi/egym-user-api-openapi.yml
   flows:
   - flow: clientCredentials
     tokenUrl: /api/v1/oauth/token
 scopes: []
+note: The OAuth2 security scheme(s) in the OpenAPI declare no scopes, and no security requirement
+  references one.
