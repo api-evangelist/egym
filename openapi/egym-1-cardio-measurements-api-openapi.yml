@@ -82,16 +82,49 @@ paths:
                 $ref: '#/components/schemas/ValidationErrorDto'
 components:
   schemas:
-    SubmitRestingHeartRateRequest:
+    SubmitVo2MaxRequest:
       type: object
       properties:
         measurements:
           type: array
           items:
-            $ref: '#/components/schemas/SubmitRestingHeartRateDto'
+            $ref: '#/components/schemas/SubmitVo2MaxDto'
           minItems: 1
       required:
       - measurements
+    FieldErrorDto:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string
+    SubmitBloodPressureRequest:
+      type: object
+      properties:
+        measurements:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubmitBloodPressureDto'
+          minItems: 1
+      required:
+      - measurements
+    SubmitRestingHeartRateDto:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+          description: Measurement timestamp in UTC
+        bpm:
+          type: integer
+          format: int32
+          description: Beats per minute value
+          maximum: 230
+          minimum: 30
+      required:
+      - bpm
+      - createdAt
     SubmitVo2MaxDto:
       type: object
       properties:
@@ -122,16 +155,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FieldErrorDto'
-    SubmitBloodPressureRequest:
-      type: object
-      properties:
-        measurements:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubmitBloodPressureDto'
-          minItems: 1
-      required:
-      - measurements
     SubmitBloodPressureDto:
       type: object
       properties:
@@ -155,36 +178,13 @@ components:
       - createdAt
       - diastolic
       - systolic
-    FieldErrorDto:
-      type: object
-      properties:
-        name:
-          type: string
-        message:
-          type: string
-    SubmitRestingHeartRateDto:
-      type: object
-      properties:
-        createdAt:
-          type: string
-          format: date-time
-          description: Measurement timestamp in UTC
-        bpm:
-          type: integer
-          format: int32
-          description: Beats per minute value
-          maximum: 230
-          minimum: 30
-      required:
-      - bpm
-      - createdAt
-    SubmitVo2MaxRequest:
+    SubmitRestingHeartRateRequest:
       type: object
       properties:
         measurements:
           type: array
           items:
-            $ref: '#/components/schemas/SubmitVo2MaxDto'
+            $ref: '#/components/schemas/SubmitRestingHeartRateDto'
           minItems: 1
       required:
       - measurements

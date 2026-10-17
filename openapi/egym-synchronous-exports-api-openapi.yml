@@ -169,6 +169,19 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
+    AnalyticsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsExportItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
     SmartStrengthAssessmentsExportResponse:
       type: object
       properties:
@@ -178,6 +191,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SmartStrengthAssessmentItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
+    BodyMeasurementsExportResponse:
+      type: object
+      properties:
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BodyMeasurementItem'
         nextCursor:
           type:
           - string
@@ -195,14 +221,23 @@ components:
           type:
           - string
           - 'null'
-    SmartStrengthWorkoutItem:
+    OptedOutUsersExportResponse:
       type: object
       properties:
-        eventTimestamp:
-          type:
-          - string
-          - 'null'
-          format: date-time
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OptedOutUserExportItem'
+    ErrorDTO:
+      type: object
+      properties:
+        message:
+          type: string
+    BodyMeasurementItem:
+      type: object
+      properties:
         externalAccountId:
           type: string
           description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
@@ -211,9 +246,26 @@ components:
           - string
           - 'null'
           description: Optional membership identifier from source systems. May be null when unavailable.
-        isGuestUser:
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        measurementSource:
+          type:
+          - string
+          - 'null'
+        isStaff:
           type:
           - boolean
+          - 'null'
+        measurementCompleted:
+          type:
+          - boolean
+          - 'null'
+        chainName:
+          type:
+          - string
           - 'null'
         firstName:
           type:
@@ -227,50 +279,68 @@ components:
           type:
           - string
           - 'null'
-        machineType:
-          type:
-          - string
-          - 'null'
-        trainingMethod:
-          type:
-          - string
-          - 'null'
-        operationMode:
-          type:
-          - string
-          - 'null'
-        trainingVisualization:
-          type:
-          - string
-          - 'null'
-    ErrorDTO:
+    FlexibilityMeasurementItem:
       type: object
       properties:
-        message:
+        externalAccountId:
           type: string
+          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
+        mmsMembershipId:
+          type:
+          - string
+          - 'null'
+          description: Optional membership identifier from source systems. May be null when unavailable.
+        eventTimestamp:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        measurementType:
+          type:
+          - string
+          - 'null'
+        isStaff:
+          type:
+          - boolean
+          - 'null'
+        measurementCompleted:
+          type:
+          - boolean
+          - 'null'
+        chainName:
+          type:
+          - string
+          - 'null'
+        firstName:
+          type:
+          - string
+          - 'null'
+        lastName:
+          type:
+          - string
+          - 'null'
+        email:
+          type:
+          - string
+          - 'null'
     GymInfo:
       type: object
       properties:
         name:
           type: string
-    AnalyticsExportItem:
+    FlexibilityMeasurementsExportResponse:
       type: object
       properties:
-        periodStart:
-          type: string
-          format: date
-        periodEnd:
-          type: string
-          format: date
-        metricType:
-          type: string
-        metricKey:
-          type: string
-        metricSubType:
-          type: string
-        value:
-          type: number
-          format: double
+        gym:
+          $ref: '#/components/schemas/GymInfo'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FlexibilityMeasurementItem'
+        nextCursor:
+          type:
+          - string
+          - 'null'
     SmartStrengthAssessmentItem:
       type: object
       properties:
@@ -330,22 +400,32 @@ components:
           - string
           - 'null'
           format: date-time
-    AnalyticsExportResponse:
+    AnalyticsExportItem:
       type: object
       properties:
-        gym:
-          $ref: '#/components/schemas/GymInfo'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AnalyticsExportItem'
-        nextCursor:
+        periodStart:
+          type: string
+          format: date
+        periodEnd:
+          type: string
+          format: date
+        metricType:
+          type: string
+        metricKey:
+          type: string
+        metricSubType:
+          type: string
+        value:
+          type: number
+          format: double
+    SmartStrengthWorkoutItem:
+      type: object
+      properties:
+        eventTimestamp:
           type:
           - string
           - 'null'
-    FlexibilityMeasurementItem:
-      type: object
-      properties:
+          format: date-time
         externalAccountId:
           type: string
           description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
@@ -354,26 +434,9 @@ components:
           - string
           - 'null'
           description: Optional membership identifier from source systems. May be null when unavailable.
-        eventTimestamp:
-          type:
-          - string
-          - 'null'
-          format: date-time
-        measurementType:
-          type:
-          - string
-          - 'null'
-        isStaff:
+        isGuestUser:
           type:
           - boolean
-          - 'null'
-        measurementCompleted:
-          type:
-          - boolean
-          - 'null'
-        chainName:
-          type:
-          - string
           - 'null'
         firstName:
           type:
@@ -387,85 +450,22 @@ components:
           type:
           - string
           - 'null'
-    BodyMeasurementsExportResponse:
-      type: object
-      properties:
-        gym:
-          $ref: '#/components/schemas/GymInfo'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BodyMeasurementItem'
-        nextCursor:
+        machineType:
           type:
           - string
           - 'null'
-    FlexibilityMeasurementsExportResponse:
-      type: object
-      properties:
-        gym:
-          $ref: '#/components/schemas/GymInfo'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FlexibilityMeasurementItem'
-        nextCursor:
+        trainingMethod:
           type:
           - string
           - 'null'
-    BodyMeasurementItem:
-      type: object
-      properties:
-        externalAccountId:
-          type: string
-          description: Unique, stable identifier for the member's account. Use it to correlate exported records and to delete this member's previously exported data later if needed.
-        mmsMembershipId:
+        operationMode:
           type:
           - string
           - 'null'
-          description: Optional membership identifier from source systems. May be null when unavailable.
-        eventTimestamp:
+        trainingVisualization:
           type:
           - string
           - 'null'
-          format: date-time
-        measurementSource:
-          type:
-          - string
-          - 'null'
-        isStaff:
-          type:
-          - boolean
-          - 'null'
-        measurementCompleted:
-          type:
-          - boolean
-          - 'null'
-        chainName:
-          type:
-          - string
-          - 'null'
-        firstName:
-          type:
-          - string
-          - 'null'
-        lastName:
-          type:
-          - string
-          - 'null'
-        email:
-          type:
-          - string
-          - 'null'
-    OptedOutUsersExportResponse:
-      type: object
-      properties:
-        gym:
-          $ref: '#/components/schemas/GymInfo'
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OptedOutUserExportItem'
   parameters:
     startDate:
       name: startDate
@@ -491,14 +491,8 @@ components:
         type: string
         format: date
   responses:
-    Unauthorized:
-      description: Missing, malformed, or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    Forbidden:
-      description: API key is not authorized to access this resource.
+    BadRequest:
+      description: Invalid request parameters or body.
       content:
         application/json:
           schema:
@@ -509,8 +503,14 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDTO'
-    BadRequest:
-      description: Invalid request parameters or body.
+    Unauthorized:
+      description: Missing, malformed, or invalid API key.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
+    Forbidden:
+      description: API key is not authorized to access this resource.
       content:
         application/json:
           schema:

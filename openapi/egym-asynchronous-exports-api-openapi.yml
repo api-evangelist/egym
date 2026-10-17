@@ -76,13 +76,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
 components:
   schemas:
-    ExportType:
-      type: string
-      enum:
-      - SMART_STRENGTH_WORKOUTS
-      - SMART_STRENGTH_ASSESSMENTS
-      - FLEXIBILITY_MEASUREMENTS
-      - BODY_MEASUREMENTS
     AsyncExportJobStatus:
       type: string
       enum:
@@ -90,6 +83,16 @@ components:
       - DONE
       - FAILED
       - EXPIRED
+    AsyncExportStatusResponse:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AsyncExportJobStatus'
+        downloadURL:
+          type:
+          - string
+          - 'null'
+          format: uri
     AsyncExportCreateRequest:
       type: object
       required:
@@ -112,27 +115,18 @@ components:
           default: JSONL
           allOf:
           - $ref: '#/components/schemas/AsyncExportFileType'
+    ExportType:
+      type: string
+      enum:
+      - SMART_STRENGTH_WORKOUTS
+      - SMART_STRENGTH_ASSESSMENTS
+      - FLEXIBILITY_MEASUREMENTS
+      - BODY_MEASUREMENTS
     ErrorDTO:
       type: object
       properties:
         message:
           type: string
-    AsyncExportStatusResponse:
-      type: object
-      properties:
-        status:
-          $ref: '#/components/schemas/AsyncExportJobStatus'
-        downloadURL:
-          type:
-          - string
-          - 'null'
-          format: uri
-    AsyncExportFileType:
-      type: string
-      enum:
-      - JSON
-      - JSONL
-      - CSV
     AsyncExportCreateResponse:
       type: object
       properties:
@@ -141,6 +135,12 @@ components:
           format: uuid
         status:
           $ref: '#/components/schemas/AsyncExportJobStatus'
+    AsyncExportFileType:
+      type: string
+      enum:
+      - JSON
+      - JSONL
+      - CSV
   responses:
     NotFound:
       description: Requested resource was not found.
@@ -154,6 +154,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorDTO'
+    InternalServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorDTO'
     BadRequest:
       description: Invalid request parameters or body.
       content:
@@ -162,12 +168,6 @@ components:
             $ref: '#/components/schemas/ErrorDTO'
     Unauthorized:
       description: Missing, malformed, or invalid API key.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorDTO'
-    InternalServerError:
-      description: Unexpected server error.
       content:
         application/json:
           schema:

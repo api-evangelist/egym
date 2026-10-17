@@ -126,6 +126,23 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
+    PartnerPushNotificationDTO:
+      type: object
+      properties:
+        text:
+          type: string
+          description: Notification plain text.
+          example: Welcome to the gym!
+          maxLength: 500
+          minLength: 0
+        deeplink:
+          type: string
+          description: Name of the feature for navigate to.
+          example: workouts
+          maxLength: 100
+          minLength: 0
+      required:
+      - text
     ErrorDTO:
       type: object
       properties:
@@ -163,23 +180,6 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
-    PartnerPushNotificationDTO:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Notification plain text.
-          example: Welcome to the gym!
-          maxLength: 500
-          minLength: 0
-        deeplink:
-          type: string
-          description: Name of the feature for navigate to.
-          example: workouts
-          maxLength: 100
-          minLength: 0
-      required:
-      - text
     FieldErrorDTO:
       type: object
       properties:

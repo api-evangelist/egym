@@ -95,15 +95,31 @@ paths:
       - user: []
 components:
   schemas:
-    GeniusStrengthWorkoutDTO:
+    StrengthTrainingPlansDTO:
       type: object
       properties:
+        trainer:
+          type: array
+          description: The training plan exercises prescribed by a trainer.
+          items:
+            $ref: '#/components/schemas/TrainerStrengthWorkoutDTO'
+        genius:
+          type: array
+          description: The AI (Genius) generated training plan exercises.
+          items:
+            $ref: '#/components/schemas/GeniusStrengthWorkoutDTO'
+    TrainerStrengthWorkoutDTO:
+      type: object
+      properties:
+        author:
+          $ref: '#/components/schemas/UserDTO'
+          description: Information about the author of the workout.
         exerciseName:
           type: string
           description: The name that the partner will give to its exercise.
         sessionName:
           type: string
-          description: The name that identifies the session for the user.
+          description: The name that the trainer will give to their exercise.
         startTimestamp:
           type: integer
           format: int64
@@ -165,6 +181,28 @@ components:
           - SHARED
         imageId:
           type: string
+    UserDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User is not linked to EGYM account.
+          example: -1c2yqo37vn9m
+        bmaUserId:
+          type: string
+          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6. Only available during xID authentication
+          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
+        firstName:
+          type: string
+          description: The user's first name.
+        lastName:
+          type: string
+          description: The user's last name.
+        image:
+          $ref: '#/components/schemas/ImageReferenceDTO'
+          description: The user profile image.
+      required:
+      - firstName
     StrengthWorkoutDTO:
       type: object
       properties:
@@ -212,41 +250,6 @@ components:
       - sets
       - startTimestamp
       - uniqueExerciseId
-    StrengthTrainingPlansDTO:
-      type: object
-      properties:
-        trainer:
-          type: array
-          description: The training plan exercises prescribed by a trainer.
-          items:
-            $ref: '#/components/schemas/TrainerStrengthWorkoutDTO'
-        genius:
-          type: array
-          description: The AI (Genius) generated training plan exercises.
-          items:
-            $ref: '#/components/schemas/GeniusStrengthWorkoutDTO'
-    UserDTO:
-      type: object
-      properties:
-        userId:
-          type: string
-          description: The userId assigned by EGYM, for example -1c2yqo37vn9m. Can be null on xID authentication if BMA User is not linked to EGYM account.
-          example: -1c2yqo37vn9m
-        bmaUserId:
-          type: string
-          description: Temporary solution for Matrix. The BMA userId assigned by egym, for example d101df00-ab9d-40f5-8f03-3c50aaa364d6. Only available during xID authentication
-          example: d101df01-ab9d-40f5-8f03-3c50aaa364d6
-        firstName:
-          type: string
-          description: The user's first name.
-        lastName:
-          type: string
-          description: The user's last name.
-        image:
-          $ref: '#/components/schemas/ImageReferenceDTO'
-          description: The user profile image.
-      required:
-      - firstName
     StrengthWorkoutSetDTO:
       type: object
       properties:
@@ -289,19 +292,6 @@ components:
       - repetitions
       - setId
       - weight
-    FieldErrorDTO:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     ApiErrorResponseDTO:
       type: object
       description: Standard error response returned by the API for all error status codes.
@@ -341,18 +331,28 @@ components:
           type: string
           description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
           example: USER_NOT_FOUND
-    TrainerStrengthWorkoutDTO:
+    FieldErrorDTO:
       type: object
       properties:
-        author:
-          $ref: '#/components/schemas/UserDTO'
-          description: Information about the author of the workout.
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
+    GeniusStrengthWorkoutDTO:
+      type: object
+      properties:
         exerciseName:
           type: string
           description: The name that the partner will give to its exercise.
         sessionName:
           type: string
-          description: The name that the trainer will give to their exercise.
+          description: The name that identifies the session for the user.
         startTimestamp:
           type: integer
           format: int64

@@ -327,6 +327,39 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
+    WebhookResponseDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Webhook id
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - id
+      - secret
+      - url
+    WebhookRequestDTO:
+      type: object
+      properties:
+        url:
+          type: string
+          description: Webhook url
+          minLength: 1
+        secret:
+          type: string
+          description: Secret that will be added to the webhook call
+          minLength: 1
+      required:
+      - secret
+      - url
     ErrorDTO:
       type: object
       properties:
@@ -364,39 +397,6 @@ components:
           additionalProperties:
             type: string
           description: Additional information of the error context
-    WebhookRequestDTO:
-      type: object
-      properties:
-        url:
-          type: string
-          description: Webhook url
-          minLength: 1
-        secret:
-          type: string
-          description: Secret that will be added to the webhook call
-          minLength: 1
-      required:
-      - secret
-      - url
-    WebhookResponseDTO:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          description: Webhook id
-        url:
-          type: string
-          description: Webhook url
-          minLength: 1
-        secret:
-          type: string
-          description: Secret that will be added to the webhook call
-          minLength: 1
-      required:
-      - id
-      - secret
-      - url
     FieldErrorDTO:
       type: object
       properties:

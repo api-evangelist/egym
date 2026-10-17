@@ -213,17 +213,6 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
-    InterpretationRegion:
-      type: object
-      properties:
-        low:
-          type: number
-          format: double
-        top:
-          type: number
-          format: double
-        labels:
-          $ref: '#/components/schemas/Labels'
     MeasurementDTO:
       type: object
       properties:
@@ -240,6 +229,104 @@ components:
           description: Metrics associated with this measurement
           items:
             $ref: '#/components/schemas/MetricDTO'
+        equipmentType:
+          type: string
+    DatedValueWithProgressDTO:
+      type: object
+      properties:
+        value:
+          type: number
+          description: Value of measurement
+          format: double
+        createdAt:
+          type: string
+          description: DateTime when measurement was conducted
+          format: date-time
+    StrengthMeasurementDTO:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        strength:
+          $ref: '#/components/schemas/DatedValueWithProgressDTO'
+        source:
+          type: string
+        bodyRegion:
+          type: string
+          enum:
+          - ALL
+          - UPPER
+          - CORE
+          - LOWER
+          - UNSPECIFIED
+        machineType:
+          type: string
+    InterpretationRegion:
+      type: object
+      properties:
+        low:
+          type: number
+          format: double
+        top:
+          type: number
+          format: double
+        labels:
+          $ref: '#/components/schemas/Labels'
+    MetricDTO:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of metric
+          example: BODY_FAT_PERCENTS
+        value:
+          type: number
+          description: Value of metric
+          format: double
+        unit:
+          type: string
+          description: Unit of metric
+          example: PERCENTS
+          enum:
+          - PERCENTS
+          - CM
+          - KG
+          - KJ
+          - LITER
+          - CM2
+          - OTHER
+      description: Metrics associated with this measurement
+    Interpretation:
+      type: object
+      properties:
+        label:
+          type: string
+          enum:
+          - UNSPECIFIED
+          - NORMAL
+          - EXCELLENT
+          - ELEVATED
+          - LOW
+        region:
+          $ref: '#/components/schemas/InterpretationRegion'
+      description: Interpretation of metric
+    BodyMeasurementDTO:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          description: Time at which measurement was created
+          format: date-time
+        source:
+          type: string
+          description: Source of the measurement
+          example: MANUAL
+        metrics:
+          type: array
+          description: Metrics associated with this measurement
+          items:
+            $ref: '#/components/schemas/MetricWithInterpretationDTO'
         equipmentType:
           type: string
     Labels:
@@ -269,64 +356,44 @@ components:
           - EXCELLENT
           - ELEVATED
           - LOW
-    Interpretation:
+    ErrorDTO:
       type: object
       properties:
-        label:
+        timestamp:
           type: string
-          enum:
-          - UNSPECIFIED
-          - NORMAL
-          - EXCELLENT
-          - ELEVATED
-          - LOW
-        region:
-          $ref: '#/components/schemas/InterpretationRegion'
-      description: Interpretation of metric
-    MetricDTO:
-      type: object
-      properties:
-        type:
-          type: string
-          description: Type of metric
-          example: BODY_FAT_PERCENTS
-        value:
-          type: number
-          description: Value of metric
-          format: double
-        unit:
-          type: string
-          description: Unit of metric
-          example: PERCENTS
-          enum:
-          - PERCENTS
-          - CM
-          - KG
-          - KJ
-          - LITER
-          - CM2
-          - OTHER
-      description: Metrics associated with this measurement
-    StrengthMeasurementDTO:
-      type: object
-      properties:
-        createdAt:
-          type: string
+          description: The timestamp of the request.
           format: date-time
-        strength:
-          $ref: '#/components/schemas/DatedValueWithProgressDTO'
-        source:
+        path:
           type: string
-        bodyRegion:
+          description: The path requested.
+        requestId:
           type: string
-          enum:
-          - ALL
-          - UPPER
-          - CORE
-          - LOWER
-          - UNSPECIFIED
-        machineType:
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
           type: string
+          description: The error.
+        errorCode:
+          type: string
+          description: The static error code.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+            description: Additional information of the error context
+          description: Additional information of the error context
     FieldErrorDTO:
       type: object
       properties:
@@ -369,73 +436,6 @@ components:
           - CM2
           - OTHER
       description: Metrics associated with this measurement
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: The timestamp of the request.
-          format: date-time
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          description: The http status code.
-          format: int32
-        error:
-          type: string
-          description: The error.
-        errorCode:
-          type: string
-          description: The static error code.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
-        metadata:
-          type: object
-          additionalProperties:
-            type: string
-            description: Additional information of the error context
-          description: Additional information of the error context
-    BodyMeasurementDTO:
-      type: object
-      properties:
-        createdAt:
-          type: string
-          description: Time at which measurement was created
-          format: date-time
-        source:
-          type: string
-          description: Source of the measurement
-          example: MANUAL
-        metrics:
-          type: array
-          description: Metrics associated with this measurement
-          items:
-            $ref: '#/components/schemas/MetricWithInterpretationDTO'
-        equipmentType:
-          type: string
-    DatedValueWithProgressDTO:
-      type: object
-      properties:
-        value:
-          type: number
-          description: Value of measurement
-          format: double
-        createdAt:
-          type: string
-          description: DateTime when measurement was conducted
-          format: date-time
   securitySchemes:
     mms:
       type: apiKey

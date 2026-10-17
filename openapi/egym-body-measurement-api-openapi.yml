@@ -506,35 +506,6 @@ paths:
       description: Production
 components:
   schemas:
-    ErrorDTO:
-      type: object
-      properties:
-        timestamp:
-          type: string
-          description: The timestamp of the request.
-          format: date-time
-        path:
-          type: string
-          description: The path requested.
-        requestId:
-          type: string
-          description: The request ID.
-          example: de625cf1-1
-        status:
-          type: integer
-          description: The http status code.
-          format: int32
-        error:
-          type: string
-          description: The error.
-        message:
-          type: string
-          description: The message to describe the error.
-        fieldErrors:
-          type: array
-          description: The constraint violations.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO'
     MeasurementDTO:
       required:
       - data
@@ -568,6 +539,35 @@ components:
             type: number
             description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
           description: A map of properties that define each measurement for this equipment. Properties need to be registered per machineName at EGYM.
+    ErrorDTO:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: The timestamp of the request.
+          format: date-time
+        path:
+          type: string
+          description: The path requested.
+        requestId:
+          type: string
+          description: The request ID.
+          example: de625cf1-1
+        status:
+          type: integer
+          description: The http status code.
+          format: int32
+        error:
+          type: string
+          description: The error.
+        message:
+          type: string
+          description: The message to describe the error.
+        fieldErrors:
+          type: array
+          description: The constraint violations.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO'
     FieldErrorDTO:
       type: object
       properties:
@@ -584,45 +584,6 @@ components:
           description: The rejected value.
           example: 3
       description: The constraint violations.
-    ApiErrorResponseDTO:
-      type: object
-      description: Standard error response returned by the API for all error status codes.
-      properties:
-        timestamp:
-          type: integer
-          format: int64
-          description: Unix epoch milliseconds when the error occurred.
-          example: 1775122463109
-        path:
-          type: string
-          description: The request path that triggered the error.
-          example: /api/v1/measurements/body/history
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code.
-          example: 400
-        error:
-          type: string
-          description: Short textual description of the HTTP status.
-          example: Bad Request
-        requestId:
-          type: string
-          description: Unique identifier for the request, useful for correlating logs and support tickets.
-          example: d0c0fd9e-236
-        message:
-          type: string
-          description: Human-readable description of the error.
-          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
-        fieldErrors:
-          type: array
-          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
-          items:
-            $ref: '#/components/schemas/FieldErrorDTO_2'
-        errorCode:
-          type: string
-          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
-          example: USER_NOT_FOUND
     MeasurementDTO_2:
       type: object
       properties:
@@ -663,19 +624,6 @@ components:
           description: List of body metrics for this measurement
           items:
             $ref: '#/components/schemas/BodyMetricDTO'
-    FieldErrorDTO_2:
-      type: object
-      properties:
-        name:
-          type: string
-          description: The field name.
-        message:
-          type: string
-          description: The error message.
-          example: Must not be null.
-        rejectedValue:
-          description: The rejected value.
-          example: Must not be null.
     BodyMetricDTO:
       type: object
       properties:
@@ -1042,6 +990,45 @@ components:
           type: number
           description: The value of the metric
           example: '75.5'
+    ApiErrorResponseDTO:
+      type: object
+      description: Standard error response returned by the API for all error status codes.
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+          description: Unix epoch milliseconds when the error occurred.
+          example: 1775122463109
+        path:
+          type: string
+          description: The request path that triggered the error.
+          example: /api/v1/measurements/body/history
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code.
+          example: 400
+        error:
+          type: string
+          description: Short textual description of the HTTP status.
+          example: Bad Request
+        requestId:
+          type: string
+          description: Unique identifier for the request, useful for correlating logs and support tickets.
+          example: d0c0fd9e-236
+        message:
+          type: string
+          description: Human-readable description of the error.
+          example: 'Invalid request parameters: value must be greater than or equal to 1 and less than or equal to 1000'
+        fieldErrors:
+          type: array
+          description: List of field-level validation errors. Only present when the error was caused by request-body binding failures or custom form validation.
+          items:
+            $ref: '#/components/schemas/FieldErrorDTO_2'
+        errorCode:
+          type: string
+          description: Machine-readable error code for domain-specific errors. Only present for exceptions that carry a custom error code.
+          example: USER_NOT_FOUND
     LatestBodyMeasurementsValuesResponseDTO:
       type: object
       properties:
@@ -1055,6 +1042,19 @@ components:
             HEIGHT_CM: 180
             BODY_FAT_PERCENTS: 18.3
             WAIST_CM: 82
+    FieldErrorDTO_2:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The field name.
+        message:
+          type: string
+          description: The error message.
+          example: Must not be null.
+        rejectedValue:
+          description: The rejected value.
+          example: Must not be null.
   securitySchemes:
     user:
       type: http
