@@ -712,6 +712,8 @@ apis:
   humanURL: https://developer.egym.com/mms-api-v2/apis/mms-v2
   baseURL: https://mms.api.egym.com
   tags:
+  - Layer 2
+  tags_raw:
   - L2
   properties:
   - type: OpenAPI
