@@ -1,4 +1,4 @@
-# Egym
+# EGYM
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,30 +64,204 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-EGYM is a Munich-headquartered fitness and health technology company behind the connected-gym
-platform used by commercial fitness operators worldwide — Smart Strength and Smart Flex
-networked equipment, the EGYM Genius training engine, the EGYM Fitness Hub and Trainer apps,
-and the EGYM Wellpass corporate fitness network.
+EGYM is a Munich-headquartered fitness and health technology company that builds the connected-gym platform used by commercial fitness operators worldwide: Smart Strength and Smart Flex networked equipment, the EGYM Genius AI training engine, the EGYM Fitness Hub and Trainer apps, and the EGYM Wellpass / Corporate Fitness membership network that lets employers give staff access to thousands of partner venues. For developers, EGYM operates a public developer portal at developer.egym.com covering eight machine-readable APIs across three integration audiences — member-management-system (MMS) vendors syncing members, memberships, RFID/NFC credentials, check-ins, products and trainer tasks into EGYM Cloud; equipment vendors submitting body, cardio and flexibility measurements from devices or backends; and analytics consumers exporting workout and measurement data. EGYM also publishes an official documentation MCP server, an llms.txt, a written AI-agent instruction page, a dated change log, published rate limits and a documented webhook event catalog.
 
-EGYM runs a public developer portal at [developer.egym.com](https://developer.egym.com/)
-covering eight machine-readable APIs across three integration audiences:
+**Areas:** Company · Fitness · Health · Wellness · Corporate Wellness · Connected Equipment · Gym Management · Member Management · Check-in · Measurements · Workouts · Analytics
 
-| API | Operations | Audience |
-|---|---|---|
-| [MMS API V2](https://developer.egym.com/mms-api-v2/apis/mms-v2) | 43 | Member management system vendors |
-| [MMS API v1](https://developer.egym.com/mms-api-v2/gymapi/api) | 13 | Legacy MMS (v2 required for new work) |
-| [Data Hub API](https://developer.egym.com/data-hub/api) | 8 | Analytics export (Enterprise Pack pilot) |
-| Data Export API | 4 | Per-account export (alpha; MCP-only discovery) |
-| [Equipment Vendor API (standalone)](https://developer.egym.com/equipment/partner-api) | 31 | Device-to-server equipment integration |
-| [Equipment Vendor API (server-to-server)](https://developer.egym.com/equipment/equipment-vendor-api-server_august-2025) | 6 | Backend-to-backend measurement relay |
-| [User Connect API](https://developer.egym.com/user-connect-api/docs/introduction) | 4 | Consented third-party app submissions |
-| [Canonical GroupX Classes](https://developer.egym.com/mms-blueprints/canonical-classes) | 8 | Blueprint the MMS vendor implements |
+## EGYM on APIs.io
 
-Plus a prose-only [Pay with Wellpass](https://developer.egym.com/mms-api-v2/tutorials/pay-with-wellpass)
-authorization surface, a documented webhook event catalog, and an official
-[documentation MCP server](https://developer.egym.com/general/ai-agent-integration) at
-`https://developer.egym.com/mcp` with a published AI-agent instruction page.
+Everything profiled for EGYM is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/egym/](https://apis.io/providers/egym/)** — or go straight to one of the APIs or properties below.
 
-- https://egym.com/int
-- https://developer.egym.com/
-- https://www.hiive.com/securities/egym-stock
+### APIs (38)
+
+- [EGYM Pay with Wellpass API](https://apis.io/apis/egym/pay-with-wellpass/) — Authorization-and-capture API for booking platforms. A Wellpass member generates a single-use booking code in the Wellpass app for a specific gym; the…
+- [EGYM Documentation MCP Server](https://apis.io/apis/egym/mcp-docs/) — Official hosted Model Context Protocol server published by EGYM at developer.egym.com/mcp and documented on the portal with copy-paste Codex configuration.…
+- [EGYM 1. Cardio Measurements API](https://apis.io/apis/egym/egym-1-cardio-measurements-api/) — API for submitting cardio measurements
+- [EGYM 2. Workouts API](https://apis.io/apis/egym/egym-2-workouts-api/) — API for submitting workouts
+- [EGYM Alive API](https://apis.io/apis/egym/egym-alive-api/) — The alive API from EGYM — 1 operation(s) for alive.
+- [EGYM Asynchronous exports API](https://apis.io/apis/egym/egym-asynchronous-exports-api/) — Background export jobs that produce downloadable JSON, JSONL, or CSV files.
+- [EGYM Body Measurement API](https://apis.io/apis/egym/egym-body-measurement-api/) — The Body Measurement API from EGYM — 2 operation(s) for body measurement.
+- [EGYM Cardio Measurement API](https://apis.io/apis/egym/egym-cardio-measurement-api/) — The Cardio Measurement API from EGYM — 2 operation(s) for cardio measurement.
+- [EGYM Cardio Test API](https://apis.io/apis/egym/egym-cardio-test-api/) — The Cardio Test API from EGYM — 3 operation(s) for cardio test.
+- [EGYM Cardio Workouts API](https://apis.io/apis/egym/egym-cardio-workouts-api/) — The Cardio Workouts API from EGYM — 2 operation(s) for cardio workouts.
+- [EGYM Flexibility Measurement API](https://apis.io/apis/egym/egym-flexibility-measurement-api/) — The Flexibility Measurement API from EGYM — 2 operation(s) for flexibility measurement.
+- [EGYM Gym API](https://apis.io/apis/egym/egym-gym-api/) — The gym API from EGYM — 2 operation(s) for gym.
+- [EGYM Gym Visit API](https://apis.io/apis/egym/egym-gym-visit-api/) — These operations are needed to transmit the information to EGYM, that a specific member is currently in the gym. Based on that information several business…
+- [EGYM Image API](https://apis.io/apis/egym/egym-image-api/) — The Image API from EGYM — 1 operation(s) for image.
+- [EGYM L2 API](https://apis.io/apis/egym/egym-l2-api/) — Operations related to L2 level of integration
+- [EGYM L3 API](https://apis.io/apis/egym/egym-l3-api/) — Operations related to L3 level of integration
+- [EGYM Machine API](https://apis.io/apis/egym/egym-machine-api/) — The Machine API from EGYM — 1 operation(s) for machine.
+- [EGYM Measurements API](https://apis.io/apis/egym/egym-measurements-api/) — These operations are needed to retrieve measurements with corresponding metrics. Additional permissions are required to access these endpoints.
+- [EGYM Member Account API](https://apis.io/apis/egym/egym-member-account-api/) — These operations are needed to create and update member accounts and their membership information.
+- [EGYM Member Account NFC API](https://apis.io/apis/egym/egym-member-account-nfc-api/) — Note that NFC API endpoints are in beta as we've been tuning setup processes on both EGYM and partner sides.
+- [EGYM Member Account Roles API](https://apis.io/apis/egym/egym-member-account-roles-api/) — These operation are needed to assign and retrieve member account roles
+- [EGYM Member RFIDs API](https://apis.io/apis/egym/egym-member-rfids-api/) — Operations with RFIDs
+- [EGYM Migrating members API](https://apis.io/apis/egym/egym-migrating-members-api/) — These operations are needed to migrate members from V1 API to V2 API.
+- [EGYM Open Exercise Workouts API](https://apis.io/apis/egym/egym-open-exercise-workouts-api/) — The Open Exercise Workouts API from EGYM — 1 operation(s) for open exercise workouts.
+- [EGYM Partners API](https://apis.io/apis/egym/egym-partners-api/) — The Partners API from EGYM — 1 operation(s) for partners.
+- [EGYM Products booking API](https://apis.io/apis/egym/egym-products-booking-api/) — Operations on EGYM products. Currently available products are EGYM Smart Strength (Machine Admission) and EGYM+
+- [EGYM Push notifications API](https://apis.io/apis/egym/egym-push-notifications-api/) — Send push notifications to EGYM mobile apps
+- [EGYM Resource API](https://apis.io/apis/egym/egym-resource-api/) — The Resource API from EGYM — 2 operation(s) for resource.
+- [EGYM Statistics API](https://apis.io/apis/egym/egym-statistics-api/) — The Statistics API from EGYM — 2 operation(s) for statistics.
+- [EGYM Strength Workouts API](https://apis.io/apis/egym/egym-strength-workouts-api/) — The Strength Workouts API from EGYM — 2 operation(s) for strength workouts.
+- [EGYM Synchronous exports API](https://apis.io/apis/egym/egym-synchronous-exports-api/) — Immediate paginated JSON exports for weekly analytics and recent event data.
+- [EGYM Task API](https://apis.io/apis/egym/egym-task-api/) — The task API from EGYM — 2 operation(s) for task.
+- [EGYM Trainer Task API](https://apis.io/apis/egym/egym-trainer-task-api/) — These operations are needed to create and update trainer tasks.
+- [EGYM User API](https://apis.io/apis/egym/egym-user-api/) — The User API from EGYM — 9 operation(s) for user.
+- [EGYM User Details API](https://apis.io/apis/egym/egym-user-details-api/) — The User Details API from EGYM — 1 operation(s) for user details.
+- [EGYM Webhooks API](https://apis.io/apis/egym/egym-webhooks-api/) — Operations with webhooks
+- [EGYM Workouts API](https://apis.io/apis/egym/egym-workouts-api/) — These operations are needed to retrieve workouts. Additional permissions are required to access these endpoints.
+- [EGYM O Auth API](https://apis.io/apis/egym/egym-oauth-api/) — The OAuth API from EGYM — 2 operation(s) for oauth.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (2)
+
+Event-driven and webhook contracts.
+
+- [Egym Events Webhooks](https://apis.io/asyncapis/egym/egym-events-webhooks/)
+- [EGYM MMS Webhook Events](https://apis.io/asyncapis/egym/egym-mms-events-asyncapi/)
+
+#### Event channels (1)
+
+Individual events and webhooks the provider emits.
+
+- [/](https://apis.io/channels/egym/memberevents/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [egym-api-docs](https://apis.io/servers/egym/egym-api-docs/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Egym Agentic Access](https://apis.io/agentic-access/egym/egym-agentic-access/)
+
+#### Collections (8)
+
+Postman and Open Collection request collections.
+
+- [Canonical GroupX Classes API](https://apis.io/collections/egym/open-egym-canonical-groupx-classes/)
+- [DATA EXPORT API](https://apis.io/collections/egym/open-egym-data-export/)
+- [Data Hub API](https://apis.io/collections/egym/open-egym-data-hub/)
+- [Equipment Vendor API (for server-to-server cases)](https://apis.io/collections/egym/open-egym-equipment-vendor-server/)
+- [Equipment Vendor API (for standalone clients)](https://apis.io/collections/egym/open-egym-equipment-vendor-standalone/)
+- [MMS API v1](https://apis.io/collections/egym/open-egym-mms-api-v1/)
+- [MMS API V2](https://apis.io/collections/egym/open-egym-mms-api-v2/)
+- [OpenAPI definition](https://apis.io/collections/egym/open-egym-user-connect/)
+
+#### Overlays (8)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Egym Canonical Groupx Classes Overlay](https://apis.io/overlays/egym/egym-canonical-groupx-classes-overlay/)
+- [Egym Data Export Overlay](https://apis.io/overlays/egym/egym-data-export-overlay/)
+- [Egym Data Hub Overlay](https://apis.io/overlays/egym/egym-data-hub-overlay/)
+- [Egym Equipment Vendor Server Overlay](https://apis.io/overlays/egym/egym-equipment-vendor-server-overlay/)
+- [Egym Equipment Vendor Standalone Overlay](https://apis.io/overlays/egym/egym-equipment-vendor-standalone-overlay/)
+- [Egym Mms Api V1 Overlay](https://apis.io/overlays/egym/egym-mms-api-v1-overlay/)
+- [Egym Mms Api V2 Overlay](https://apis.io/overlays/egym/egym-mms-api-v2-overlay/)
+- [Egym User Connect Overlay](https://apis.io/overlays/egym/egym-user-connect-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Egym Authentication](https://apis.io/security/egym/egym-authentication/)
+- [Egym Domain Security](https://apis.io/security/egym/egym-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Egym Scopes](https://apis.io/scopes/egym/egym-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Egym Plans Pricing](https://apis.io/plans/egym/egym-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Egym Rate Limits](https://apis.io/rate-limits/egym/egym-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://egym.com/int)
+- [Documentation](https://developer.egym.com/general/general-info)
+- [Getting started](https://developer.egym.com/mms-api-v2/guide)
+- [API reference](https://developer.egym.com/mms-api-v2/apis/mms-v2)
+- [Pricing](https://egym.com/int/contact)
+- [Sign up](https://developer.egym.com/general/general-info)
+- [Support](https://egym.com/int/contact)
+- [Changelog](https://developer.egym.com/mms-api-v2/change-log)
+- [Blog](https://egym.com/us/blog)
+- [Terms of service](https://us.egym.com/en-us/terms)
+- [Privacy policy](https://egym.com/int/privacy)
+- [GitHub](https://github.com/egym)
+- [Status](https://egym.statuspage.io/)
+
+## API Evangelist rating
+
+**Kin Score 58.7** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 71.7 |
+| Contract quality | 60.9 |
+| Contract governance | 4.5 |
+| Operational transparency | 71.1 |
+| Developer ergonomics | 73.2 |
+| Access clarity | 44.7 |
+
+**Agent readiness 50.5** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 36.7** — Health
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/egym/](https://apis.io/providers/egym/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for EGYM: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/egym/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
